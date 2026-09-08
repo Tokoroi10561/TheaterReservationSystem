@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +13,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import com.example.demo.constant.BookingStatus;
+import com.example.demo.constant.PaymentMethod;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +55,8 @@ public class Booking {
 	@Column(name = "remarks", nullable = true, length = 1000)
 	private String remarks;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "booking_status", nullable = false)
 	private BookingStatus bookingStatus;
 	
 	@Column(name = "token", nullable = false, unique = true, length = 255)
@@ -62,6 +69,10 @@ public class Booking {
 	@ManyToOne
 	@JoinColumn(name = "ticket_type_id", nullable = false)
 	private Long ticketTypeId;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "payment_method", nullable = false)
+	private PaymentMethod paymentMethod;
 	
 	@ManyToOne
 	@JoinColumn(name = "staff_id", nullable = false)
