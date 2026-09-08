@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
-@Table(name = "stages")
+@Table(name = "booking_details")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,9 +38,8 @@ public class BookingDetails {
 	@Column(name = "quantity", nullable = false)
 	private Integer quantity;
 	
-	@ManyToOne
-	@JoinColumn(name = "booking_id", nullable = false)
-	private List<Booking> bookings;
+	@OneToMany(mappedBy = "bookingDetails")
+	private Long bookingId;
 	
 	@ManyToOne
 	@JoinColumn(name = "ticket_type_id", nullable = false)

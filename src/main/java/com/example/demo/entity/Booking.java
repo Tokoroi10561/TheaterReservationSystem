@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import com.example.demo.constant.BookingStatus;
@@ -44,10 +45,10 @@ public class Booking {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 	
-	@Column(name = "email", nullable = false, unique = true, length = 100)
+	@Column(name = "email", nullable = false, length = 100)
 	private String email;
 	
-	@Column(name = "phone", nullable = false, length = 20)
+	@Column(name = "phone", nullable = true, length = 20)
 	private String phone;
 	
 	@Column(name = "address", nullable = true, length = 255)
@@ -84,10 +85,9 @@ public class Booking {
 	private Long stageId;
 	
 	@ManyToOne
-	@JoinColumn(name = "staff_id", nullable = false)
+	@JoinColumn(name = "staff_id", nullable = true)
 	private Long staffId;
 	
-	@OneToOne
-	@JoinColumn(name = "booking_details_id", nullable = false)
-	private Long bookingDetailsId;
+	@OneToMany(mappedBy = "booking")
+	private List<BookingDetails> bookingDetails;
 }
