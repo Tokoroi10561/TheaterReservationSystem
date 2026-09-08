@@ -1,21 +1,15 @@
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import com.example.demo.constant.StageStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,32 +28,20 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @ToString
 @Slf4j
-public class Stage {
-
+public class BookingDetails {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "start_time", nullable = false)
-	private LocalDateTime startTime;
-	
-	@Column(name = "end_time", nullable = false)
-	private LocalDateTime endTime;
-	
-	@Column(name = "open_time", nullable = false)
-	private LocalDateTime openTime;
-	
-	@Column(name = "capacity", nullable = false)
-	private Integer capacity;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "stage_status", nullable = false)
-	private StageStatus status;
+	@Column(name = "quantity", nullable = false)
+	private Integer quantity;
 	
 	@ManyToOne
-	@JoinColumn(name = "show_id", nullable = false)
-	private Long showId;
-	
-	@OneToMany(mappedBy = "stage")
+	@JoinColumn(name = "booking_id", nullable = false)
 	private List<Booking> bookings;
+	
+	@ManyToOne
+	@JoinColumn(name = "ticket_type_id", nullable = false)
+	private List<TicketType> ticketTypes;
 }
