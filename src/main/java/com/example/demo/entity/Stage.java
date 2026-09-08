@@ -23,7 +23,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "stages")
@@ -33,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @ToString
-@Slf4j
 public class Stage {
 
 	@Id

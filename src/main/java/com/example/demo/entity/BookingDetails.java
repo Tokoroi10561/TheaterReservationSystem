@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "booking_details")
@@ -28,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @ToString
-@Slf4j
 public class BookingDetails {
 	
 	@Id
@@ -38,10 +36,10 @@ public class BookingDetails {
 	@Column(name = "quantity", nullable = false)
 	private Integer quantity;
 	
-	@OneToMany(mappedBy = "bookingDetails")
+	@ManyToOne
+	@JoinColumn(name = "booking_id", nullable = false)
 	private Long bookingId;
 	
-	@ManyToOne
-	@JoinColumn(name = "ticket_type_id", nullable = false)
+	@OneToMany(mappedBy = "bookingDetails")
 	private List<TicketType> ticketTypes;
 }
