@@ -46,5 +46,5 @@ public class TicketType {
 	private Long showId;
 	
 	@OneToMany(mappedBy = "ticketType")
-	private List<Booking> bookings;
+	private List<BookingDetails> bookingDetails;
 }
