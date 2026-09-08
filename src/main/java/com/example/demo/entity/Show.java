@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -19,7 +21,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
-@Table(name = "troupes")
+@Table(name = "shows")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,27 +29,25 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @ToString
 @Slf4j
-public class Troupe {
-	
+public class Show {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "name", nullable = false, length = 100)
-	private String name;
+	@Column(name = "title", nullable = false, length = 100)
+	private String title;
 	
-	@Column(name = "email", nullable = false, unique = true, length = 100)
-	private String email;
+	@Column(name = "place", nullable = true, length = 100)
+	private String place;
 	
-	@Column(name = "password_hash", nullable = false, length = 255)
-	private String passwordHash;
+	@Column(name = "flyer_url", nullable = true, length = 255)
+	private String flyerImageUrl;
 	
-	@Column(name = "sns_account", nullable = true, length = 20)
-	private String snsAccount;
+	@ManyToOne
+	@JoinColumn(name = "troupe_id", nullable = false)
+	private Long troupeId;
 	
-	@Column(name = "signature", nullable = true, length = 1000)
-	private String signature;
-	
-	@OneToMany(mappedBy = "troupe")
-	private List<Show> shows;
+	@OneToMany(mappedBy = "show")
+	private List<Stage> stages;
 }
