@@ -16,6 +16,7 @@ import jakarta.persistence.Table;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.constant.PaymentMethod;
+import com.example.demo.constant.PaymentStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,12 +56,28 @@ public class Booking {
 	@Column(name = "remarks", nullable = true, length = 1000)
 	private String remarks;
 	
+	@Column(name = "token", nullable = false, unique = true, length = 255)
+	private String token;
+
+	@Column(name = "created_at", nullable = false)
+	private LocalDateTime createdAt;
+	
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
+	
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "payment_method", nullable = false)
+	private PaymentMethod paymentMethod;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "booking_status", nullable = false)
 	private BookingStatus bookingStatus;
 	
-	@Column(name = "token", nullable = false, unique = true, length = 255)
-	private String token;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "payment_status", nullable = false)
+	private PaymentStatus paymentStatus;
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "stage_id", nullable = false)
@@ -70,10 +87,6 @@ public class Booking {
 	@JoinColumn(name = "ticket_type_id", nullable = false)
 	private Long ticketTypeId;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "payment_method", nullable = false)
-	private PaymentMethod paymentMethod;
-	
 	@ManyToOne
 	@JoinColumn(name = "staff_id", nullable = false)
 	private Long staffId;
@@ -81,10 +94,4 @@ public class Booking {
 	@OneToOne
 	@JoinColumn(name = "booking_details_id", nullable = false)
 	private Long bookingDetailsId;
-	
-	@Column(name = "created_at", nullable = false)
-	private LocalDateTime createdAt;
-	
-	@Column(name = "updated_at", nullable = false)
-	private LocalDateTime updatedAt;
 }
