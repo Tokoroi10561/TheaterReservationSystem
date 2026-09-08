@@ -84,10 +84,6 @@ public class Booking {
 	private Long stageId;
 	
 	@ManyToOne
-	@JoinColumn(name = "ticket_type_id", nullable = false)
-	private Long ticketTypeId;
-	
-	@ManyToOne
 	@JoinColumn(name = "staff_id", nullable = false)
 	private Long staffId;
 	
