@@ -80,11 +80,11 @@ public class Booking {
 	
 	@ManyToOne
 	@JoinColumn(name = "stage_id", nullable = false)
-	private Long stageId;
+	private Stage stage;
 	
 	@ManyToOne
 	@JoinColumn(name = "staff_id", nullable = true)
-	private Long staffId;
+	private Staff staff;
 	
 	@OneToMany(mappedBy = "booking")
 	private List<BookingDetails> bookingDetails;

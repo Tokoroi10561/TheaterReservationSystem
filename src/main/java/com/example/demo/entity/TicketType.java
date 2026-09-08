@@ -41,7 +41,7 @@ public class TicketType {
 	
 	@ManyToOne
 	@JoinColumn(name = "show_id", nullable = false)
-	private Long showId;
+	private Show show;
 	
 	@OneToMany(mappedBy = "ticketType")
 	private List<BookingDetails> bookingDetails;

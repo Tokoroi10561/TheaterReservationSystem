@@ -48,7 +48,7 @@ public class Show {
 	
 	@ManyToOne
 	@JoinColumn(name = "troupe_id", nullable = false)
-	private Long troupeId;
+	private Troupe troupe;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_method", nullable = false)
