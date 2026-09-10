@@ -19,14 +19,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	@Query("SELECT b FROM Booking b WHERE b.email LIKE %:email%")
 	List<Booking> findByEmail(String email);
 	
-	@Query("SELECT b FROM Booking b WHERE b.stageId = :stageId AND b.bookingStatus = :status ORDER BY b.bookingStatus DESC ")
+	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :status ORDER BY b.createdAt DESC")
 	List<Booking> findByStageId(Long stageId, BookingStatus status);
 	
-	List<Booking> findByStageIdAndTicketTypeIdAndStatus(Long stageId, Long ticketTypeId, BookingStatus status);
+//	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId"
+//			+ " AND b.ticketType.id = :ticketTypeId"
+//			+ " AND b.bookingStatus = :status")
+//	List<Booking> findByTicketTypeId(Long stageId, Long ticketTypeId, BookingStatus status);
 	
 	List<Booking> findByToken(String token);
-	
-	List<Booking> findByStageId(Long stageId);
 	
 	List<Booking> findByStaffId(Long staffId);
 }

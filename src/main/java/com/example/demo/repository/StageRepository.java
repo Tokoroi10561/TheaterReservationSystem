@@ -10,6 +10,6 @@ import com.example.demo.entity.Stage;
 
 @Repository
 public interface StageRepository extends JpaRepository<Stage, Long> {
-	@Query("SELECT s FROM Stage s ORDERD BY s.show.id, s.startTime")
+	@Query("SELECT s FROM Stage s ORDER BY s.show.id, s.startTime")
 	List<Stage> findByShowId(Long showId);
 }
