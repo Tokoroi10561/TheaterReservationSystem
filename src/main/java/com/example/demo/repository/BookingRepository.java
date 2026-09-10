@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +18,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	List<Booking> findByName(String name);
 	
 	@Query("SELECT b FROM Booking b WHERE b.email LIKE %:email%")
-	List<Booking> findByEmail(String email);
+	Optional<Booking> findByEmail(String email);
 	
 	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :status ORDER BY b.createdAt DESC")
 	List<Booking> findByStageId(Long stageId, BookingStatus status);
@@ -27,7 +28,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 //			+ " AND b.bookingStatus = :status")
 //	List<Booking> findByTicketTypeId(Long stageId, Long ticketTypeId, BookingStatus status);
 	
-	List<Booking> findByToken(String token);
+	Optional<Booking> findByToken(String token);
 	
 	List<Booking> findByStaffId(Long staffId);
 }
