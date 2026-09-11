@@ -86,6 +86,7 @@ public class Booking {
 	@JoinColumn(name = "staff_id", nullable = true)
 	private Staff staff;
 	
+	
 	@OneToMany(mappedBy = "booking")
 	private List<BookingDetails> bookingDetails;
 }
