@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import com.example.demo.constant.StageStatus;
-import com.example.demo.entity.Show;
 import com.example.demo.entity.Stage;
 
 import lombok.AllArgsConstructor;
@@ -30,8 +29,8 @@ public class StageDto {
 	@Future(message = "開演時間は未来の時間を指定してください")
 	private LocalDateTime startTime;
 	
-	@NotNull(message = "閉場時間は必須です")
-	@Future(message = "閉場時間は未来の時間を指定してください")
+	@NotNull(message = "閉演時間は必須です")
+	@Future(message = "閉演時間は未来の時間を指定してください")
 	private LocalDateTime endTime;
 	
 	@NotNull(message = "開場時間は必須です")
@@ -46,7 +45,7 @@ public class StageDto {
 	private StageStatus status;
 	
 	@NotNull(message = "公演IDは必須です")
-	private Show showId;
+	private Long showId;
 	
 	public Stage toEntity() {
 		return Stage.builder()
@@ -66,7 +65,7 @@ public class StageDto {
 				.openTime(stage.getOpenTime())
 				.capacity(stage.getCapacity())
 				.status(stage.getStatus())
-//				.showId(stage.getShowId())
+				.showId(stage.getShow().getId())
 				.build();
 	}
 }

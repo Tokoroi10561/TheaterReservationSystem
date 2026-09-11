@@ -49,8 +49,8 @@ public class TicketTypeDto {
 				.id(ticketType.getId())
 				.name(ticketType.getName())
 				.price(ticketType.getPrice())
-//				.showId(ticketType.getTicketTypeId())
-//				.bookingDetailsId(ticketType.getBookingDetailsId())
+				.showId(ticketType.getShow().getId())
+				.bookingDetailsId(ticketType.getBookingDetails().getId())
 				.build();
 	}
 }

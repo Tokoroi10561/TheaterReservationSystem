@@ -34,7 +34,7 @@ public class ShowDto {
 	private String flyerImageUrl;
 	
 	@NotNull(message = "劇団idは必須です")
-	private Long TroupeId;
+	private Long troupeId;
 	
 	public Show toEntity() {
 		return Show.builder()
@@ -50,7 +50,7 @@ public class ShowDto {
 				.title(show.getTitle())
 				.place(show.getPlace())
 				.flyerImageUrl(show.getFlyerImageUrl())
-//				.troupeId(show.getTroupeId())
+				.troupeId(show.getTroupe().getId())
 				.build();
 	}
 }
