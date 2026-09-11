@@ -2,8 +2,9 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import com.example.demo.constant.StageStatus;
 import com.example.demo.entity.Show;
@@ -26,16 +27,19 @@ public class StageDto {
 	private Long id;
 	
 	@NotNull(message = "開演時間は必須です")
+	@Future(message = "開演時間は未来の時間を指定してください")
 	private LocalDateTime startTime;
 	
-	@NotNull(message = "開場時間は必須です")
+	@NotNull(message = "閉場時間は必須です")
+	@Future(message = "閉場時間は未来の時間を指定してください")
 	private LocalDateTime endTime;
 	
 	@NotNull(message = "開場時間は必須です")
+	@Future(message = "開場時間は未来の時間を指定してください")
 	private LocalDateTime openTime;
 	
 	@NotNull(message = "席数上限は必須です")
-	@Size(min = 1, message = "席数は1以上の数字を入力してください")
+	@Min(value = 1, message = "席数は1以上の数字を入力してください")
 	private Integer capacity;
 	
 	@NotNull(message = "ステージステータスは必須です")
