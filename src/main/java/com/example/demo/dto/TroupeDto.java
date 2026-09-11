@@ -43,7 +43,6 @@ public class TroupeDto {
 	
 	public Troupe toEntity() {
 		return Troupe.builder()
-				.id(this.id)
 				.name(this.name)
 				.email(this.email)
 				.passwordHash(this.password)
