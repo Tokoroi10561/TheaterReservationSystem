@@ -29,14 +29,10 @@ public class StaffDto {
 	@Size(max = 100, message = "所属団体名は100文字以内で入力してください")
 	private String belong;
 	
-	@NotNull(message = "公演idは必須です")
-	private Long showId;
-	
 	public Staff toEntity() {
 		return Staff.builder()
 				.name(this.name)
 				.belong(this.belong)
-//				.showId(this.showId)
 				.build();
 	}
 	
@@ -45,7 +41,6 @@ public class StaffDto {
 				.id(staff.getId())
 				.name(staff.getName())
 				.belong(staff.getBelong())
-				.showId(staff.getShow().getId())
 				.build();
 	}
 }

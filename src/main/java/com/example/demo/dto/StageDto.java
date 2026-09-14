@@ -44,9 +44,6 @@ public class StageDto {
 	@NotNull(message = "ステージステータスは必須です")
 	private StageStatus status;
 	
-	@NotNull(message = "公演IDは必須です")
-	private Long showId;
-	
 	public Stage toEntity() {
 		return Stage.builder()
 				.startTime(this.startTime)
@@ -54,7 +51,6 @@ public class StageDto {
 				.openTime(this.openTime)
 				.capacity(this.capacity)
 				.status(this.status)
-//				.showId(this.showId)
 				.build();
 	}
 	
@@ -65,7 +61,6 @@ public class StageDto {
 				.openTime(stage.getOpenTime())
 				.capacity(stage.getCapacity())
 				.status(stage.getStatus())
-				.showId(stage.getShow().getId())
 				.build();
 	}
 }

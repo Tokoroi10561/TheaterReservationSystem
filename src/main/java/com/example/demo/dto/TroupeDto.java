@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,6 +42,8 @@ public class TroupeDto {
 	
 	@Size(max = 1000, message = "署名は1000文字以内で入力してください")
 	private String signature;
+	
+	private List<ShowDto> shows;
 	
 	public Troupe toEntity() {
 		return Troupe.builder()

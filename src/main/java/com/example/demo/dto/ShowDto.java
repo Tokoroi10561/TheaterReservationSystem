@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -33,15 +35,17 @@ public class ShowDto {
 	@Size(max = 255, message = "ビラ画像のURLは255文字以内で入力してください")
 	private String flyerImageUrl;
 	
-	@NotNull(message = "劇団idは必須です")
-	private Long troupeId;
+	private List<StaffDto> staffs;
+	
+	private List<StageDto> stages;
+	
+	private List<TicketTypeDto> ticketTypes;
 	
 	public Show toEntity() {
 		return Show.builder()
 				.title(this.title)
 				.place(this.place)
 				.flyerImageUrl(this.flyerImageUrl)
-//				.TroupeId(troupeId)
 				.build();
 	}
 	
@@ -50,7 +54,6 @@ public class ShowDto {
 				.title(show.getTitle())
 				.place(show.getPlace())
 				.flyerImageUrl(show.getFlyerImageUrl())
-				.troupeId(show.getTroupe().getId())
 				.build();
 	}
 }
