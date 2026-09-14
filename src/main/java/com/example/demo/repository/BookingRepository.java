@@ -31,4 +31,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	Optional<Booking> findByToken(String token);
 	
 	List<Booking> findByStaffId(Long staffId);
+	
+	List<Booking> findByBookingDetails(Long bookinDetailsId);
 }

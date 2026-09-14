@@ -32,15 +32,11 @@ public class TicketTypeDto {
 	@NotNull(message = "公演idは必須です")
 	private Long showId;
 	
-	@NotNull(message = "予約明細idは必須です")
-	private Long bookingDetailsId;
-	
 	public TicketType toEntity() {
 		return TicketType.builder()
 				.name(this.name)
 				.price(this.price)
 //				.showId(this.showId)
-//				.bookindDetailsId(this.bookingDetailsId)
 				.build();
 	}
 	
@@ -50,7 +46,6 @@ public class TicketTypeDto {
 				.name(ticketType.getName())
 				.price(ticketType.getPrice())
 				.showId(ticketType.getShow().getId())
-				.bookingDetailsId(ticketType.getBookingDetails().getId())
 				.build();
 	}
 }

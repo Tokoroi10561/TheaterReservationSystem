@@ -28,10 +28,14 @@ public class BookingDetailsDto {
 	@NotNull(message = "予約idは必須です")
 	private Long bookingId;
 	
+	@NotNull(message = "チケットタイプidは必須です")
+	private Long ticketTypeId;
+	
 	public BookingDetails toEntity() {
 		return BookingDetails.builder()
 				.quantity(this.quantity)
 //				.bookingId(this.bookingId)
+//				.ticketTypeId(this.ticketTypeId)
 				.build();
 	}
 	
@@ -40,6 +44,7 @@ public class BookingDetailsDto {
 				.id(bookingDetails.getId())
 				.quantity(bookingDetails.getQuantity())
 				.bookingId(bookingDetails.getBooking().getId())
+				.ticketTypeId(bookingDetails.getTicketType().getId())
 				.build();
 	}
 }

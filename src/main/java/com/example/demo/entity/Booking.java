@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -87,6 +88,6 @@ public class Booking {
 	private Staff staff;
 	
 	
-	@OneToMany(mappedBy = "booking")
+	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
 	private List<BookingDetails> bookingDetails;
 }
