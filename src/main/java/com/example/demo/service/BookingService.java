@@ -5,11 +5,11 @@ import com.example.demo.dto.BookingDto;
 public interface BookingService {
 	
 	void createBooking(BookingDto bookingDto);
-//	
+	
 //	void updateBooking(BookingDto bookingDto);
-//	
-//	void deleteBooking(Long Id);
-//	
+	
+	void deleteBooking(String token);
+	
 //	List<Booking> getAllBookings();
 //	
 //	List<Booking> getBookingsById(Long Id);

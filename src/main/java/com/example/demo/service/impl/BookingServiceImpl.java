@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +15,7 @@ import com.example.demo.entity.Booking;
 import com.example.demo.entity.BookingDetails;
 import com.example.demo.entity.Stage;
 import com.example.demo.entity.TicketType;
+import com.example.demo.exception.BookingClosedException;
 import com.example.demo.exception.NoDataFoundException;
 import com.example.demo.exception.StageSoldOutException;
 import com.example.demo.repository.BookingRepository;
@@ -34,6 +37,7 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public void createBooking(BookingDto bookingDto) {
 		Long stageId = bookingDto.getStageId();
+		int total = 0;
 		
 		Stage stage = stageRepository.findById(stageId).orElseThrow(() -> 
 			new NoDataFoundException("ステージが存在しません" + stageId)
@@ -42,15 +46,11 @@ public class BookingServiceImpl implements BookingService {
 		int capacity = stage.getCapacity();
 		
 		List<Booking> bookings = bookingRepository.findByStageId(stageId, BookingStatus.RESERVED);
-		
 		List<BookingDetailsDto> bookingDetailsDtos = bookingDto.getBookingDetailsDto();
-		
-		int total = 0;
 		
 		for(BookingDetailsDto bookingDetailsDto: bookingDetailsDtos) {
 			total += bookingDetailsDto.getQuantity();
 		}
-		
 		
 		for(Booking booking: bookings) {
 			List<BookingDetails> bookingDetails = booking.getBookingDetails();
@@ -66,40 +66,57 @@ public class BookingServiceImpl implements BookingService {
 			throw new StageSoldOutException("ステージは満席です" + stageId);
 		}
 		
-		//チェックをクリアしたら、javaのUUID機能を使ってその予約のためだけのランダム文字列を生成
 		String uuid = UUID.randomUUID().toString();
 		
-		//データベースへのセット親(ステータスやトークン)
 		Booking booking = bookingDto.toEntity();
 		booking.setToken(uuid);
 		booking.setBookingStatus(BookingStatus.RESERVED);
 		
 		ArrayList<BookingDetails> details = new ArrayList<>();
-		//データベースへのセット子(チケットタイプと枚数の内訳)
+		
 		for(BookingDetailsDto bookingDetailsDto: bookingDetailsDtos) {
 			Long ticketTypeId = bookingDetailsDto.getTicketTypeId();
-			
 			BookingDetails detail = bookingDetailsDto.toEntity();
-			//チケットタイプからチケットオブジェクトにして、BookingDetailsに代入
+			
 			TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(() -> 
-			new NoDataFoundException("ステージが存在しません" + ticketTypeId)
+				new NoDataFoundException("チケットタイプが存在しません" + ticketTypeId)
 			);
-			details.add(ticketType);
+			detail.setTicketType(ticketType);
 			details.add(detail);
 			detail.setBooking(booking);
 		}
 		
 		booking.setBookingDetails(details);
-		
 		bookingRepository.save(booking);
 	}
 //	
 //	@Override
 //	public void updateBooking(Booking booking) {}
 //	
-//	@Override
-//	public void deleteBooking(Long Id) {}
-//	
+	@Override
+	public void deleteBooking(String token) {
+		Booking booking = bookingRepository.findByToken(token).orElseThrow(() ->
+			new NoDataFoundException("トークンが存在しません" + token)
+		);
+		
+		if(booking.getBookingStatus() != BookingStatus.RESERVED) {
+			throw new NoDataFoundException(booking.getName() + "様の予約はすでにキャンセルされています");
+		}
+		
+		LocalDateTime now = LocalDateTime.now();
+		
+		LocalDateTime stageTime = booking.getStage().getStartTime();
+		LocalDate stageDay = stageTime.toLocalDate();
+		LocalDateTime deadline = stageDay.minusDays(1).atTime(23, 59);
+		
+		if(now.isAfter(deadline)) {
+			throw new BookingClosedException("当日のキャンセルはできません");
+		}
+		
+		booking.setBookingStatus(BookingStatus.CANCELLED);
+		bookingRepository.save(booking);
+	}
+	
 //	@Override
 //	public List<Booking> getAllBookings() {}
 //	

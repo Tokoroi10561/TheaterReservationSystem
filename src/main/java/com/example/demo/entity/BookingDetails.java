@@ -38,6 +38,6 @@ public class BookingDetails {
 	private Booking booking;
 	
 	@ManyToOne
-	@JoinColumn(name = "booking_details_id", nullable = false)
+	@JoinColumn(name = "ticket_type_id", nullable = false)
 	private TicketType ticketType;
 }
