@@ -4,9 +4,9 @@ import com.example.demo.dto.BookingDto;
 
 public interface BookingService {
 	
-	void createBooking(BookingDto bookingDto);
+	void createBooking(BookingDto dto);
 	
-//	void updateBooking(BookingDto bookingDto);
+	void updateBooking(BookingDto dto, String token);
 	
 	void deleteBooking(String token);
 	
