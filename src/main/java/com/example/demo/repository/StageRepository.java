@@ -12,4 +12,7 @@ import com.example.demo.entity.Stage;
 public interface StageRepository extends JpaRepository<Stage, Long> {
 	@Query("SELECT s FROM Stage s ORDER BY s.show.id, s.startTime")
 	List<Stage> findByShowId(Long showId);
+	
+	@Query("SELECT s FROM Stage s")
+	List<Stage> findAllStage();
 }

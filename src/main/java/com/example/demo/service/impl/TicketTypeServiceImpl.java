@@ -13,6 +13,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 	
 	@Override
 	public void getAllTicketType() {
-		ticketTypeRepository.findAll();
+		ticketTypeRepository.findAllTicketType();
 	}
 }

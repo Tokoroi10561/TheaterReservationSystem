@@ -14,6 +14,6 @@ public class StageServiceImpl implements StageService {
 	
 	@Override
 	public void getAllStage() {
-		stageRepository.findAll();
+		stageRepository.findAllStage();
 	}
 }

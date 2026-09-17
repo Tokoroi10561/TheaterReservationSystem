@@ -12,6 +12,6 @@ public class StaffServiceImpl implements StaffService {
 	
 	@Override
 	public void getAllStaff() {
-		staffRepositroy.findAll();
+		staffRepositroy.findAllStaff();
 	}
 }
