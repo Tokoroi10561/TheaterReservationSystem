@@ -1,9 +1,13 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.Staff;
 
 @Service
 public interface StaffService {
 
-	void getAllStaff();
+	List<Staff> getAllStaff();
 }
