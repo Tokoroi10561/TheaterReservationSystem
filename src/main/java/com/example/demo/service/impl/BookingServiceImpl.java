@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.dto.BookingDetailsDto;
@@ -23,6 +24,7 @@ import com.example.demo.repository.StageRepository;
 import com.example.demo.repository.TicketTypeRepository;
 import com.example.demo.service.BookingService;
 
+@Service
 public class BookingServiceImpl implements BookingService {
 	
 	@Autowired
