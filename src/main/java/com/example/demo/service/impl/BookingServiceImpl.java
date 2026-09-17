@@ -55,11 +55,11 @@ public class BookingServiceImpl implements BookingService {
 		String uuid = UUID.randomUUID().toString();
 		
 		Booking booking = dto.toEntity();
-		booking.setToken(uuid);
-		booking.setBookingStatus(BookingStatus.RESERVED);
 		
 		ArrayList<BookingDetails> details = convertDtoToDetails(bookingDetailsDtos, booking);
 		
+		booking.setToken(uuid);
+		booking.setBookingStatus(BookingStatus.RESERVED);
 		booking.setBookingDetails(details);
 		
 		bookingRepository.save(booking);
@@ -67,16 +67,16 @@ public class BookingServiceImpl implements BookingService {
 	
 	@Override
 	public void updateBooking(BookingDto dto, String token) {
-		Booking oldBooking = getValidateByTokenAndStatus(token);
+		Booking booking = getValidateByTokenAndStatus(token);
 		int total = 0;
 		
-		checkDeadline(oldBooking);
+		checkDeadline(booking);
 		
 		//新旧のステージID確認
-		Long oldStageId = oldBooking.getStage().getId();
+		Long oldStageId = booking.getStage().getId();
 		Long newStageId = dto.getStageId();
 		
-		List<BookingDetails> bookingDetailses = oldBooking.getBookingDetails();
+		List<BookingDetails> bookingDetailses = booking.getBookingDetails();
 		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetailsDto();
 		
 		if(oldStageId == newStageId) {
@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
 			
 			//stageの予約枚数の合計を出す
 			List<Booking> bookings = bookingRepository.findByStageId(newStageId, BookingStatus.RESERVED);
-			calculateSumStageTicket(bookings, total);
+			total = calculateSumStageTicket(bookings, total);
 			
 			//dtoの予約枚数を計算する
 			int zero = 0;
@@ -104,16 +104,13 @@ public class BookingServiceImpl implements BookingService {
 				throw new StageSoldOutException("ステージは満席です" + newStageId);
 			}
 			
-			Booking booking = dto.toEntity();
-			String uuid = oldBooking.getToken();
-			
-			booking.setToken(uuid);
-			booking.setId(oldBooking.getId());
-			booking.setBookingStatus(BookingStatus.RESERVED);
+			//ステージ変更しない場合の保存＝detailだけ変更すればよい
 			
 			ArrayList<BookingDetails> details = convertDtoToDetails(bookingDetailsDtos, booking);
 			
-			booking.setBookingDetails(details);
+			bookingDetailses.clear();
+			bookingDetailses.addAll(details);
+			
 			bookingRepository.save(booking);
 			
 		}else {
@@ -130,14 +127,12 @@ public class BookingServiceImpl implements BookingService {
 				throw new StageSoldOutException("ステージは満席です" + newStageId);
 			}
 			
-			Booking booking = dto.toEntity();
-			String uuid = oldBooking.getToken();
-			
-			booking.setToken(uuid);
-			booking.setBookingStatus(BookingStatus.RESERVED);
-			
 			ArrayList<BookingDetails> details = convertDtoToDetails(bookingDetailsDtos, booking);
 			
+			bookingDetailses.clear();
+			bookingDetailses.addAll(details);
+			
+			booking.setStage(stage);
 			booking.setBookingDetails(details);
 			bookingRepository.save(booking);
 		}
@@ -155,10 +150,7 @@ public class BookingServiceImpl implements BookingService {
 	
 //	@Override
 //	public List<Booking> getAllBookings() {}
-//	
-//	@Override
-//	public List<Booking> getBookingsById(Long Id) {}
-//	
+	
 //	@Override
 //	public List<Booking> getBookingsByName(String name) {}
 //	
@@ -167,10 +159,7 @@ public class BookingServiceImpl implements BookingService {
 //	
 //	@Override
 //	public List<Booking> getBookingsByStageId(Long stageId) {}
-//	
-//	@Override
-//	public Optional<Booking> getBookingsByToken(String token) {}
-//	
+	
 //	@Override
 //	public List<Booking> getBookingsByStaffId(Long staffId) {}
 	
@@ -239,8 +228,8 @@ public class BookingServiceImpl implements BookingService {
 				new NoDataFoundException("チケットタイプが存在しません" + ticketTypeId)
 			);
 			detail.setTicketType(ticketType);
-			details.add(detail);
 			detail.setBooking(booking);
+			details.add(detail);
 		}
 		
 		return details;

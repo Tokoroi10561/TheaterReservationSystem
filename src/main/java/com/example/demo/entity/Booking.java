@@ -88,6 +88,6 @@ public class Booking {
 	private Staff staff;
 	
 	
-	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<BookingDetails> bookingDetails;
 }
