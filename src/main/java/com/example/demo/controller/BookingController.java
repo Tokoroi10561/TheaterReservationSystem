@@ -34,7 +34,9 @@ public class BookingController {
 		
 		model.addAttribute("form", bookingDto);
 		//選択肢の奴の追加(ticketType, Staff, Stage)
+		model.addAttribute("ticketTypes", ticketTypeService.getAllTicketType());
 		model.addAttribute("staffs", staffService.getAllStaff());
+		model.addAttribute("stages", stageService.getAllStage());
 		
 		
 		return "form";
