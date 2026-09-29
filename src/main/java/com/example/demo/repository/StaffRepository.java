@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Staff;
 
 @Repository
-public interface StaffRepository extends JpaRepository<Long, Staff> {
+public interface StaffRepository extends JpaRepository<Staff, Long> {
 
 	@Query("SELECT s FROM Staff s")
 	List<Staff> findAllStaff();
