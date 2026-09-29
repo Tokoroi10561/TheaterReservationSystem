@@ -1,9 +1,14 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +20,7 @@ import com.example.demo.service.StageService;
 import com.example.demo.service.TicketTypeService;
 
 @Controller
-@RequestMapping("booking")
+@RequestMapping("/booking")
 public class BookingController {
 	
 	@Autowired
@@ -31,7 +36,7 @@ public class BookingController {
 	private StageService stageService;
 	
 	//フォーム表示メソッド
-	@GetMapping("/form/{showId}")
+	@GetMapping("/{showId}")
 	public String showForm(Model model, BookingDto bookingDto, @PathVariable Long showId) {
 		
 		model.addAttribute("form", bookingDto);
@@ -41,13 +46,24 @@ public class BookingController {
 		model.addAttribute("stages", stageService.getStage(showId));
 		
 		
-		return "form";
+		return "booking";
 	}
 	
 	//フォーム確認メソッド
-	@PostMapping("/form/confirm")
-	public String confirmForm() {
-		return "";
+	@PostMapping("/confirm")
+	public String confirmForm(@Valid @ModelAttribute BookingDto bookingDto,
+							  BindingResult bindingResult,
+							  HttpSession httpSession,
+							  Model model) {
+		//バリデーション
+		if(bindingResult.hasErrors()) {
+			return "booking/{showId}";
+		}
+		//セッション保存
+		httpSession.setAttribute("bookingDto", bookingDto);
+		model.addAttribute("bookingDto", bookingDto);
+		
+		return "booking/confirm";
 	}
 	
 	//フォーム登録メソッド
