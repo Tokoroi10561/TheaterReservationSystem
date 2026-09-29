@@ -11,6 +11,6 @@ import com.example.demo.entity.Staff;
 @Repository
 public interface StaffRepository extends JpaRepository<Staff, Long> {
 
-	@Query("SELECT s FROM Staff s")
-	List<Staff> findAllStaff();
+	@Query("SELECT s FROM Staff s WHERE s.show.id = :showId")
+	List<Staff> findStaff(Long showId);
 }

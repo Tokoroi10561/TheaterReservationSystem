@@ -14,7 +14,7 @@ public class StaffServiceImpl implements StaffService {
 	private StaffRepository staffRepositroy;
 	
 	@Override
-	public List<Staff> getAllStaff() {
-		return staffRepositroy.findAllStaff();
+	public List<Staff> getStaff(Long showId) {
+		return staffRepositroy.findStaff(showId);
 	}
 }
