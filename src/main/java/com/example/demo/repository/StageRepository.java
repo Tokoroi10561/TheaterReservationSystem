@@ -13,6 +13,6 @@ public interface StageRepository extends JpaRepository<Stage, Long> {
 	@Query("SELECT s FROM Stage s ORDER BY s.show.id, s.startTime")
 	List<Stage> findByShowId(Long showId);
 	
-	@Query("SELECT s FROM Stage s")
-	List<Stage> findAllStage();
+	@Query("SELECT s FROM Stage s WHERE s.show.id = :showId")
+	List<Stage> findStage(Long showId);
 }

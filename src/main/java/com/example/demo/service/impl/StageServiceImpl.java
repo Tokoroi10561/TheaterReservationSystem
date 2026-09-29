@@ -16,7 +16,7 @@ public class StageServiceImpl implements StageService {
 	private StageRepository stageRepository;
 	
 	@Override
-	public List<Stage> getAllStage() {
-		return stageRepository.findAllStage();
+	public List<Stage> getStage(Long showId) {
+		return stageRepository.findStage(showId);
 	}
 }
