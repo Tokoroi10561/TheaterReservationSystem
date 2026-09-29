@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.dto.BookingDto;
 import com.example.demo.service.BookingService;
@@ -36,7 +37,7 @@ public class BookingController {
 	private StageService stageService;
 	
 	//フォーム表示メソッド
-	@GetMapping("/{showId}")
+	@GetMapping("/form/{showId}")
 	public String showForm(Model model, BookingDto bookingDto, @PathVariable Long showId) {
 		
 		model.addAttribute("form", bookingDto);
@@ -50,7 +51,7 @@ public class BookingController {
 	}
 	
 	//フォーム確認メソッド
-	@PostMapping("/confirm")
+	@PostMapping("/form/confirm")
 	public String confirmForm(@Valid @ModelAttribute BookingDto bookingDto,
 							  BindingResult bindingResult,
 							  HttpSession httpSession,
@@ -61,12 +62,27 @@ public class BookingController {
 		}
 		//セッション保存
 		httpSession.setAttribute("bookingDto", bookingDto);
+		
+		//値段計算メソッドを渡す
+		
 		model.addAttribute("bookingDto", bookingDto);
 		
 		return "booking/confirm";
 	}
 	
 	//フォーム登録メソッド
+	@PostMapping("/form/register")
+	public String registerForm(HttpSession httpSession,
+							   RedirectAttributes redirectAttributes) {
+		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
+		if(bookingDto == null) {
+			return "redirect:/booking/form";
+		}
+		
+		bookingService.createBooking(bookingDto);
+		httpSession.removeAttribute("bookingDto");
+		return "booking/register";
+	}
 	
 	//フォーム完了表示メソッド
 	
