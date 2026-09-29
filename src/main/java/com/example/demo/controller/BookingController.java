@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,8 +31,8 @@ public class BookingController {
 	private StageService stageService;
 	
 	//フォーム表示メソッド
-	@GetMapping("form")
-	public String showForm(Model model, BookingDto bookingDto) {
+	@GetMapping("/form/{showId}")
+	public String showForm(Model model, BookingDto bookingDto, @PathVariable Long showId) {
 		
 		model.addAttribute("form", bookingDto);
 		//選択肢の奴の追加(ticketType, Staff, Stage)
@@ -44,7 +45,7 @@ public class BookingController {
 	}
 	
 	//フォーム確認メソッド
-	@PostMapping("form/confirm")
+	@PostMapping("/form/confirm")
 	public String confirmForm() {
 		return "";
 	}
