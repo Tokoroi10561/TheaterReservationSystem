@@ -150,7 +150,22 @@ public class BookingServiceImpl implements BookingService {
 		bookingRepository.save(booking);
 	}
 	
-	
+	@Override
+	public int calculateTicketSumPrice(BookingDto bookingDto) {
+		int total = 0;
+		List<BookingDetailsDto> bookingDetails = bookingDto.getBookingDetailsDto();
+		
+		for(BookingDetailsDto bookingDetail: bookingDetails) {
+			int quantity = bookingDetail.getQuantity();
+			
+			//チケットの値段を持ってくる(bookingDetailDtoのチケットIdから値段を引っ張ってくる)
+			
+			//チケット枚数と値段をかける
+			
+			//かけたものからトータルを出す
+		}
+		return total;
+	}
 	
 //	@Override
 //	public List<Booking> getAllBookings() {}
