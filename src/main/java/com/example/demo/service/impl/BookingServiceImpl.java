@@ -23,6 +23,7 @@ import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.StageRepository;
 import com.example.demo.repository.TicketTypeRepository;
 import com.example.demo.service.BookingService;
+import com.example.demo.service.TicketTypeService;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -35,6 +36,9 @@ public class BookingServiceImpl implements BookingService {
 	
 	@Autowired
 	private TicketTypeRepository ticketTypeRepository;
+	
+	@Autowired
+	private TicketTypeService ticketTypeService;
 	
 	@Override
 	public void createBooking(BookingDto dto) {
@@ -152,19 +156,25 @@ public class BookingServiceImpl implements BookingService {
 	
 	@Override
 	public int calculateTicketSumPrice(BookingDto bookingDto) {
-		int total = 0;
+		int sum = 0;
+		Long stageId = bookingDto.getStageId();
+		
 		List<BookingDetailsDto> bookingDetails = bookingDto.getBookingDetailsDto();
 		
 		for(BookingDetailsDto bookingDetail: bookingDetails) {
 			int quantity = bookingDetail.getQuantity();
 			
 			//チケットの値段を持ってくる(bookingDetailDtoのチケットIdから値段を引っ張ってくる)
+			TicketType ticketType = ticketTypeService.getByStageId(stageId);
+			int price = ticketType.getPrice();
 			
 			//チケット枚数と値段をかける
+			int total = quantity * price;
 			
 			//かけたものからトータルを出す
+			sum += total;
 		}
-		return total;
+		return sum;
 	}
 	
 //	@Override
