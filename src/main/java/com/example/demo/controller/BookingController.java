@@ -74,8 +74,7 @@ public class BookingController {
 	
 	//フォーム登録メソッド
 	@PostMapping("/form/register")
-	public String registerForm(HttpSession httpSession,
-							   RedirectAttributes redirectAttributes) {
+	public String registerForm(HttpSession httpSession) {
 		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
 		if(bookingDto == null) {
 			return "redirect:/booking/form";
@@ -87,6 +86,10 @@ public class BookingController {
 	}
 	
 	//フォーム完了表示メソッド
+	@GetMapping("/form/complete")
+	public String completeForm(RedirectAttributes redirectAttributes) {
+		return "redirect:/booking/complete";
+	}
 	
 	//フォーム更新表示メソッド
 	
