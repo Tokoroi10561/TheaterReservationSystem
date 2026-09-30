@@ -9,5 +9,5 @@ import com.example.demo.entity.TicketType;
 @Service
 public interface TicketTypeService {
 
-	List<TicketType> getTicketType(Long showId);
+	List<TicketType> getAllTicketTypeByShowId(Long showId);
 }

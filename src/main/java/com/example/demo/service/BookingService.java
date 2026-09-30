@@ -13,6 +13,8 @@ public interface BookingService {
 	
 	void deleteBooking(String token);
 	
+//	int calculateTicketSumPrice(BookingDto bookingDto);
+	
 //	List<Booking> getAllBookings();
 //	
 //	List<Booking> getBookingsByName(String name);

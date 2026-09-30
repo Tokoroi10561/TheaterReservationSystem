@@ -9,5 +9,5 @@ import com.example.demo.entity.Staff;
 @Service
 public interface StaffService {
 
-	List<Staff> getStaff(Long showId);
+	List<Staff> getAllStaffByShowId(Long showId);
 }

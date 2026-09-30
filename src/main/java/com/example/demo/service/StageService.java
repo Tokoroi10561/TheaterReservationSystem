@@ -9,5 +9,5 @@ import com.example.demo.entity.Stage;
 @Service
 public interface StageService {
 
-	List<Stage> getStage(Long showId);
+	List<Stage> getAllStageByShowId(Long showId);
 }

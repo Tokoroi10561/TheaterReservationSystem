@@ -15,7 +15,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 	private TicketTypeRepository ticketTypeRepository;
 	
 	@Override
-	public List<TicketType> getTicketType(Long showId) {
-		return ticketTypeRepository.findTicketType(showId);
+	public List<TicketType> getAllTicketTypeByShowId(Long showId) {
+		return ticketTypeRepository.findAllTicketTypeByShowId(showId);
 	}
 }

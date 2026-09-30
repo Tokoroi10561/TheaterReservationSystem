@@ -150,6 +150,8 @@ public class BookingServiceImpl implements BookingService {
 		bookingRepository.save(booking);
 	}
 	
+	
+	
 //	@Override
 //	public List<Booking> getAllBookings() {}
 	
