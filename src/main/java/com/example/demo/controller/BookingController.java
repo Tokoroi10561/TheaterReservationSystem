@@ -38,27 +38,33 @@ public class BookingController {
 	
 	//フォーム表示メソッド
 	@GetMapping("/form/{showId}")
-	public String showForm(Model model, BookingDto bookingDto, @PathVariable Long showId) {
+	public String showForm(Model model, @ModelAttribute BookingDto bookingDto, @PathVariable Long showId) {
 		
 		model.addAttribute("form", bookingDto);
-		//選択肢の奴の追加(ticketType, Staff, Stage)
 		model.addAttribute("ticketTypes", ticketTypeService.getAllTicketTypeByShowId(showId));
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
-		
 		
 		return "booking";
 	}
 	
 	//フォーム確認メソッド
-	@PostMapping("/form/confirm")
+	@PostMapping("/form/{showId}/confirm")
 	public String confirmForm(@Valid @ModelAttribute BookingDto bookingDto,
 							  BindingResult bindingResult,
 							  HttpSession httpSession,
-							  Model model) {
+							  Model model,
+							  @PathVariable Long showId
+							  ) {
 		//バリデーション
 		if(bindingResult.hasErrors()) {
-			return "booking/{showId}";
+			
+			model.addAttribute("form", bookingDto);
+			model.addAttribute("ticketTypes", ticketTypeService.getAllTicketTypeByShowId(showId));
+			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
+			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
+			
+			return "booking";
 		}
 		//セッション保存
 		httpSession.setAttribute("bookingDto", bookingDto);
@@ -73,22 +79,31 @@ public class BookingController {
 	}
 	
 	//フォーム登録メソッド
-	@PostMapping("/form/register")
-	public String registerForm(HttpSession httpSession) {
+	@PostMapping("/form/{showId}/register")
+	public String registerForm(HttpSession httpSession,
+							   Model model,
+							   @PathVariable Long showId,
+							   RedirectAttributes redirectAttributes
+							   ) {
 		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
 		if(bookingDto == null) {
-			return "redirect:/booking/form";
+			
+			model.addAttribute("ticketTypes", ticketTypeService.getAllTicketTypeByShowId(showId));
+			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
+			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
+			
+			return "redirect:/booking/form/" + showId;
 		}
 		
 		bookingService.createBooking(bookingDto);
 		httpSession.removeAttribute("bookingDto");
-		return "booking/register";
+		return "redirect:/booking/form/complete";
 	}
 	
 	//フォーム完了表示メソッド
 	@GetMapping("/form/complete")
-	public String completeForm(RedirectAttributes redirectAttributes) {
-		return "redirect:/booking/complete";
+	public String completeForm() {
+		return "booking/complete";
 	}
 	
 	//フォーム更新表示メソッド
