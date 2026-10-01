@@ -155,9 +155,8 @@ public class BookingServiceImpl implements BookingService {
 	}
 	
 	@Override
-	public int calculateTicketSumPrice(BookingDto bookingDto) {
+	public int calculateTicketSumPrice(BookingDto bookingDto, Long showId) {
 		int sum = 0;
-		Long stageId = bookingDto.getStageId();
 		
 		List<BookingDetailsDto> bookingDetails = bookingDto.getBookingDetailsDto();
 		
@@ -165,7 +164,7 @@ public class BookingServiceImpl implements BookingService {
 			int quantity = bookingDetail.getQuantity();
 			
 			//チケットの値段を持ってくる(bookingDetailDtoのチケットIdから値段を引っ張ってくる)
-			TicketType ticketType = ticketTypeService.getByStageId(stageId);
+			TicketType ticketType = ticketTypeService.getByShowId(showId);
 			int price = ticketType.getPrice();
 			
 			//チケット枚数と値段をかける

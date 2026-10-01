@@ -16,8 +16,8 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 	private TicketTypeRepository ticketTypeRepository;
 	
 	@Override
-	public TicketType getByStageId(Long stageId){
-		TicketType ticket = ticketTypeRepository.findByStageId(stageId).orElseThrow(() ->
+	public TicketType getByShowId(Long showId){
+		TicketType ticket = ticketTypeRepository.findByShowId(showId).orElseThrow(() ->
 		new NoDataFoundException("チケットタイプが存在しません")
 		);
 		return ticket;

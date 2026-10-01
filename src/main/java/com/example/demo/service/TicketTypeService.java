@@ -9,7 +9,7 @@ import com.example.demo.entity.TicketType;
 @Service
 public interface TicketTypeService {
 	
-	TicketType getByStageId(Long stageId);
+	TicketType getByShowId(Long showId);
 
 	List<TicketType> getAllTicketTypeByShowId(Long showId);
 }

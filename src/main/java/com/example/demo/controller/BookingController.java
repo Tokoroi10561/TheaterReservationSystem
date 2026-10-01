@@ -70,7 +70,7 @@ public class BookingController {
 		httpSession.setAttribute("bookingDto", bookingDto);
 		
 		//値段計算メソッドを渡す
-		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
+		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto, showId);
 		model.addAttribute("sumPrice", sumPrice);
 	
 		model.addAttribute("bookingDto", bookingDto);
