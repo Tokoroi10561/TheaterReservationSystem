@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.dto.BookingDto;
 import com.example.demo.service.BookingService;
+import com.example.demo.service.MailService;
 import com.example.demo.service.StaffService;
 import com.example.demo.service.StageService;
 import com.example.demo.service.TicketTypeService;
@@ -35,6 +36,9 @@ public class BookingController {
 	
 	@Autowired
 	private StageService stageService;
+	
+	@Autowired
+	private MailService mailService;
 	
 	//フォーム表示メソッド
 	@GetMapping("/form/{showId}")
@@ -96,7 +100,10 @@ public class BookingController {
 		}
 		
 		bookingService.createBooking(bookingDto);
+		
 		httpSession.removeAttribute("bookingDto");
+		
+		mailService.sendBookingMail(bookingDto);
 		return "redirect:/booking/form/complete";
 	}
 	
