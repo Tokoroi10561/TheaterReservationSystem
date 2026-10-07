@@ -27,7 +27,6 @@ import lombok.Setter;
 @Builder
 public class BookingDto {
 
-	@NotNull(message = "idは必須です")
 	private Long id;
 	
 	@NotBlank(message = "名前は必須です")
@@ -48,8 +47,6 @@ public class BookingDto {
 	@Size(max = 1000, message = "備考は1000文字以内で入力してください")
 	private String remarks;
 	
-	@NotNull(message = "トークンは必須です")
-	@Size(max = 255, message = "トークンは255文字以内で入力してください")
 	private String token;
 	
 	private LocalDateTime createdAt;
@@ -68,7 +65,7 @@ public class BookingDto {
 	@NotNull(message = "スタッフidは必須です")
 	private Long staffId;
 	
-	private List<BookingDetailsDto> bookingDetailsDto;
+	private List<BookingDetailsDto> bookingDetails;
 	
 	public Booking toEntity() {
 		return Booking.builder()

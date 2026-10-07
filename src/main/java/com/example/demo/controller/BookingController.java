@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.dto.BookingDetailsDto;
 import com.example.demo.dto.BookingDto;
+import com.example.demo.entity.TicketType;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.MailService;
 import com.example.demo.service.StaffService;
@@ -44,8 +48,23 @@ public class BookingController {
 	@GetMapping("/form/{showId}")
 	public String showForm(Model model, @ModelAttribute BookingDto bookingDto, @PathVariable Long showId) {
 		
-		model.addAttribute("bookingDto", bookingDto);
-		model.addAttribute("ticketTypes", ticketTypeService.getAllTicketTypeByShowId(showId));
+		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+		
+		BookingDto dto = new BookingDto();
+		
+		List<BookingDetailsDto> details = ticketTypes.stream()
+				.map(tt -> {
+					BookingDetailsDto d = new BookingDetailsDto();
+					
+					d.setTicketTypeId(tt.getId());
+					d.setQuantity(0);
+					return d;
+				})
+				.toList();
+		dto.setBookingDetails(details);
+		
+		model.addAttribute("bookingDto", dto);
+		model.addAttribute("ticketTypes", ticketTypes);
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 		

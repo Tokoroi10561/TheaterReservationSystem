@@ -11,7 +11,7 @@
     <div class="container bg-light" py-3 col-md-6>
         <div class="row align-items-center justify-content-center">
             <div class="col-md-6">
-                <form th:action="@{/booking/from/{showId}(showId=1)}" th:object="${bookingDto}" method="post">
+                <form th:action="@{/booking/form/{showId}/confirm(showId=1)}" th:object="${bookingDto}" method="post">
                     <div class="form-title">
                         <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">予約フォーム</h1>
                     </div>
@@ -44,18 +44,18 @@
 
                         <div th:each="ticketType, stat:${ticketTypes}">
                             <label class="form-label" th:text="${ticketType.name}" for="ticketType__${ticketType.id}">1st</label>
-                            <input type="number" class="form-control" th:field="*{ticketTypes[__${stat.index}__].quantity}" min="0">
+                            <input type="hidden" th:field="*{bookingDetails[__${stat.index}__].ticketTypeId}">
+                            <input type="number" class="form-control" th:field="*{bookingDetails[__${stat.index}__].quantity}" min="0">
                         </div>
 
                         <label class="form-label" for="remarks">備考：</label>
                         <input type="text" class="form-control" id="remarks" th:field="*{remarks}">
 
                     </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary mb-3">確認する</button>
+                    </div>
                 </form>
-
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary mb-3">予約する</button>
-                </div>
             </div>
         </div>
 

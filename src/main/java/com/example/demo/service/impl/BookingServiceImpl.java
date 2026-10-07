@@ -50,7 +50,7 @@ public class BookingServiceImpl implements BookingService {
 		Stage stage = stageExist(stageId);
 		int capacity = stage.getCapacity();
 		
-		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetailsDto();
+		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetails();
 		int total = 0;
 		total = calculateSumDtoTicket(bookingDetailsDtos, total);
 		
@@ -87,7 +87,7 @@ public class BookingServiceImpl implements BookingService {
 		Long newStageId = dto.getStageId();
 		
 		List<BookingDetails> bookingDetailses = booking.getBookingDetails();
-		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetailsDto();
+		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetails();
 		
 		if(oldStageId == newStageId) {
 			//ステージを変更しない場合: 二重カウント防止の引き算を入れた残席チェック
@@ -163,7 +163,7 @@ public class BookingServiceImpl implements BookingService {
 	public int calculateTicketSumPrice(BookingDto bookingDto) {
 		int sum = 0;
 		
-		List<BookingDetailsDto> bookingDetails = bookingDto.getBookingDetailsDto();
+		List<BookingDetailsDto> bookingDetails = bookingDto.getBookingDetails();
 		
 		for(BookingDetailsDto bookingDetail: bookingDetails) {
 			int quantity = bookingDetail.getQuantity();
