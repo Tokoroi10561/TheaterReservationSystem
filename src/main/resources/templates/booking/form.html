@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約フォーム</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <div class="container bg-light" py-3 col-md-6>
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-6">
+                <form th:action="@{/booking/from/{showId}(showId=1)}" th:object="${bookingDto}" method="post">
+                    <div class="form-title">
+                        <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">予約フォーム</h1>
+                    </div>
+                    <div class="form-group text-dark">
+
+                        <label class="form-label" for="name">名前：</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+
+                        <label class="form-label" for="email">メールアドレス：</label>
+                        <input type="email" class="form-control" id="email" th:field="*{email}" required>
+
+                        <label class="form-label" for="phone">電話番号：</label>
+                        <input type="tel" class="form-control" id="phone" th:field="*{phone}">
+
+                        <label class="form-label" for="address">住所：</label>
+                        <input type="text" class="form-control" id="address" th:field="*{address}">
+
+                        <!-- 後で丸▲視覚で満席具合を表示 -->
+                        <label class="form-label" for="stage">ステージ：</label>
+                        <select class="form-select" id="stage" th:field="*{stageId}" required>
+                            <option value="" disabled selected>ステージを選択してください</option>
+                            <option th:each="stage: ${stages}" th:value="${stage.id}" th:text="${stage.name}">
+                        </select>
+
+                        <label class="form-label" for="staff">スタッフ：</label>
+                        <select class="form-select" id="staff" th:field="*{staffId}" required>
+                            <option value="" disabled selected>スタッフを選択してください</option>
+                            <option th:each="staff: ${staffs}" th:value="${staff.id}" th:text="${staff.name}">
+                        </select>
+
+                        <div th:each="ticketType, stat:${ticketTypes}">
+                            <label class="form-label" th:text="${ticketType.name}" for="ticketType__${ticketType.id}">1st</label>
+                            <input type="number" class="form-control" th:field="*{ticketTypes[__${stat.index}__].quantity}" min="0">
+                        </div>
+
+                        <label class="form-label" for="remarks">備考：</label>
+                        <input type="text" class="form-control" id="remarks" th:field="*{remarks}">
+
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary mb-3">予約する</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+</body>
+</html>

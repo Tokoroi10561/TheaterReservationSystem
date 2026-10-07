@@ -12,8 +12,8 @@ import com.example.demo.entity.TicketType;
 @Repository
 public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
 
-	@Query("SELECT t FROM TicketType t WHERE t.show.id = :showId AND t.id = :id")
-	Optional<TicketType> findByShowId(Long showId);
+	@Query("SELECT t FROM TicketType t WHERE t.id = :id")
+	Optional<TicketType> findById(Long id);
 	
 	@Query("SELECT t FROM TicketType t WHERE t.show.id = :showId")
 	List<TicketType> findAllTicketTypeByShowId(Long showId);

@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import com.example.demo.constant.StageStatus;
 import com.example.demo.entity.Stage;
@@ -24,6 +26,10 @@ public class StageDto {
 
 	@NotNull(message = "idは必須です")
 	private Long id;
+	
+	@NotBlank(message = "ステージ名は必須です")
+	@Size(min = 1, max = 100, message = "ステージ名は1文字以上100文字以下で入力してください")
+	private String name;
 	
 	@NotNull(message = "開演時間は必須です")
 	@Future(message = "開演時間は未来の時間を指定してください")
@@ -46,6 +52,7 @@ public class StageDto {
 	
 	public Stage toEntity() {
 		return Stage.builder()
+				.name(this.name)
 				.startTime(this.startTime)
 				.endTime(this.endTime)
 				.openTime(this.openTime)
@@ -56,6 +63,7 @@ public class StageDto {
 	
 	public static StageDto fromEntity(Stage stage) {
 		return StageDto.builder()
+				.name(stage.getName())
 				.startTime(stage.getStartTime())
 				.endTime(stage.getEndTime())
 				.openTime(stage.getOpenTime())

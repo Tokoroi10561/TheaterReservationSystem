@@ -44,12 +44,12 @@ public class BookingController {
 	@GetMapping("/form/{showId}")
 	public String showForm(Model model, @ModelAttribute BookingDto bookingDto, @PathVariable Long showId) {
 		
-		model.addAttribute("form", bookingDto);
+		model.addAttribute("bookingDto", bookingDto);
 		model.addAttribute("ticketTypes", ticketTypeService.getAllTicketTypeByShowId(showId));
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 		
-		return "booking";
+		return "booking/form";
 	}
 	
 	//フォーム確認メソッド
@@ -74,7 +74,7 @@ public class BookingController {
 		httpSession.setAttribute("bookingDto", bookingDto);
 		
 		//値段計算メソッドを渡す
-		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto, showId);
+		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
 		model.addAttribute("sumPrice", sumPrice);
 	
 		model.addAttribute("bookingDto", bookingDto);

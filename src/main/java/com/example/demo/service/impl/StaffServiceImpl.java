@@ -8,13 +8,16 @@ import com.example.demo.entity.Staff;
 import com.example.demo.repository.StaffRepository;
 import com.example.demo.service.StaffService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class StaffServiceImpl implements StaffService {
 
-	private StaffRepository staffRepositroy;
+	private final StaffRepository staffRepository;
 	
 	@Override
 	public List<Staff> getAllStaffByShowId(Long showId) {
-		return staffRepositroy.findAllStaffByShowId(showId);
+		return staffRepository.findAllStaffByShowId(showId);
 	}
 }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,7 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	private TicketTypeService ticketTypeService;
 	
+	@Transactional
 	@Override
 	public void createBooking(BookingDto dto) {
 		Long stageId = dto.getStageId();
@@ -71,6 +74,7 @@ public class BookingServiceImpl implements BookingService {
 		bookingRepository.save(booking);
 	}
 	
+	@Transactional
 	@Override
 	public void updateBooking(BookingDto dto, String token) {
 		Booking booking = getValidateByTokenAndStatus(token);
@@ -144,6 +148,7 @@ public class BookingServiceImpl implements BookingService {
 		}
 	}
 	
+	@Transactional
 	@Override
 	public void deleteBooking(String token) {
 		Booking booking = getValidateByTokenAndStatus(token);
@@ -155,7 +160,7 @@ public class BookingServiceImpl implements BookingService {
 	}
 	
 	@Override
-	public int calculateTicketSumPrice(BookingDto bookingDto, Long showId) {
+	public int calculateTicketSumPrice(BookingDto bookingDto) {
 		int sum = 0;
 		
 		List<BookingDetailsDto> bookingDetails = bookingDto.getBookingDetailsDto();
@@ -163,8 +168,10 @@ public class BookingServiceImpl implements BookingService {
 		for(BookingDetailsDto bookingDetail: bookingDetails) {
 			int quantity = bookingDetail.getQuantity();
 			
+			Long ticketId = bookingDetail.getTicketTypeId();
+			
 			//チケットの値段を持ってくる(bookingDetailDtoのチケットIdから値段を引っ張ってくる)
-			TicketType ticketType = ticketTypeService.getByShowId(showId);
+			TicketType ticketType = ticketTypeService.getById(ticketId);
 			int price = ticketType.getPrice();
 			
 			//チケット枚数と値段をかける
