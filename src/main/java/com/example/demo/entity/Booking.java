@@ -16,9 +16,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.constant.PaymentMethod;
-import com.example.demo.constant.PaymentStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,12 +61,13 @@ public class Booking {
 	@Column(name = "token", nullable = false, unique = true, length = 255)
 	private String token;
 
-	@Column(name = "created_at", nullable = false)
+	@CreationTimestamp
+	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 	
+	@UpdateTimestamp
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
-	
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_method", nullable = false)
@@ -74,9 +77,9 @@ public class Booking {
 	@Column(name = "booking_status", nullable = false)
 	private BookingStatus bookingStatus;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "payment_status", nullable = false)
-	private PaymentStatus paymentStatus;
+//	@Enumerated(EnumType.STRING)
+//	@Column(name = "payment_status", nullable = false)
+//	private PaymentStatus paymentStatus;
 	
 	//メール遅れたか否かのstatusを作りたい
 	

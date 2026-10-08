@@ -38,7 +38,7 @@ public class BookingDto {
 	private String email;
 	
 	@Size(max = 20, message = "電話番号は20文字以下で入力してください")
-	@Pattern(regexp = "^0\\d{9,10}$", message = "電話番号はハイフンなしの10桁もしくは11桁で入力してください")
+	@Pattern(regexp = "^$|^0\\d{9,10}$", message = "電話番号はハイフンなしの10桁もしくは11桁で入力してください")
 	private String phone;
 	
 	@Size(max = 255, message = "住所は255文字以内で入力してください")
@@ -62,7 +62,6 @@ public class BookingDto {
 	@NotNull(message = "ステージidは必須です")
 	private Long stageId;
 	
-	@NotNull(message = "スタッフidは必須です")
 	private Long staffId;
 	
 	private List<BookingDetailsDto> bookingDetails;
@@ -75,13 +74,9 @@ public class BookingDto {
 				.address(this.address)
 				.remarks(this.remarks)
 				.token(this.token)
-				.createdAt(this.createdAt)
-				.updatedAt(this.updatedAt)
 				.paymentMethod(this.paymentMethod)
-				.bookingStatus(this.bookingStatus)
-				.paymentStatus(this.paymentStatus)
-//				.stage(this.stageId)
-//				.staff(this.staffId)
+				.bookingStatus(this.bookingStatus.RESERVED)
+//				.paymentStatus(this.paymentStatus)
 				.build();
 	}
 	
@@ -98,7 +93,7 @@ public class BookingDto {
 				.updatedAt(booking.getUpdatedAt())
 				.paymentMethod(booking.getPaymentMethod())
 				.bookingStatus(booking.getBookingStatus())
-				.paymentStatus(booking.getPaymentStatus())
+//				.paymentStatus(booking.getPaymentStatus())
 				.stageId(booking.getStage().getId())
 				.staffId(booking.getStaff().getId())
 				.build();

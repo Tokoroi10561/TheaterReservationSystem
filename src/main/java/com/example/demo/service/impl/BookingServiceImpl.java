@@ -269,4 +269,19 @@ public class BookingServiceImpl implements BookingService {
 		
 		return details;
 	}
+	
+	@Override
+	public void mapTicketTypeToDto(List<TicketType> ticketTypes, BookingDto dto) {
+		
+		List<BookingDetailsDto> details = ticketTypes.stream()
+				.map(tt -> {
+					BookingDetailsDto d = new BookingDetailsDto();
+					
+					d.setTicketTypeId(tt.getId());
+					d.setQuantity(0);
+					return d;
+				})
+				.toList();
+		dto.setBookingDetails(details);
+	}
 }
