@@ -270,5 +270,12 @@ public class BookingController {
 	}
 	
 	//フォーム削除メソッド
+	@PostMapping("/delete/{token}")
+	public String deleteForm(@RequestParam String token, RedirectAttributes redirectAttributes) {
+		
+		bookingService.deleteBooking(token);
+		
+		return "redirect:/delete/form/complete";
+	}
 
 }
