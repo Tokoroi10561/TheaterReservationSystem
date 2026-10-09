@@ -267,8 +267,8 @@ public class BookingServiceImpl implements BookingService {
 		}
 	}
 	
-	
-	private Booking getValidateByTokenAndStatus(String token) {
+	@Override
+	public Booking getValidateByTokenAndStatus(String token) {
 		Booking booking = bookingRepository.findByToken(token).orElseThrow(() ->
 			new NoDataFoundException("トークンが存在しません" + token)
 		);
