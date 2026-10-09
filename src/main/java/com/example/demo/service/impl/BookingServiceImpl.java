@@ -106,7 +106,7 @@ public class BookingServiceImpl implements BookingService {
 	
 	@Transactional
 	@Override
-	public void updateBooking(BookingDto dto, String token) {
+	public String updateBooking(BookingDto dto, String token) {
 		Booking booking = getValidateByTokenAndStatus(token);
 		int total = 0;
 		
@@ -173,6 +173,8 @@ public class BookingServiceImpl implements BookingService {
 			booking.setBookingDetails(details);
 			bookingRepository.save(booking);
 		}
+		
+		return token;
 	}
 	
 	@Transactional

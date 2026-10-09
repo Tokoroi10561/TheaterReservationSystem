@@ -196,10 +196,78 @@ public class BookingController {
 			  Model model,
 			  @RequestParam String token
 			  ) {
+		if(bindingResult.hasErrors()) {
+			Booking booking = bookingService.getValidateByTokenAndStatus(token);
+			Long showId = booking.getStage().getShow().getId();
+			
+			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+			
+			BookingDto dto = BookingDto.fromEntity(booking);
+			
+			bookingService.mapTicketTypeToDto(ticketTypes, dto);
+			
+			model.addAttribute("bookingDto", dto);
+			model.addAttribute("ticketTypes", ticketTypes);
+			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
+			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
+			model.addAttribute("paymentMethods", PaymentMethod.values());
+		}
+		
+		httpSession.setAttribute("bookingDto", bookingDto);
+		System.out.println("③セッション保存完了");
+		
+		//値段計算メソッドを渡す
+		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
+		model.addAttribute("sumPrice", sumPrice);
+	
+		model.addAttribute("bookingDto", bookingDto);
+		
+		System.out.println("④confirm画面へ");
+		
 		return "update/confirm";
 	}
 	
 	//フォーム更新メソッド
+	@PostMapping("/update/{token}")
+	public String updateForm(HttpSession httpSession,
+							   Model model,
+							   @RequestParam String token,
+							   RedirectAttributes redirectAttributes
+							   ) {
+		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
+		if(bookingDto == null) {
+			
+			System.out.println("⑤バリデーションエラー(bookingDtoがnull)");
+			
+			Booking booking = bookingService.getValidateByTokenAndStatus(token);
+			Long showId = booking.getStage().getShow().getId();
+			
+			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+			
+			BookingDto dto = BookingDto.fromEntity(booking);
+			
+			bookingService.mapTicketTypeToDto(ticketTypes, dto);
+			
+			model.addAttribute("bookingDto", dto);
+			model.addAttribute("ticketTypes", ticketTypes);
+			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
+			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
+			model.addAttribute("paymentMethods", PaymentMethod.values());
+			
+			return "redirect:/booking/form/update/" + token;
+		}
+		
+		System.out.println("⑥BookingDtoの作成");
+		String uuid = bookingService.updateBooking(bookingDto, token);
+		
+		System.out.println("⑦セッション削除");
+		httpSession.removeAttribute("bookingDto");
+		
+		System.out.println("⑧メール送信");
+		mailService.sendBookingMail(bookingDto, uuid);
+		
+		return "redirect:/booking/form/complete";
+	}
 	
 	//フォーム削除メソッド
 
