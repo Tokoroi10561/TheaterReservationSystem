@@ -48,7 +48,7 @@ public class BookingController {
 	
 	//フォーム表示メソッド
 	@GetMapping("/form/{showId}")
-	public String showForm(Model model, @ModelAttribute BookingDto bookingDto, @PathVariable Long showId) {
+	public String showForm(Model model, BookingDto bookingDto, @PathVariable Long showId) {
 		
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 		
@@ -189,7 +189,15 @@ public class BookingController {
 	}
 	
 	//フォーム更新確認メソッド
-	
+	@PostMapping("/confirm/update/{token}")
+	public String confirmUpdateForm(@Valid @ModelAttribute BookingDto bookingDto,
+			  BindingResult bindingResult,
+			  HttpSession httpSession,
+			  Model model,
+			  @RequestParam String token
+			  ) {
+		return "update/confirm";
+	}
 	
 	//フォーム更新メソッド
 	
