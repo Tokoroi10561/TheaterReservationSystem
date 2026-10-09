@@ -275,7 +275,18 @@ public class BookingController {
 		
 		bookingService.deleteBooking(token);
 		
-		return "redirect:/delete/form/complete";
+		return "redirect:/booking/delete/form";
 	}
+	
+	//フォーム削除完了表示メソッド
+		@GetMapping("/delete/form/{token}")
+		public String deleteForm(@RequestParam String token, Model model) {
+			Booking booking = bookingService.getValidateByTokenAndStatus(token);
+			
+			//現状の予約表示
+			model.addAttribute("booking", booking);
+			
+			return "delete/complete";
+		}
 
 }
