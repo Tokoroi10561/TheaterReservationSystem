@@ -10,4 +10,6 @@ import com.example.demo.entity.Staff;
 public interface StaffService {
 
 	List<Staff> getAllStaffByShowId(Long showId);
+	
+	Staff getStaffById(Long id);
 }

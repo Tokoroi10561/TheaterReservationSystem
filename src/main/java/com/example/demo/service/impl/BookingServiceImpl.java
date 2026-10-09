@@ -16,6 +16,7 @@ import com.example.demo.dto.BookingDetailsDto;
 import com.example.demo.dto.BookingDto;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.BookingDetails;
+import com.example.demo.entity.Staff;
 import com.example.demo.entity.Stage;
 import com.example.demo.entity.TicketType;
 import com.example.demo.exception.BookingClosedException;
@@ -25,9 +26,13 @@ import com.example.demo.repository.BookingRepository;
 import com.example.demo.repository.StageRepository;
 import com.example.demo.repository.TicketTypeRepository;
 import com.example.demo.service.BookingService;
+import com.example.demo.service.StaffService;
 import com.example.demo.service.TicketTypeService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class BookingServiceImpl implements BookingService {
 	
 	@Autowired
@@ -42,6 +47,9 @@ public class BookingServiceImpl implements BookingService {
 	@Autowired
 	private TicketTypeService ticketTypeService;
 	
+	@Autowired
+	private StaffService staffService;
+	
 	@Transactional
 	@Override
 	public void createBooking(BookingDto dto) {
@@ -49,27 +57,47 @@ public class BookingServiceImpl implements BookingService {
 		
 		Stage stage = stageExist(stageId);
 		int capacity = stage.getCapacity();
+		System.out.println("サービス①");
 		
 		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetails();
 		int total = 0;
 		total = calculateSumDtoTicket(bookingDetailsDtos, total);
+		System.out.println("サービス②");
 		
 		List<Booking> bookings = bookingRepository.findByStageId(stageId, BookingStatus.RESERVED);
 		total = calculateSumStageTicket(bookings, total);
+		System.out.println("サービス③");
 		
 		if(total > capacity) {
 			throw new StageSoldOutException("ステージは満席です" + stageId);
 		}
+		System.out.println("サービス④");
+		
+		Long staffId = dto.getStaffId();
+		System.out.println("サービス⑤");
+		
+		Staff staff;
+		if(staffId == null){
+			staff = null;
+		}else {
+			staff = staffService.getStaffById(staffId);
+		}
+		
+		System.out.println("サービス⑥");
 		
 		String uuid = UUID.randomUUID().toString();
 		
 		Booking booking = dto.toEntity();
+		
 		
 		ArrayList<BookingDetails> details = convertDtoToDetails(bookingDetailsDtos, booking);
 		
 		booking.setToken(uuid);
 		booking.setBookingStatus(BookingStatus.RESERVED);
 		booking.setBookingDetails(details);
+		booking.setStage(stage);
+		booking.setStaff(staff);
+		System.out.println("サービス⑦");
 		
 		bookingRepository.save(booking);
 	}
@@ -94,7 +122,6 @@ public class BookingServiceImpl implements BookingService {
 			Stage stage = stageExist(newStageId);
 			int capacity = stage.getCapacity();
 			
-			//entityの予約枚数合計を出す
 			int totalEntity = 0;
 			for(BookingDetails bookingDetails: bookingDetailses) {
 				totalEntity += bookingDetails.getQuantity();
@@ -113,8 +140,6 @@ public class BookingServiceImpl implements BookingService {
 			if((total - totalEntity) + totalDto > capacity) {
 				throw new StageSoldOutException("ステージは満席です" + newStageId);
 			}
-			
-			//ステージ変更しない場合の保存＝detailだけ変更すればよい
 			
 			ArrayList<BookingDetails> details = convertDtoToDetails(bookingDetailsDtos, booking);
 			

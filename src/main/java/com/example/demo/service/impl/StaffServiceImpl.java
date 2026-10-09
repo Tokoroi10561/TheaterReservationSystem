@@ -20,4 +20,11 @@ public class StaffServiceImpl implements StaffService {
 	public List<Staff> getAllStaffByShowId(Long showId) {
 		return staffRepository.findAllStaffByShowId(showId);
 	}
+	
+	@Override
+	public Staff getStaffById(Long id){
+		Staff staff = staffRepository.findById(id).orElse(null);
+		
+		return staff;
+	}
 }
