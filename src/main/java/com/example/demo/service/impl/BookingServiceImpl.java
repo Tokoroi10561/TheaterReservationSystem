@@ -311,9 +311,4 @@ public class BookingServiceImpl implements BookingService {
 				.toList();
 		dto.setBookingDetails(details);
 	}
-	
-	@Override
-	public Booking getBookingByToken(String token) {
-		
-	}
 }
