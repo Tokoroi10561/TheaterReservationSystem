@@ -24,9 +24,9 @@ public class MailServiceImpl implements MailService{
 
 	@Override
 	@Async
-	public void sendBookingMail(BookingDto bookingDto) {		
+	public void sendBookingMail(BookingDto bookingDto, String uuid) {		
 		try {
-			String cancelUrl = frontendBaseUrl + "/bookings/manage?token=" + bookingDto.getToken();			
+			String cancelUrl = frontendBaseUrl + "/booking/manage?token=" + uuid;			
 			SimpleMailMessage message = new SimpleMailMessage();
 			//そのうち劇予約管理アプリ用のメールアドレスに変更する。
 			message.setFrom("mizyu1110@gmail.com");

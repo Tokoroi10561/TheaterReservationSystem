@@ -52,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
 	
 	@Transactional
 	@Override
-	public void createBooking(BookingDto dto) {
+	public String createBooking(BookingDto dto) {
 		Long stageId = dto.getStageId();
 		
 		Stage stage = stageExist(stageId);
@@ -100,6 +100,8 @@ public class BookingServiceImpl implements BookingService {
 		System.out.println("サービス⑦");
 		
 		bookingRepository.save(booking);
+		
+		return uuid;
 	}
 	
 	@Transactional
@@ -308,5 +310,10 @@ public class BookingServiceImpl implements BookingService {
 				})
 				.toList();
 		dto.setBookingDetails(details);
+	}
+	
+	@Override
+	public Booking getBookingByToken(String token) {
+		
 	}
 }

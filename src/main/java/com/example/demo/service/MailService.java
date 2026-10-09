@@ -7,5 +7,5 @@ import com.example.demo.dto.BookingDto;
 @Service
 public interface MailService {
 
-	void sendBookingMail(BookingDto bookingDto);
+	void sendBookingMail(BookingDto bookingDto, String uuid);
 }

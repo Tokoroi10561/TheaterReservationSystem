@@ -10,7 +10,7 @@ import com.example.demo.entity.TicketType;
 @Service
 public interface BookingService {
 	
-	void createBooking(BookingDto dto);
+	String createBooking(BookingDto dto);
 	
 	void updateBooking(BookingDto dto, String token);
 	

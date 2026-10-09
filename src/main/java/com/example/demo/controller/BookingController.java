@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.constant.PaymentMethod;
@@ -137,13 +138,13 @@ public class BookingController {
 			return "redirect:/booking/form/" + showId;
 		}
 		System.out.println("⑥BookingDtoの作成");
-		bookingService.createBooking(bookingDto);
+		String uuid = bookingService.createBooking(bookingDto);
 		
 		System.out.println("⑦セッション削除");
 		httpSession.removeAttribute("bookingDto");
 		
 		System.out.println("⑧メール送信");
-		mailService.sendBookingMail(bookingDto);
+		mailService.sendBookingMail(bookingDto, uuid);
 		return "redirect:/booking/form/complete";
 	}
 	
@@ -153,7 +154,17 @@ public class BookingController {
 		return "booking/complete";
 	}
 	
-	//フォーム更新表示メソッド
+	//フォーム変更表示メソッド
+	@GetMapping("/manage/{token}")
+	public String choseChange(@RequestParam String token) {
+		//トークンを取得して、その人の予約を持ってくる。
+		
+		
+		//現状の予約表示
+		
+		
+		return "booking/change";
+	}
 	
 	//フォーム更新確認メソッド
 	
