@@ -155,7 +155,7 @@ public class BookingController {
 		return "booking/complete";
 	}
 	
-	//フォーム変更表示メソッド
+	//変更前状態表示メソッド
 	@GetMapping("/manage/{token}")
 	public String choseChange(@RequestParam String token, Model model) {
 		//トークンを取得して、その人の予約を持ってくる。
@@ -167,7 +167,29 @@ public class BookingController {
 		return "booking/change";
 	}
 	
+	//更新フォーム表示メソッド
+	@GetMapping("/form/update/{token}")
+	public String showUpdateForm(@RequestParam String token, Model model) {
+		Booking booking = bookingService.getValidateByTokenAndStatus(token);
+		Long showId = booking.getStage().getShow().getId();
+		
+		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+		
+		BookingDto dto = BookingDto.fromEntity(booking);
+		
+		bookingService.mapTicketTypeToDto(ticketTypes, dto);
+		
+		model.addAttribute("bookingDto", dto);
+		model.addAttribute("ticketTypes", ticketTypes);
+		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
+		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
+		model.addAttribute("paymentMethods", PaymentMethod.values());
+		
+		return "update/form";
+	}
+	
 	//フォーム更新確認メソッド
+	
 	
 	//フォーム更新メソッド
 	
