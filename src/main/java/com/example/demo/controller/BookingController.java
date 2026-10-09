@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.constant.PaymentMethod;
 import com.example.demo.dto.BookingDto;
+import com.example.demo.entity.Booking;
 import com.example.demo.entity.TicketType;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.MailService;
@@ -156,12 +157,12 @@ public class BookingController {
 	
 	//フォーム変更表示メソッド
 	@GetMapping("/manage/{token}")
-	public String choseChange(@RequestParam String token) {
+	public String choseChange(@RequestParam String token, Model model) {
 		//トークンを取得して、その人の予約を持ってくる。
-		
+		Booking booking = bookingService.getValidateByTokenAndStatus(token);
 		
 		//現状の予約表示
-		
+		model.addAttribute("booking", booking);
 		
 		return "booking/change";
 	}
