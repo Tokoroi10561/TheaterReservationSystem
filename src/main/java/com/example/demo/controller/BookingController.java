@@ -164,7 +164,7 @@ public class BookingController {
 		//現状の予約表示
 		model.addAttribute("booking", booking);
 		
-		return "booking/change";
+		return "booking/manage";
 	}
 	
 	//更新フォーム表示メソッド
@@ -211,6 +211,8 @@ public class BookingController {
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 			model.addAttribute("paymentMethods", PaymentMethod.values());
+			
+			return "update/form";
 		}
 		
 		httpSession.setAttribute("bookingDto", bookingDto);
