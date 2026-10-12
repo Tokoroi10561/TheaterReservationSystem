@@ -8,7 +8,7 @@
 </head>
 <body class="bg-secondary">
     <div class="container py-3 bg-white">
-        <div class="row justify-content-center">
+        <div class="row justify-content-between">
             <div class="col-md-6">
                 <h1 class="h2 bg-primary text-white text-center py-2 mb-3 rounded">予約確認</h1>
                 <table class="table">
@@ -40,8 +40,9 @@
                         <th>備考</th>
                         <td th:text="${booking.remarks}">備考内容</td>
                     </tr>
-                    <!-- ステージ、スタッフ、チケット枚数は数字ではなく文字が表示されるようにする
-                    電話番号、住所備考等はnullの場合は表示しないようにする -->
+                    <!-- ・ステージ、スタッフ、チケット枚数は数字ではなく文字が表示されるようにする
+                         ・チケット枚数系をきちんと表示させる
+                         ・電話番号、住所備考等はnullの場合は表示しないようにする -->
                 </table>
 
                 <form th:action="@/booking/update/${booking.token}" method="post">

@@ -11,6 +11,7 @@
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col-md-6 bg-white">
+                <!-- アクションのshowIdのやつがやばいから後でちゃんと変更する。 -->
                 <form th:action="@{/booking/form/{showId}/confirm(showId=1)}" th:object="${bookingDto}" method="post">
                     <div class="form-title">
                         <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">予約フォーム</h1>
@@ -29,7 +30,7 @@
                         <label class="form-label" for="address">住所：</label>
                         <input type="text" class="form-control" id="address" th:field="*{address}">
 
-                        <!-- 後で丸▲視覚で満席具合を表示 -->
+                        <!-- 後で丸▲視覚で満席具合と時間を表示 -->
                         <label class="form-label" for="stage">ステージ<span class="text-danger"> *</span>：</label>
                         <select class="form-select" id="stage" th:field="*{stageId}" required>
                             <option value="" disabled selected>ステージを選択してください</option>
@@ -49,7 +50,7 @@
                         </select>
 
                         <div th:each="ticketType, stat:${ticketTypes}">
-                            <label class="form-label" th:text="${ticketType.name}" for="ticketType__${ticketType.id}">1st</label>
+                            <label class="form-label" th:text="${ticketType.name}" for="ticketType__${ticketType.id}">招待</label>
                             <input type="hidden" th:field="*{bookingDetails[__${stat.index}__].ticketTypeId}">
                             <input type="number" class="form-control" th:field="*{bookingDetails[__${stat.index}__].quantity}" min="0">
                         </div>
