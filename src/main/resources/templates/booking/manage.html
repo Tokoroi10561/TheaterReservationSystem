@@ -45,15 +45,16 @@
                          ・電話番号、住所備考等はnullの場合は表示しないようにする -->
                 </table>
 
-                <form th:action="@/booking/update/${booking.token}" method="post">
+                <form th:action="@{/booking/update/{token}(token=${booking.token})}" method="post">
                     <button type="submit" class="btn btn-primary">予約を変更</button>
-
-                    <button type="button" class="btn btn-danger">予約を削除</button>
+                </form>
+                <form th:action="@{/booking/delete/{token}(token=${booking.token})}" method="post"
+                    onsubmit="return confirm('予約を削除しますか？')" style="display: inline">
+                    <button type="submit" class="btn btn-danger" id="delete-btn">予約を削除</button>
                 </form>
             </div>
 
         </div>
     </div>
-    
 </body>
 </html>
