@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import com.example.demo.constant.TroupeStatus;
 import com.example.demo.entity.Troupe;
 
 import lombok.AllArgsConstructor;
@@ -45,6 +46,8 @@ public class TroupeDto {
 	
 	private List<ShowDto> shows;
 	
+	private TroupeStatus status;
+	
 	public Troupe toEntity() {
 		return Troupe.builder()
 				.name(this.name)
@@ -52,6 +55,7 @@ public class TroupeDto {
 				.passwordHash(this.password)
 				.snsAccount(this.snsAccount)
 				.signature(this.signature)
+				.status(TroupeStatus.ACTICE)
 				.build();
 	}
 	
@@ -63,6 +67,7 @@ public class TroupeDto {
 				.password(troupe.getPasswordHash())
 				.snsAccount(troupe.getSnsAccount())
 				.signature(troupe.getSignature())
+				.status(troupe.getStatus())
 				.build();
 	}
 }

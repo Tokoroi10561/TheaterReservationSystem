@@ -4,11 +4,15 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import com.example.demo.constant.TroupeStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,4 +50,8 @@ public class Troupe {
 	
 	@OneToMany(mappedBy = "troupe")
 	private List<Show> shows;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "troupe_status", nullable = false)
+	private TroupeStatus status;
 }
