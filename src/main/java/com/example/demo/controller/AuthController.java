@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -25,14 +26,27 @@ public class AuthController {
 		return "login";
 	}
 	
-	@GetMapping("/new")
+	@GetMapping("/new/form")
 	public String showNewForm(@ModelAttribute TroupeDto dto) {
-		return "new";
+		return "new/form";
+	}
+	
+	@PostMapping("new/confirm")
+	public String confirmNew(@Valid@ModelAttribute TroupeDto dto,
+							 RedirectAttributes redirectAttributes,
+							 HttpSession httpSession
+							 ) {
+		return "new/confirm";
 	}
 	
 	@PostMapping("/new/register")
-	public String registerNew(@Valid@ModelAttribute TroupeDto dto, RedirectAttributes redirectAttributes) {
-		return "";
+	public String registerNew(HttpSession httpSession, RedirectAttributes redirectAttributes) {
+		return "redirect:/new/complete";
+	}
+	
+	@GetMapping("/new/complete")
+	public String completeNew() {
+		return "new/complete";
 	}
 	
 	@PostMapping("/login")

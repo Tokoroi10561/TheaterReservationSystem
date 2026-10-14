@@ -158,11 +158,10 @@ public class BookingController {
 	public String choseChange(@RequestParam String token, Model model, RedirectAttributes redirectAttributes) {
 		//トークンを取得して、その人の予約を持ってくる。
 		Booking booking = bookingService.getValidateByTokenAndStatus(token);
-		Long showId = booking.getStage().getShow().getId();
 		
 		BookingStatus status = booking.getBookingStatus();
 			//現状の予約表示
-		if(status != status.RESERVED) {
+		if(status != BookingStatus.RESERVED) {
 			throw new NotReservedException("予約されていません");
 		}
 			model.addAttribute("booking", booking);

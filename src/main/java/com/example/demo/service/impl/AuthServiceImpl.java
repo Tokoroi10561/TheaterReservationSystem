@@ -29,4 +29,7 @@ public class AuthServiceImpl implements AuthService{
 		
 		return isSuccess;
 	}
+	
+	
+	//劇団新規登録
 }
