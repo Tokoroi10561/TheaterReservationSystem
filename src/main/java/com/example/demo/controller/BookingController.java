@@ -5,7 +5,6 @@ import java.util.List;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,27 +30,19 @@ import com.example.demo.service.StaffService;
 import com.example.demo.service.StageService;
 import com.example.demo.service.TicketTypeService;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
 @RequestMapping("/booking")
+@RequiredArgsConstructor
 public class BookingController {
 	
-	@Autowired
-	private BookingService bookingService;
-	
-	@Autowired
-	private BookingDetailsService bookingDetailsService;
-	
-	@Autowired
-	private TicketTypeService ticketTypeService;
-	
-	@Autowired
-	private StaffService staffService;
-	
-	@Autowired
-	private StageService stageService;
-	
-	@Autowired
-	private MailService mailService;
+	private final BookingService bookingService;
+	private final BookingDetailsService bookingDetailsService;
+	private final TicketTypeService ticketTypeService;
+	private final StaffService staffService;
+	private final StageService stageService;
+	private final MailService mailService;
 	
 	//フォーム表示メソッド
 	@GetMapping("/form/{showId}")

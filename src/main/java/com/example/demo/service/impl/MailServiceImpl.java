@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,14 +9,15 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.BookingDto;
 import com.example.demo.service.MailService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MailServiceImpl implements MailService{
 	
-	@Autowired
-	private JavaMailSender mailSender;
+	private final JavaMailSender mailSender;
 	
 	@Value("${app.frontend.url}")
 	private String frontendBaseUrl;

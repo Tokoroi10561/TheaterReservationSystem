@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.constant.BookingStatus;
@@ -29,26 +28,19 @@ import com.example.demo.service.BookingService;
 import com.example.demo.service.StaffService;
 import com.example.demo.service.TicketTypeService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class BookingServiceImpl implements BookingService {
 	
-	@Autowired
-	private BookingRepository bookingRepository;
-	
-	@Autowired
-	private StageRepository stageRepository;
-	
-	@Autowired
-	private TicketTypeRepository ticketTypeRepository;
-	
-	@Autowired
-	private TicketTypeService ticketTypeService;
-	
-	@Autowired
-	private StaffService staffService;
+	private final BookingRepository bookingRepository;
+	private final StageRepository stageRepository;
+	private final TicketTypeRepository ticketTypeRepository;
+	private final TicketTypeService ticketTypeService;
+	private final StaffService staffService;
 	
 	@Transactional
 	@Override
