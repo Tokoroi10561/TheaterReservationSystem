@@ -10,9 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.dto.TroupeDto;
+import com.example.demo.service.AuthService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
+	private final AuthService authService;
 
 	@GetMapping("/")
 	public String showLoginForm(@ModelAttribute TroupeDto dto) {
@@ -33,7 +38,7 @@ public class AuthController {
 	public String login(@Valid@ModelAttribute TroupeDto dto,
 			BindingResult bindinResult,
 			RedirectAttributes redirectAttributes) {
-		
+		boolean isSuccess = 
 		
 		return "login";
 	}

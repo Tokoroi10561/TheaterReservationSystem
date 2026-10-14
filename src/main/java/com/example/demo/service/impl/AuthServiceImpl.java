@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.TroupeDto;
 import com.example.demo.entity.Troupe;
+import com.example.demo.repository.TroupeRepository;
 import com.example.demo.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
 	private final PasswordEncoder passwordEncoder;
+	private final TroupeRepository troupeRepository;
 	
-	public boolean ckeck(TroupeDto dto, Troupe troupe) {
-		
+	@Override
+	public boolean ckeck(TroupeDto dto){
+		Troupe troupe = troupeRepository(dto.getEmail());
 	}
 }
