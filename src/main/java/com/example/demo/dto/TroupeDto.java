@@ -52,7 +52,6 @@ public class TroupeDto {
 		return Troupe.builder()
 				.name(this.name)
 				.email(this.email)
-				.passwordHash(this.password)
 				.snsAccount(this.snsAccount)
 				.signature(this.signature)
 				.status(TroupeStatus.ACTICE)

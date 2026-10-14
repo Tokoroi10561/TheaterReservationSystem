@@ -45,6 +45,13 @@ public class GlobalExceptionHandler {
 		return "error/not-reserved";
 	}
 	
+	@ExceptionHandler(AlreadyExistsException.class)
+	public String handleAlreadyExistsException(AlreadyExistsException ex, Model model) {
+		model.addAttribute("errorMessage", ex.getMessage());
+		
+		return "error/already-exists";
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public String handleException(Exception ex, Model model) {
 		model.addAttribute("errorMessage", "予期せぬエラーが発生しました。時間をおいてやり直してください" + ex.getMessage());

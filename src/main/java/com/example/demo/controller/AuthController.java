@@ -53,9 +53,9 @@ public class AuthController {
 	public String login(@Valid@ModelAttribute LoginDto dto,
 			BindingResult bindinResult,
 			RedirectAttributes redirectAttributes) {
-		boolean isSuccess = authService.ckeck(dto);
+		boolean canAuth = authService.ckeck(dto);
 		
-		if(isSuccess) {
+		if(canAuth) {
 			return "redirect:/home";
 		}else {
 			return "login";
