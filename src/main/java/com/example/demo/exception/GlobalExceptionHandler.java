@@ -38,6 +38,13 @@ public class GlobalExceptionHandler {
 		return "error/booking-not-found";
 	}
 	
+	@ExceptionHandler(NotReservedException.class)
+	public String handleNotReservedException(NotReservedException ex, Model model) {
+		model.addAttribute("errorMessage", ex.getMessage());
+		
+		return "error/not-reserved";
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public String handleException(Exception ex, Model model) {
 		model.addAttribute("errorMessage", "予期せぬエラーが発生しました。時間をおいてやり直してください" + ex.getMessage());

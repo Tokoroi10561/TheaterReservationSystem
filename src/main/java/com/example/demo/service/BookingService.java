@@ -13,7 +13,7 @@ public interface BookingService {
 	
 	String createBooking(BookingDto dto);
 	
-	String updateBooking(BookingDto dto, String token);
+	String updateBooking(BookingDto dto);
 	
 	void deleteBooking(String token);
 	
@@ -22,6 +22,8 @@ public interface BookingService {
 	void mapTicketTypeToDto(List<TicketType> ticketTypes, BookingDto dto);
 	
 	Booking getValidateByTokenAndStatus(String token);
+	
+	Booking getById(Long id);
 	
 //	List<Booking> getAllBookings();
 //	

@@ -34,7 +34,7 @@ public class MailServiceImpl implements MailService{
 			message.setTo(bookingDto.getEmail());
 			message.setSubject("予約完了のお知らせ");
 			message.setText(bookingDto.getName() + "様\n\n" +
-					"ご予約ありがとうございます。" +
+					"ご予約ありがとうございます。\n" +
 					cancelUrl + "\n\n" +
 					"※公演前日の23:59までお手続きが可能です。");
 			

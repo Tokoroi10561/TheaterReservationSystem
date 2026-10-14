@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.constant.BookingStatus;
 import com.example.demo.constant.PaymentMethod;
+import com.example.demo.dto.BookingDetailsDto;
 import com.example.demo.dto.BookingDto;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.TicketType;
+import com.example.demo.exception.NotReservedException;
+import com.example.demo.service.BookingDetailsService;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.MailService;
 import com.example.demo.service.StaffService;
@@ -33,6 +37,9 @@ public class BookingController {
 	
 	@Autowired
 	private BookingService bookingService;
+	
+	@Autowired
+	private BookingDetailsService bookingDetailsService;
 	
 	@Autowired
 	private TicketTypeService ticketTypeService;
@@ -156,28 +163,38 @@ public class BookingController {
 	}
 	
 	//変更前状態表示メソッド
-	@GetMapping("/manage/{token}")
-	public String choseChange(@RequestParam String token, Model model) {
+	@GetMapping("/manage")
+	public String choseChange(@RequestParam String token, Model model, RedirectAttributes redirectAttributes) {
 		//トークンを取得して、その人の予約を持ってくる。
 		Booking booking = bookingService.getValidateByTokenAndStatus(token);
+		Long showId = booking.getStage().getShow().getId();
 		
-		//現状の予約表示
-		model.addAttribute("booking", booking);
+		BookingStatus status = booking.getBookingStatus();
+			//現状の予約表示
+		if(status != status.RESERVED) {
+			throw new NotReservedException("予約されていません");
+		}
+			model.addAttribute("booking", booking);
 		
 		return "booking/manage";
+		
 	}
 	
 	//更新フォーム表示メソッド
-	@GetMapping("/form/update/{token}")
-	public String showUpdateForm(@RequestParam String token, Model model) {
-		Booking booking = bookingService.getValidateByTokenAndStatus(token);
+	@GetMapping("/form/update/{id}")
+	public String showUpdateForm(@PathVariable("id") Long bookingId, Model model) {
+		Booking booking = bookingService.getById(bookingId);
+		
 		Long showId = booking.getStage().getShow().getId();
 		
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 		
 		BookingDto dto = BookingDto.fromEntity(booking);
 		
-		bookingService.mapTicketTypeToDto(ticketTypes, dto);
+		List<BookingDetailsDto> detailsDto = bookingDetailsService.convertBookingDetailsDto(booking);
+		dto.setBookingDetails(detailsDto);
+		
+//		bookingService.mapTicketTypeToDto(ticketTypes, dto);
 		
 		model.addAttribute("bookingDto", dto);
 		model.addAttribute("ticketTypes", ticketTypes);
@@ -189,24 +206,22 @@ public class BookingController {
 	}
 	
 	//フォーム更新確認メソッド
-	@PostMapping("/confirm/update/{token}")
+	@PostMapping("/confirm/update/{id}")
 	public String confirmUpdateForm(@Valid @ModelAttribute BookingDto bookingDto,
 			  BindingResult bindingResult,
 			  HttpSession httpSession,
 			  Model model,
-			  @RequestParam String token
+			  @PathVariable("id") Long bookingId
 			  ) {
 		if(bindingResult.hasErrors()) {
-			Booking booking = bookingService.getValidateByTokenAndStatus(token);
+			Booking booking = bookingService.getById(bookingId);
 			Long showId = booking.getStage().getShow().getId();
 			
 			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 			
-			BookingDto dto = BookingDto.fromEntity(booking);
+			bookingService.mapTicketTypeToDto(ticketTypes, bookingDto);
 			
-			bookingService.mapTicketTypeToDto(ticketTypes, dto);
-			
-			model.addAttribute("bookingDto", dto);
+			model.addAttribute("bookingDto", bookingDto);
 			model.addAttribute("ticketTypes", ticketTypes);
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
@@ -220,8 +235,9 @@ public class BookingController {
 		
 		//値段計算メソッドを渡す
 		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
+		System.out.println("③計算メソッドを宣言");
 		model.addAttribute("sumPrice", sumPrice);
-	
+		System.out.println("③計算メソッドを渡す");
 		model.addAttribute("bookingDto", bookingDto);
 		
 		System.out.println("④confirm画面へ");
@@ -230,37 +246,16 @@ public class BookingController {
 	}
 	
 	//フォーム更新メソッド
-	@PostMapping("/update/{token}")
+	@PostMapping("/update/{id}")
 	public String updateForm(HttpSession httpSession,
 							   Model model,
-							   @RequestParam String token,
+							   @PathVariable("id") Long bookingId,
 							   RedirectAttributes redirectAttributes
 							   ) {
 		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
-		if(bookingDto == null) {
-			
-			System.out.println("⑤バリデーションエラー(bookingDtoがnull)");
-			
-			Booking booking = bookingService.getValidateByTokenAndStatus(token);
-			Long showId = booking.getStage().getShow().getId();
-			
-			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
-			
-			BookingDto dto = BookingDto.fromEntity(booking);
-			
-			bookingService.mapTicketTypeToDto(ticketTypes, dto);
-			
-			model.addAttribute("bookingDto", dto);
-			model.addAttribute("ticketTypes", ticketTypes);
-			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
-			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
-			model.addAttribute("paymentMethods", PaymentMethod.values());
-			
-			return "redirect:/booking/form/update/" + token;
-		}
-		
+				
 		System.out.println("⑥BookingDtoの作成");
-		String uuid = bookingService.updateBooking(bookingDto, token);
+		String uuid = bookingService.updateBooking(bookingDto);
 		
 		System.out.println("⑦セッション削除");
 		httpSession.removeAttribute("bookingDto");
@@ -272,8 +267,11 @@ public class BookingController {
 	}
 	
 	//フォーム削除メソッド
-	@PostMapping("/delete/{token}")
-	public String deleteForm(@RequestParam String token, RedirectAttributes redirectAttributes) {
+	@PostMapping("/delete/{id}")
+	public String deleteForm(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+		Booking booking = bookingService.getById(id);
+		
+		String token = booking.getToken();
 		
 		bookingService.deleteBooking(token);
 		
@@ -281,13 +279,8 @@ public class BookingController {
 	}
 	
 	//フォーム削除完了表示メソッド
-		@GetMapping("/delete/form/{token}")
-		public String deleteForm(@RequestParam String token, Model model) {
-			Booking booking = bookingService.getValidateByTokenAndStatus(token);
-			
-			//現状の予約表示
-			model.addAttribute("booking", booking);
-			
+		@GetMapping("/delete/form")
+		public String deleteForm(Model model) {
 			return "delete/complete";
 		}
 
