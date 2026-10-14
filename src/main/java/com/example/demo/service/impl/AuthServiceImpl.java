@@ -3,7 +3,7 @@ package com.example.demo.service.impl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.TroupeDto;
+import com.example.demo.dto.LoginDto;
 import com.example.demo.entity.Troupe;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.TroupeService;
@@ -17,7 +17,7 @@ public class AuthServiceImpl implements AuthService{
 	private final TroupeService troupeService;
 	
 	@Override
-	public boolean ckeck(TroupeDto dto){
+	public boolean ckeck(LoginDto dto){
 		String email = dto.getEmail();
 		String rawPassword = dto.getPassword();
 		
