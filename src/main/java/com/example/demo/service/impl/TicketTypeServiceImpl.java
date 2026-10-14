@@ -19,7 +19,7 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 	@Override
 	public TicketType getById(Long id){
 		TicketType ticket = ticketTypeRepository.findById(id).orElseThrow(() ->
-		new NoDataFoundException("チケットタイプが存在しません")
+			new NoDataFoundException("チケットタイプが存在しません")
 		);
 		return ticket;
 	}

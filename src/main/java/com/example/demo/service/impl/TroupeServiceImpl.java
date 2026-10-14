@@ -15,7 +15,7 @@ public class TroupeServiceImpl implements TroupeService {
 	@Override
 	public Troupe getByEmail(String email) {
 		return troupeRepository.findByEmail(email).orElseThrow(() ->
-			new NoDataFoundException("この劇団は存在しません")
+			new NoDataFoundException("このemailは存在しません")
 		);
 	}
 }

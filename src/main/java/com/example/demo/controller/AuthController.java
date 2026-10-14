@@ -38,8 +38,12 @@ public class AuthController {
 	public String login(@Valid@ModelAttribute TroupeDto dto,
 			BindingResult bindinResult,
 			RedirectAttributes redirectAttributes) {
-		boolean isSuccess = 
+		boolean isSuccess = authService.ckeck(dto);
 		
-		return "login";
+		if(isSuccess) {
+			return "redirect:/home";
+		}else {
+			return "login";
+		}
 	}
 }
