@@ -22,25 +22,41 @@ public class AuthController {
 	private final AuthService authService;
 
 	@GetMapping("/")
-	public String showLoginForm(@ModelAttribute LoginDto dto) {
+	public String showLoginForm(@ModelAttribute LoginDto troupeDto) {
 		return "login";
 	}
 	
 	@GetMapping("/new/form")
-	public String showNewForm(@ModelAttribute TroupeDto dto) {
+	public String showNewForm(@ModelAttribute TroupeDto troupeDto) {
 		return "new/form";
 	}
 	
 	@PostMapping("new/confirm")
-	public String confirmNew(@Valid@ModelAttribute TroupeDto dto,
+	public String confirmNew(@Valid@ModelAttribute TroupeDto troupeDto,
+							 BindingResult bindingResult,
 							 RedirectAttributes redirectAttributes,
 							 HttpSession httpSession
 							 ) {
+		if(bindingResult.hasErrors()) {
+			bindingResult.getAllErrors().forEach(error -> {
+				System.out.println(error.getDefaultMessage());
+				});
+			
+			return "new/form";
+		}
+		httpSession.setAttribute("troupeDto", troupeDto);
 		return "new/confirm";
 	}
 	
 	@PostMapping("/new/register")
-	public String registerNew(HttpSession httpSession, RedirectAttributes redirectAttributes) {
+	public String registNew(HttpSession httpSession,
+							  RedirectAttributes redirectAttributes) {
+		TroupeDto troupeDto = (TroupeDto) httpSession.getAttribute("troupeDto");
+		
+		authService.registNewTroupe(troupeDto);
+		
+		httpSession.removeAttribute("troupeDto");
+		
 		return "redirect:/new/complete";
 	}
 	
@@ -50,10 +66,10 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@Valid@ModelAttribute LoginDto dto,
+	public String login(@Valid@ModelAttribute LoginDto loginDto,
 			BindingResult bindinResult,
 			RedirectAttributes redirectAttributes) {
-		boolean canAuth = authService.ckeck(dto);
+		boolean canAuth = authService.ckeck(loginDto);
 		
 		if(canAuth) {
 			return "redirect:/home";

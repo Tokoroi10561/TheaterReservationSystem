@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,8 @@ public class AuthServiceImpl implements AuthService{
 	
 	
 	//劇団新規登録
+	@Transactional
+	@Override
 	public void registNewTroupe(TroupeDto dto) {
 		
 		String email = dto.getEmail();
