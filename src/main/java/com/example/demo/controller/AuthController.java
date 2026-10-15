@@ -22,7 +22,7 @@ public class AuthController {
 	private final AuthService authService;
 
 	@GetMapping("/")
-	public String showLoginForm(@ModelAttribute LoginDto troupeDto) {
+	public String showLoginForm(@ModelAttribute LoginDto loginDto) {
 		return "login";
 	}
 	
@@ -31,7 +31,7 @@ public class AuthController {
 		return "new/form";
 	}
 	
-	@PostMapping("new/confirm")
+	@PostMapping("/new/confirm")
 	public String confirmNew(@Valid@ModelAttribute TroupeDto troupeDto,
 							 BindingResult bindingResult,
 							 RedirectAttributes redirectAttributes,
@@ -51,7 +51,7 @@ public class AuthController {
 	@PostMapping("/new/register")
 	public String registNew(HttpSession httpSession,
 							  RedirectAttributes redirectAttributes) {
-		TroupeDto troupeDto = (TroupeDto) httpSession.getAttribute("troupeDto");
+		TroupeDto troupeDto = (TroupeDto) httpSession.getAttribute("TroupeDto");
 		
 		authService.registNewTroupe(troupeDto);
 		
