@@ -15,9 +15,11 @@ import com.example.demo.service.AuthService;
 import com.example.demo.service.TroupeService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService{
 	private final PasswordEncoder passwordEncoder;
 	private final TroupeService troupeService;
@@ -25,11 +27,13 @@ public class AuthServiceImpl implements AuthService{
 	
 	@Override
 	public boolean check(LoginDto dto){
+		log.info("ログインチェックメソッドを開始します。");
 		String email = dto.getEmail();
 		String rawPassword = dto.getPassword();
 		
 		Troupe troupe = troupeService.getByEmail(email);
 		if(troupe == null) {
+			log.warn("メールアドレスが存在しません");
 			return false;
 		}
 		
@@ -42,8 +46,10 @@ public class AuthServiceImpl implements AuthService{
 		boolean isActive = status == TroupeStatus.ACTIVE;
 		
 		if(isMatch && isActive) {
+			log.info("チェックができました。 劇団名: {}", troupe.getName());
 			return true;
 		}else {
+			log.warn("パスワードが間違っているかもしくはアクティブではありません。");
 			return false;
 		}
 		
@@ -54,7 +60,7 @@ public class AuthServiceImpl implements AuthService{
 	@Transactional
 	@Override
 	public void registNewTroupe(TroupeDto dto) {
-		
+		log.info("劇団の新規登録メソッドを開始します。");
 		String email = dto.getEmail();
 		boolean exist = troupeRepository.findByEmail(email).isPresent();
 		if(!exist) {
@@ -64,8 +70,10 @@ public class AuthServiceImpl implements AuthService{
 			Troupe troupe = dto.toEntity();
 			troupe.setPasswordHash(hashedPassword);
 			
+			log.info("劇団を新規登録しました。 劇団名: ", dto.getName());
 			troupeRepository.save(troupe);
 		}else {
+			log.warn("すでにメールアドレスが存在するため、登録できません。メールアドレス: ", dto.getEmail());
 			throw new AlreadyExistsException("すでにメールアドレスが存在します");
 		}
 	}
