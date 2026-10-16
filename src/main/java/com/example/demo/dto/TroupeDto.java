@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.example.demo.constant.TroupeStatus;
@@ -23,7 +22,6 @@ import lombok.Setter;
 @Builder
 public class TroupeDto {
 
-	@NotNull(message = "idは必須です")
 	private Long id;
 	
 	@NotBlank(message = "劇団名は必須です")
@@ -52,9 +50,10 @@ public class TroupeDto {
 		return Troupe.builder()
 				.name(this.name)
 				.email(this.email)
+				.passwordHash(password)
 				.snsAccount(this.snsAccount)
 				.signature(this.signature)
-				.status(TroupeStatus.ACTICE)
+				.status(TroupeStatus.ACTIVE)
 				.build();
 	}
 	

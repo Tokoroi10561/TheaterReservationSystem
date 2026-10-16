@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
-import jakarta.transaction.Transactional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.constant.TroupeStatus;
 import com.example.demo.dto.LoginDto;
@@ -24,11 +24,14 @@ public class AuthServiceImpl implements AuthService{
 	private final TroupeRepository troupeRepository;
 	
 	@Override
-	public boolean ckeck(LoginDto dto){
+	public boolean check(LoginDto dto){
 		String email = dto.getEmail();
 		String rawPassword = dto.getPassword();
 		
 		Troupe troupe = troupeService.getByEmail(email);
+		if(troupe == null) {
+			return false;
+		}
 		
 		String hashedPassword = troupe.getPasswordHash();
 		
@@ -36,7 +39,7 @@ public class AuthServiceImpl implements AuthService{
 		
 		TroupeStatus status = troupe.getStatus();
 		
-		boolean isActive = status == TroupeStatus.ACTICE;
+		boolean isActive = status == TroupeStatus.ACTIVE;
 		
 		if(isMatch && isActive) {
 			return true;

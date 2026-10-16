@@ -21,8 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final AuthService authService;
 
-	@GetMapping("/")
-	public String showLoginForm(@ModelAttribute LoginDto loginDto) {
+	@GetMapping("/login")
+	public String showLoginForm() {
 		return "login";
 	}
 	
@@ -51,7 +51,7 @@ public class AuthController {
 	@PostMapping("/new/register")
 	public String registNew(HttpSession httpSession,
 							  RedirectAttributes redirectAttributes) {
-		TroupeDto troupeDto = (TroupeDto) httpSession.getAttribute("TroupeDto");
+		TroupeDto troupeDto = (TroupeDto) httpSession.getAttribute("troupeDto");
 		
 		authService.registNewTroupe(troupeDto);
 		
@@ -69,7 +69,7 @@ public class AuthController {
 	public String login(@Valid@ModelAttribute LoginDto loginDto,
 			BindingResult bindinResult,
 			RedirectAttributes redirectAttributes) {
-		boolean canAuth = authService.ckeck(loginDto);
+		boolean canAuth = authService.check(loginDto);
 		
 		if(canAuth) {
 			return "redirect:/home";

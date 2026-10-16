@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.example.demo.entity.Troupe;
 import com.example.demo.exception.NoDataFoundException;
 import com.example.demo.repository.TroupeRepository;
@@ -7,6 +9,7 @@ import com.example.demo.service.TroupeService;
 
 import lombok.RequiredArgsConstructor;
 
+@Service
 @RequiredArgsConstructor
 public class TroupeServiceImpl implements TroupeService {
 

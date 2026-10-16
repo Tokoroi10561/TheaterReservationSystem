@@ -10,23 +10,31 @@
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-6 bg-white py-3">
-                <form th:action="@{/login}" th:object="${loginDto}" method="post">
+                <!-- th:objectを外し、POST先を明示 -->
+                <form th:action="@{/login}" method="post">
                     <div class="form-title">
                         <h1 class="h3 bg-primary text-white py-3 text-center rounded">ログイン</h1>
                     </div>
 
                     <div class="form-body">
+                        <!-- エラーメッセージ用（必要に応じて） -->
+                        <div th:if="${param.error}" class="alert alert-danger mx-2" role="alert">
+                            メールアドレスまたはパスワードが間違っています。
+                        </div>
+
                         <div class="row mb-4 mt-5 mx-2">
-                            <label class="col-sm-3 col-form-label" for="email">メールアドレス<span class="text-danger"> * </span></label>
+                            <label class="col-sm-3 col-form-label" for="username">メールアドレス</label>
                             <div class="col-sm-9">
-                                <input type="email" id="email" th:field="*{email}" class="form-control required">
+                                <!-- ★ name="username" に変更 (IDがメールアドレスであってもSpring Security側はusernameとして受け取る) -->
+                                <input type="email" id="username" name="username" class="form-control required" required>
                             </div>
                         </div>
 
                         <div class="row mb-5 pt-2 mx-2">
-                            <label class="col-sm-3 col-form-label" for="password">パスワード<span class="text-danger"> * </span></label>
+                            <label class="col-sm-3 col-form-label" for="password">パスワード</label>
                             <div class="col-sm-9">
-                                <input type="password" id="password" th:field="*{password}" class="form-control required">
+                                <!-- ★ name="password" に変更 -->
+                                <input type="password" id="password" name="password" class="form-control required" required>
                             </div>
                         </div>
                     </div>

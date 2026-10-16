@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum TroupeStatus {
-	ACTICE("通常稼働中"),
+	ACTIVE("通常稼働中"),
 	SUSPENDED("利用停止"),
 	WITHDRAWED("退会済み");
 	
