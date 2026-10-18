@@ -9,8 +9,6 @@ import com.example.demo.constant.TroupeStatus;
 import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.TroupeDto;
 import com.example.demo.entity.Troupe;
-import com.example.demo.exception.AlreadyExistsException;
-import com.example.demo.repository.TroupeRepository;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.TroupeService;
 
@@ -23,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthServiceImpl implements AuthService{
 	private final PasswordEncoder passwordEncoder;
 	private final TroupeService troupeService;
-	private final TroupeRepository troupeRepository;
 	
 	@Override
 	public boolean check(LoginDto dto){
@@ -60,21 +57,6 @@ public class AuthServiceImpl implements AuthService{
 	@Transactional
 	@Override
 	public void registNewTroupe(TroupeDto dto) {
-		log.info("劇団の新規登録メソッドを開始します。");
-		String email = dto.getEmail();
-		boolean exist = troupeRepository.findByEmail(email).isPresent();
-		if(!exist) {
-
-			String hashedPassword = passwordEncoder.encode(dto.getPassword());
-			
-			Troupe troupe = dto.toEntity();
-			troupe.setPasswordHash(hashedPassword);
-			
-			log.info("劇団を新規登録しました。 劇団名: ", dto.getName());
-			troupeRepository.save(troupe);
-		}else {
-			log.warn("すでにメールアドレスが存在するため、登録できません。メールアドレス: ", dto.getEmail());
-			throw new AlreadyExistsException("すでにメールアドレスが存在します");
-		}
+		troupeService.regist(dto);
 	}
 }
