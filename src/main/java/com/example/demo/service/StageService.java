@@ -10,4 +10,5 @@ import com.example.demo.entity.Stage;
 public interface StageService {
 
 	List<Stage> getAllStageByShowId(Long showId);
+	Stage stageExist(Long stageId);
 }

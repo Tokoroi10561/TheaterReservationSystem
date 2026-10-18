@@ -22,10 +22,9 @@ import com.example.demo.exception.BookingClosedException;
 import com.example.demo.exception.NoDataFoundException;
 import com.example.demo.exception.StageSoldOutException;
 import com.example.demo.repository.BookingRepository;
-import com.example.demo.repository.StageRepository;
-import com.example.demo.repository.TicketTypeRepository;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.StaffService;
+import com.example.demo.service.StageService;
 import com.example.demo.service.TicketTypeService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,8 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BookingServiceImpl implements BookingService {
 	
 	private final BookingRepository bookingRepository;
-	private final StageRepository stageRepository;
-	private final TicketTypeRepository ticketTypeRepository;
+	private final StageService stageService;
 	private final TicketTypeService ticketTypeService;
 	private final StaffService staffService;
 	
@@ -49,7 +47,7 @@ public class BookingServiceImpl implements BookingService {
 		
 		Long stageId = dto.getStageId();
 		
-		Stage stage = stageExist(stageId);
+		Stage stage = stageService.stageExist(stageId);
 		int capacity = stage.getCapacity();
 		
 		
@@ -120,7 +118,7 @@ public class BookingServiceImpl implements BookingService {
 		
 		if(oldStageId.equals(newStageId)) {
 			log.info("ステージは変更されていません。 stageId: {}", newStageId);
-			Stage stage = stageExist(newStageId);
+			Stage stage = stageService.stageExist(newStageId);
 			int capacity = stage.getCapacity();
 			
 			int oldTotal = 0;
@@ -152,7 +150,7 @@ public class BookingServiceImpl implements BookingService {
 			bookingRepository.save(booking);
 		}else {
 			log.info("ステージが変更されました。 old→new: {}→{}", oldStageId, newStageId);
-			Stage stage = stageExist(newStageId);
+			Stage stage = stageService.stageExist(newStageId);
 			int capacity = stage.getCapacity();
 			int demandTotal = 0;
 			
@@ -239,13 +237,6 @@ public class BookingServiceImpl implements BookingService {
 //	@Override
 //	public List<Booking> getBookingsByStaffId(Long staffId) {}
 	
-	private Stage stageExist(Long stageId) {
-		Stage stage = stageRepository.findById(stageId).orElseThrow(() -> 
-			new NoDataFoundException("ステージが存在しません" + stageId)
-		);
-		log.info("ステージが存在しました。 stageId: {}", stage.getId());
-		return stage;
-	}
 	
 	private int calculateSumDtoTicket
 						(List<BookingDetailsDto> bookingDetailsDtos, int total) {
@@ -304,9 +295,7 @@ public class BookingServiceImpl implements BookingService {
 			Long ticketTypeId = bookingDetailsDto.getTicketTypeId();
 			BookingDetails detail = bookingDetailsDto.toEntity();
 			
-			TicketType ticketType = ticketTypeRepository.findById(ticketTypeId).orElseThrow(() -> 
-				new NoDataFoundException("チケットタイプが存在しません" + ticketTypeId)
-			);
+			TicketType ticketType = ticketTypeService.getById(ticketTypeId);
 			
 			detail.setTicketType(ticketType);
 			detail.setBooking(booking);
