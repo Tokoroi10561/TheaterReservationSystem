@@ -31,10 +31,12 @@ import com.example.demo.service.StageService;
 import com.example.demo.service.TicketTypeService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/booking")
 @RequiredArgsConstructor
+@Slf4j
 public class BookingController {
 	
 	private final BookingService bookingService;
@@ -44,9 +46,9 @@ public class BookingController {
 	private final StageService stageService;
 	private final MailService mailService;
 	
-	//フォーム表示メソッド
 	@GetMapping("/form/{showId}")
 	public String showForm(Model model, BookingDto bookingDto, @PathVariable Long showId) {
+		log.info("フォームの提示");
 		
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 		
@@ -63,7 +65,6 @@ public class BookingController {
 		return "booking/form";
 	}
 	
-	//フォーム確認メソッド
 	@PostMapping("/form/{showId}/confirm")
 	public String confirmForm(@Valid @ModelAttribute BookingDto bookingDto,
 							  BindingResult bindingResult,
@@ -71,12 +72,10 @@ public class BookingController {
 							  Model model,
 							  @PathVariable Long showId
 							  ) {
-		System.out.println("①confirmForm開始");
-		//バリデーション
+		log.info("フォーム確認メソッド開始");
+		
 		if(bindingResult.hasErrors()) {
-
-			System.out.println("②バリデーションエラー");
-			
+			log.warn("バリデーションエラー");
 			bindingResult.getAllErrors().forEach(error -> {
 				System.out.println(error.getDefaultMessage());
 				});
@@ -96,31 +95,30 @@ public class BookingController {
 			
 			return "booking/form";
 		}
-		//セッション保存
-		httpSession.setAttribute("bookingDto", bookingDto);
-		System.out.println("③セッション保存完了");
 		
-		//値段計算メソッドを渡す
+		httpSession.setAttribute("bookingDto", bookingDto);
+		log.info("セッション保存完了");
+		
 		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
 		model.addAttribute("sumPrice", sumPrice);
+		log.info("チケット合計金額: {}", sumPrice);
 	
 		model.addAttribute("bookingDto", bookingDto);
 		
-		System.out.println("④confirm画面へ");
+		log.info("確認画面投げる");
 		return "booking/confirm";
 	}
 	
-	//フォーム登録メソッド
 	@PostMapping("/form/{showId}/register")
 	public String registerForm(HttpSession httpSession,
 							   Model model,
 							   @PathVariable Long showId,
 							   RedirectAttributes redirectAttributes
 							   ) {
+		log.info("フォーム登録メソッド開始");
 		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
 		if(bookingDto == null) {
-			
-			System.out.println("⑤バリデーションエラー(bookingDtoがnull)");
+			log.warn("バリデーションエラー");
 			
 			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 			
@@ -136,43 +134,44 @@ public class BookingController {
 			
 			return "redirect:/booking/form/" + showId;
 		}
-		System.out.println("⑥BookingDtoの作成");
 		String uuid = bookingService.createBooking(bookingDto);
+		log.info("データの保存");
 		
-		System.out.println("⑦セッション削除");
 		httpSession.removeAttribute("bookingDto");
+		log.info("セッションの削除");
 		
-		System.out.println("⑧メール送信");
 		mailService.sendBookingMail(bookingDto, uuid);
+		log.info("メールの送信");
 		return "redirect:/booking/form/complete";
 	}
 	
-	//フォーム完了表示メソッド
 	@GetMapping("/form/complete")
 	public String completeForm() {
+		log.info("フォーム完了");
 		return "booking/complete";
 	}
 	
-	//変更前状態表示メソッド
 	@GetMapping("/manage")
 	public String choseChange(@RequestParam String token, Model model, RedirectAttributes redirectAttributes) {
-		//トークンを取得して、その人の予約を持ってくる。
+		log.info("更新前状態表示メソッド開始");
 		Booking booking = bookingService.getValidateByTokenAndStatus(token);
 		
 		BookingStatus status = booking.getBookingStatus();
 			//現状の予約表示
 		if(status != BookingStatus.RESERVED) {
+			log.warn("予約されていないため表示ができません");
 			throw new NotReservedException("予約されていません");
 		}
 			model.addAttribute("booking", booking);
 		
+		log.info("更新前状態表示ページを投げる");
 		return "booking/manage";
 		
 	}
 	
-	//更新フォーム表示メソッド
 	@GetMapping("/form/update/{id}")
 	public String showUpdateForm(@PathVariable("id") Long bookingId, Model model) {
+		log.info("編集フォーム提示メソッド開始");
 		Booking booking = bookingService.getById(bookingId);
 		
 		Long showId = booking.getStage().getShow().getId();
@@ -192,10 +191,10 @@ public class BookingController {
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 		model.addAttribute("paymentMethods", PaymentMethod.values());
 		
+		log.info("編集フォーム提示ページを投げる");
 		return "update/form";
 	}
 	
-	//フォーム更新確認メソッド
 	@PostMapping("/confirm/update/{id}")
 	public String confirmUpdateForm(@Valid @ModelAttribute BookingDto bookingDto,
 			  BindingResult bindingResult,
@@ -203,7 +202,9 @@ public class BookingController {
 			  Model model,
 			  @PathVariable("id") Long bookingId
 			  ) {
+		log.info("編集フォーム確認メソッド開始");
 		if(bindingResult.hasErrors()) {
+			log.warn("バリデーションエラー");
 			Booking booking = bookingService.getById(bookingId);
 			Long showId = booking.getStage().getShow().getId();
 			
@@ -217,61 +218,60 @@ public class BookingController {
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 			model.addAttribute("paymentMethods", PaymentMethod.values());
 			
+			log.info("編集フォーム確認ページ投げる");
 			return "update/form";
 		}
 		
 		httpSession.setAttribute("bookingDto", bookingDto);
-		System.out.println("③セッション保存完了");
+		log.info("セッション保存");
 		
-		//値段計算メソッドを渡す
 		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
-		System.out.println("③計算メソッドを宣言");
+		log.info("チケット合計金額: {}", sumPrice);
 		model.addAttribute("sumPrice", sumPrice);
-		System.out.println("③計算メソッドを渡す");
 		model.addAttribute("bookingDto", bookingDto);
 		
-		System.out.println("④confirm画面へ");
+		log.info("編集フォーム確認ページを投げる");
 		
 		return "update/confirm";
 	}
 	
-	//フォーム更新メソッド
 	@PostMapping("/update/{id}")
 	public String updateForm(HttpSession httpSession,
 							   Model model,
 							   @PathVariable("id") Long bookingId,
 							   RedirectAttributes redirectAttributes
 							   ) {
+		log.info("編集フォーム更新メソッド開始");
 		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
-				
-		System.out.println("⑥BookingDtoの作成");
+		
 		String uuid = bookingService.updateBooking(bookingDto);
+		log.info("編集データ保存");
 		
-		System.out.println("⑦セッション削除");
 		httpSession.removeAttribute("bookingDto");
+		log.info("セッション削除");
 		
-		System.out.println("⑧メール送信");
 		mailService.sendBookingMail(bookingDto, uuid);
+		log.info("メール送信");
 		
 		return "redirect:/booking/form/complete";
 	}
 	
-	//フォーム削除メソッド
 	@PostMapping("/delete/{id}")
-	public String deleteForm(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+		log.info("削除メソッド開始");
 		Booking booking = bookingService.getById(id);
 		
 		String token = booking.getToken();
 		
 		bookingService.deleteBooking(token);
+		log.info("{}様のデータ削除。token: {}", booking.getName(), token);
 		
-		return "redirect:/booking/delete/form";
+		return "redirect:/booking/delete/complete";
 	}
 	
-	//フォーム削除完了表示メソッド
-		@GetMapping("/delete/form")
-		public String deleteForm(Model model) {
-			return "delete/complete";
-		}
-
+	@GetMapping("/delete/complete")
+	public String deleteComplete(Model model) {
+		log.info("削除完了");
+		return "delete/complete";
+	}
 }
