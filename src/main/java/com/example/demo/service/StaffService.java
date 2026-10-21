@@ -10,10 +10,11 @@ import com.example.demo.entity.Staff;
 
 @Service
 public interface StaffService {
-
-	List<Staff> getAllStaffByShowId(Long showId);
-	
-	Staff getStaffById(Long id);
 	
 	void saveStaffs(List<StaffDto> staffDtos, Show show);
+	void deleteStaffs(List<Staff> staffs);
+	
+	Staff getStaffById(Long id);
+
+	List<Staff> getAllStaffByShowId(Long showId);
 }

@@ -19,10 +19,21 @@ public class StaffServiceImpl implements StaffService {
 	private final StaffRepository staffRepository;
 	
 	@Override
-	public List<Staff> getAllStaffByShowId(Long showId) {
-		return staffRepository.findAllStaffByShowId(showId);
+	public void saveStaffs(List<StaffDto> staffDtos, Show show) {
+		for(StaffDto staffDto : staffDtos) {
+			Staff staff = staffDto.toEntity();
+			staff.setShow(show);
+			staffRepository.save(staff);
+		}
 	}
 	
+	@Override
+	public void deleteStaffs(List<Staff> staffs) {
+		for(Staff staff : staffs) {
+			staffRepository.delete(staff);
+		}
+	}
+
 	@Override
 	public Staff getStaffById(Long id){
 		Staff staff = staffRepository.findById(id).orElse(null);
@@ -31,11 +42,7 @@ public class StaffServiceImpl implements StaffService {
 	}
 	
 	@Override
-	public void saveStaffs(List<StaffDto> staffDtos, Show show) {
-		for(StaffDto staffDto : staffDtos) {
-			Staff staff = staffDto.toEntity();
-			staff.setShow(show);
-			staffRepository.save(staff);
-		}
+	public List<Staff> getAllStaffByShowId(Long showId) {
+		return staffRepository.findAllStaffByShowId(showId);
 	}
 }

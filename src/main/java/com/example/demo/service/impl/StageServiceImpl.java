@@ -27,19 +27,22 @@ public class StageServiceImpl implements StageService {
 	private final StageRepository stageRepository;
 	
 	@Override
-	public List<Stage> getAllStageByShowId(Long showId) {
-		return stageRepository.findAllStageByShowId(showId);
+	public void saveStages(List<StageDto> stageDtos, Show show) {
+		for(StageDto stageDto : stageDtos) {
+			Stage stage = stageDto.toEntity();
+			stage.setShow(show);
+			stageRepository.save(stage);
+		}
 	}
 	
 	@Override
-	public Stage stageExist(Long stageId) {
-		Stage stage = stageRepository.findById(stageId).orElseThrow(() -> 
-		new NoDataFoundException("ステージが存在しません" + stageId)
-	);
-	log.info("ステージが存在しました。 stageId: {}", stage.getId());
-	return stage;
+	public void deleteStages(List<Stage> stages) {
+		for(Stage stage : stages) {
+			stageRepository.delete(stage);
+		}
 	}
 	
+	@Override
 	public void changeStageStatus(Stage stage, int total, Booking booking) {
 		int capacity = stage.getCapacity();
 		
@@ -69,11 +72,16 @@ public class StageServiceImpl implements StageService {
 	}
 	
 	@Override
-	public void saveStages(List<StageDto> stageDtos, Show show) {
-		for(StageDto stageDto : stageDtos) {
-			Stage stage = stageDto.toEntity();
-			stage.setShow(show);
-			stageRepository.save(stage);
-		}
+	public Stage stageExist(Long stageId) {
+		Stage stage = stageRepository.findById(stageId).orElseThrow(() -> 
+		new NoDataFoundException("ステージが存在しません" + stageId)
+	);
+	log.info("ステージが存在しました。 stageId: {}", stage.getId());
+	return stage;
+	}
+	
+	@Override
+	public List<Stage> getAllStageByShowId(Long showId) {
+		return stageRepository.findAllStageByShowId(showId);
 	}
 }

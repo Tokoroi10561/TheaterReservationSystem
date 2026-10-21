@@ -17,6 +17,22 @@ import lombok.RequiredArgsConstructor;
 public class TicketTypeServiceImpl implements TicketTypeService {
 
 	private final TicketTypeRepository ticketTypeRepository;
+
+	@Override
+	public void saveTicketTypes(List<TicketTypeDto> ticketTypeDtos, Show show) {
+		for(TicketTypeDto ticketTypeDto : ticketTypeDtos) {	
+			TicketType ticketType = ticketTypeDto.toEntity();
+			ticketType.setShow(show);
+			ticketTypeRepository.save(ticketType);
+		}
+	}
+	
+	@Override
+	public void deleteTicketTypes(List<TicketType> ticketTypes) {
+		for(TicketType  ticketType : ticketTypes) {
+			ticketTypeRepository.delete(ticketType);
+		}
+	}
 	
 	@Override
 	public TicketType getById(Long id){
@@ -31,12 +47,4 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 		return ticketTypeRepository.findAllTicketTypeByShowId(showId);
 	}
 	
-	@Override
-	public void saveTicketTypes(List<TicketTypeDto> ticketTypeDtos, Show show) {
-		for(TicketTypeDto ticketTypeDto : ticketTypeDtos) {	
-			TicketType ticketType = ticketTypeDto.toEntity();
-			ticketType.setShow(show);
-			ticketTypeRepository.save(ticketType);
-		}
-	}
 }

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.dto.ShowDto;
 import com.example.demo.entity.Show;
 import com.example.demo.entity.Troupe;
+import com.example.demo.exception.NoDataFoundException;
 import com.example.demo.repository.ShowRepository;
 import com.example.demo.service.ShowService;
 import com.example.demo.service.StaffService;
@@ -38,13 +39,38 @@ public class ShowServiceImpl implements ShowService {
 		ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
 	}
 	
+	@Transactional
 	@Override
-	public void updateShow() {
+	public void updateShow(ShowDto showDto) {
+		Show show = getById(showDto.getId());
 		
+		show.setTitle(showDto.getTitle());
+		show.setPlace(showDto.getPlace());
+		show.setFlyerImageUrl(showDto.getFlyerImageUrl());
+		
+		Troupe troupe = troupeService.getById(showDto.getTroupeId());
+		show.setTroupe(troupe);
+		
+		showRepository.save(show);
+		
+		staffService.deleteStaffs(show.getStaffs());
+		stageService.deleteStages(show.getStages());
+		ticketTypeService.deleteTicketTypes(show.getTicketTypes());
+		
+		staffService.saveStaffs(showDto.getStaffs(), show);
+		stageService.saveStages(showDto.getStages(), show);
+		ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
 	}
 	
 	@Override
 	public void deleteShow() {
 		
+	}
+	
+	@Override
+	public Show getById(Long id) {
+		return showRepository.findById(id).orElseThrow(() ->
+			new NoDataFoundException("Idが存在しません" + id)
+			);
 	}
 }

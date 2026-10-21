@@ -22,20 +22,6 @@ public class TroupeServiceImpl implements TroupeService {
 	private final PasswordEncoder passwordEncoder;
 	
 	@Override
-	public Troupe getByEmail(String email) {
-		return troupeRepository.findByEmail(email).orElseThrow(() ->
-			new NoDataFoundException("このemailは存在しません")
-		);
-	}
-	
-	@Override
-	public Troupe getById(Long id) {
-		return troupeRepository.findById(id).orElseThrow(() ->
-			new NoDataFoundException("このIdは存在しません" + id)
-		);
-	}
-	
-	@Override
 	public void regist(TroupeDto dto) {
 		log.info("劇団の新規登録メソッドを開始します。");
 		String email = dto.getEmail();
@@ -56,6 +42,19 @@ public class TroupeServiceImpl implements TroupeService {
 	}
 	
 	//編集メソッド
-	
 	//削除メソッド
+
+	@Override
+	public Troupe getById(Long id) {
+		return troupeRepository.findById(id).orElseThrow(() ->
+			new NoDataFoundException("このIdは存在しません" + id)
+		);
+	}
+	
+	@Override
+	public Troupe getByEmail(String email) {
+		return troupeRepository.findByEmail(email).orElseThrow(() ->
+			new NoDataFoundException("このemailは存在しません")
+		);
+	}
 }

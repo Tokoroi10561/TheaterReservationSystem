@@ -10,8 +10,8 @@ import com.example.demo.entity.Staff;
 
 public interface StaffRepository extends JpaRepository<Staff, Long> {
 
+	Optional<Staff> findById(Long id);
+	
 	@Query("SELECT s FROM Staff s WHERE s.show.id = :showId")
 	List<Staff> findAllStaffByShowId(Long showId);
-	
-	Optional<Staff> findById(Long id);
 }

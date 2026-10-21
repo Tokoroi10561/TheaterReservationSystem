@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +47,9 @@ public class Show {
 	
 	@Column(name = "flyer_url", nullable = true, length = 255)
 	private String flyerImageUrl;
+	
+	@Column(name = "deleted_at")
+	private LocalDateTime deletedAt;
 	
 	@ManyToOne
 	@JoinColumn(name = "troupe_id", nullable = false)

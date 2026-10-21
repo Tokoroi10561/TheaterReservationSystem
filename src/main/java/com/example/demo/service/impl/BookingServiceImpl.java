@@ -112,6 +112,11 @@ public class BookingServiceImpl implements BookingService {
 		int total = 0;
 		checkDeadline(booking);
 		
+		booking.setName(dto.getName());
+		booking.setPhone(dto.getPhone());
+		booking.setAddress(dto.getAddress());	
+		booking.setRemarks(dto.getRemarks());
+		
 		Long oldStageId = booking.getStage().getId();
 		Long newStageId = dto.getStageId();
 		

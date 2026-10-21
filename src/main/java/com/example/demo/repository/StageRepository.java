@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.entity.Stage;
 
 public interface StageRepository extends JpaRepository<Stage, Long> {
+	
 	@Query("SELECT s FROM Stage s ORDER BY s.show.id, s.startTime")
 	List<Stage> findByShowId(Long showId);
-	
 	@Query("SELECT s FROM Stage s WHERE s.show.id = :showId")
 	List<Stage> findAllStageByShowId(Long showId);
 }

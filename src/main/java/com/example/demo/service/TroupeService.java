@@ -8,7 +8,8 @@ import com.example.demo.entity.Troupe;
 @Service
 public interface TroupeService {
 
-	Troupe getByEmail(String email);
 	void regist(TroupeDto dto);
+
 	Troupe getById(Long id);
+	Troupe getByEmail(String email);
 }

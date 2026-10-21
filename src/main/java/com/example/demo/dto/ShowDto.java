@@ -37,6 +37,8 @@ public class ShowDto {
 	@Size(max = 255, message = "ビラ画像のURLは255文字以内で入力してください")
 	private String flyerImageUrl;
 	
+	private Long troupeId;
+	
 	private List<StaffDto> staffs;
 	
 	private List<StageDto> stages;
@@ -59,6 +61,7 @@ public class ShowDto {
 				.title(show.getTitle())
 				.place(show.getPlace())
 				.flyerImageUrl(show.getFlyerImageUrl())
+				.troupeId(show.getTroupe().getId())
 				.option(show.getOption())
 				.build();
 	}
