@@ -51,10 +51,6 @@ public class Show {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 	
-	public boolean isDeleted() {
-		return deletedAt != null;
-	}
-	
 	@ManyToOne
 	@JoinColumn(name = "troupe_id", nullable = false)
 	private Troupe troupe;

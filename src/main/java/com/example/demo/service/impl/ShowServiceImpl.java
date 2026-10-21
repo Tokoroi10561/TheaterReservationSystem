@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class ShowServiceImpl implements ShowService {
 		
 		Show show = getById(showDto.getId());
 		
-		if(show.isDeleted()) {
+		if(show.getDeletedAt() == null) {
 			throw new IllegalArgumentException("すでに削除されています");
 		}else {
 			show.setTitle(showDto.getTitle());
@@ -74,7 +75,7 @@ public class ShowServiceImpl implements ShowService {
 	public void deleteShow(Long id) {
 		Show show = getById(id);
 		
-		if(show.isDeleted()) {
+		if(show.getDeletedAt() == null) {
 			throw new IllegalArgumentException("すでに削除されています。");
 		}else {
 			show.setDeletedAt(LocalDateTime.now());
@@ -88,5 +89,10 @@ public class ShowServiceImpl implements ShowService {
 		return showRepository.findById(id).orElseThrow(() ->
 			new NoDataFoundException("Idが存在しません" + id)
 			);
+	}
+	
+	@Override
+	public List<Show> findAllActive(Long troupeId){
+		return showRepository.findAll(troupeId);
 	}
 }

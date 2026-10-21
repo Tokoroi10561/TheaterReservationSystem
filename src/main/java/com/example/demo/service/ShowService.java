@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.ShowDto;
@@ -13,4 +15,6 @@ public interface ShowService {
 	void deleteShow(Long id);
 	
 	Show getById (Long id);
+	
+	List<Show> findAllActive(Long troupeId);
 }

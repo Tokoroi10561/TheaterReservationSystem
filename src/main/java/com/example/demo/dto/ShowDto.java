@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -37,6 +38,8 @@ public class ShowDto {
 	@Size(max = 255, message = "ビラ画像のURLは255文字以内で入力してください")
 	private String flyerImageUrl;
 	
+	private LocalDateTime deletedAt;
+	
 	private Long troupeId;
 	
 	private List<StaffDto> staffs;
@@ -61,6 +64,7 @@ public class ShowDto {
 				.title(show.getTitle())
 				.place(show.getPlace())
 				.flyerImageUrl(show.getFlyerImageUrl())
+				.deletedAt(show.getDeletedAt())
 				.troupeId(show.getTroupe().getId())
 				.option(show.getOption())
 				.build();
