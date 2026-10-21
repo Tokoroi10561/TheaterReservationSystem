@@ -5,12 +5,10 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.entity.Booking;
 
-@Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 	
 	//後でnameとemailをキーワード検索できるようにしたい
