@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import com.example.demo.constant.PaymentMethod;
+import com.example.demo.constant.ShowOption;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,4 +63,8 @@ public class Show {
 	
 	@OneToMany(mappedBy = "show")
 	private List<Staff> staffs;
+	
+	@ElementCollection
+	@Enumerated(EnumType.STRING)
+	private Set<ShowOption> option;
 }

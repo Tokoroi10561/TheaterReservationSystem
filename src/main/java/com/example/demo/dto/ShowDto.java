@@ -1,11 +1,13 @@
 package com.example.demo.dto;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import com.example.demo.constant.ShowOption;
 import com.example.demo.entity.Show;
 
 import lombok.AllArgsConstructor;
@@ -41,11 +43,14 @@ public class ShowDto {
 	
 	private List<TicketTypeDto> ticketTypes;
 	
+	private Set<ShowOption> option;
+	
 	public Show toEntity() {
 		return Show.builder()
 				.title(this.title)
 				.place(this.place)
 				.flyerImageUrl(this.flyerImageUrl)
+				.option(this.option)
 				.build();
 	}
 	
@@ -54,6 +59,7 @@ public class ShowDto {
 				.title(show.getTitle())
 				.place(show.getPlace())
 				.flyerImageUrl(show.getFlyerImageUrl())
+				.option(show.getOption())
 				.build();
 	}
 }
