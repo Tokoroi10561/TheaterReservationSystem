@@ -10,7 +10,7 @@ public interface ShowService {
 
 	void createShow(ShowDto showDto, Long troupeId);
 	void updateShow(ShowDto showDto);
-	void deleteShow();
+	void deleteShow(Long id);
 	
 	Show getById (Long id);
 }

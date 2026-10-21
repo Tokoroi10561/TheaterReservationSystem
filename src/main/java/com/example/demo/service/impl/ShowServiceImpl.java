@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,29 +44,43 @@ public class ShowServiceImpl implements ShowService {
 	@Transactional
 	@Override
 	public void updateShow(ShowDto showDto) {
+		
 		Show show = getById(showDto.getId());
 		
-		show.setTitle(showDto.getTitle());
-		show.setPlace(showDto.getPlace());
-		show.setFlyerImageUrl(showDto.getFlyerImageUrl());
-		
-		Troupe troupe = troupeService.getById(showDto.getTroupeId());
-		show.setTroupe(troupe);
-		
-		showRepository.save(show);
-		
-		staffService.deleteStaffs(show.getStaffs());
-		stageService.deleteStages(show.getStages());
-		ticketTypeService.deleteTicketTypes(show.getTicketTypes());
-		
-		staffService.saveStaffs(showDto.getStaffs(), show);
-		stageService.saveStages(showDto.getStages(), show);
-		ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
+		if(show.isDeleted()) {
+			throw new IllegalArgumentException("すでに削除されています");
+		}else {
+			show.setTitle(showDto.getTitle());
+			show.setPlace(showDto.getPlace());
+			show.setFlyerImageUrl(showDto.getFlyerImageUrl());
+			
+			Troupe troupe = troupeService.getById(showDto.getTroupeId());
+			show.setTroupe(troupe);
+			
+			showRepository.save(show);
+			
+			staffService.deleteStaffs(show.getStaffs());
+			stageService.deleteStages(show.getStages());
+			ticketTypeService.deleteTicketTypes(show.getTicketTypes());
+			
+			staffService.saveStaffs(showDto.getStaffs(), show);
+			stageService.saveStages(showDto.getStages(), show);
+			ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
+		}
 	}
 	
+	@Transactional
 	@Override
-	public void deleteShow() {
+	public void deleteShow(Long id) {
+		Show show = getById(id);
 		
+		if(show.isDeleted()) {
+			throw new IllegalArgumentException("すでに削除されています。");
+		}else {
+			show.setDeletedAt(LocalDateTime.now());
+			
+			showRepository.save(show);
+		}
 	}
 	
 	@Override
