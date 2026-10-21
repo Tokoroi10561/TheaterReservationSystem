@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.constant.CapacityStatus;
 import com.example.demo.constant.StageStatus;
+import com.example.demo.dto.StageDto;
 import com.example.demo.entity.Booking;
+import com.example.demo.entity.Show;
 import com.example.demo.entity.Stage;
 import com.example.demo.exception.NoDataFoundException;
 import com.example.demo.repository.StageRepository;
@@ -66,4 +68,12 @@ public class StageServiceImpl implements StageService {
 		}
 	}
 	
+	@Override
+	public void saveStages(List<StageDto> stageDtos, Show show) {
+		for(StageDto stageDto : stageDtos) {
+			Stage stage = stageDto.toEntity();
+			stage.setShow(show);
+			stageRepository.save(stage);
+		}
+	}
 }

@@ -29,6 +29,13 @@ public class TroupeServiceImpl implements TroupeService {
 	}
 	
 	@Override
+	public Troupe getById(Long id) {
+		return troupeRepository.findById(id).orElseThrow(() ->
+			new NoDataFoundException("このIdは存在しません" + id)
+		);
+	}
+	
+	@Override
 	public void regist(TroupeDto dto) {
 		log.info("劇団の新規登録メソッドを開始します。");
 		String email = dto.getEmail();
@@ -47,4 +54,8 @@ public class TroupeServiceImpl implements TroupeService {
 			throw new AlreadyExistsException("すでにメールアドレスが存在します");
 		}
 	}
+	
+	//編集メソッド
+	
+	//削除メソッド
 }

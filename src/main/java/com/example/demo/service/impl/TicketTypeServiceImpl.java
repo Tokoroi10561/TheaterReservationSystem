@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.TicketTypeDto;
+import com.example.demo.entity.Show;
 import com.example.demo.entity.TicketType;
 import com.example.demo.exception.NoDataFoundException;
 import com.example.demo.repository.TicketTypeRepository;
@@ -27,5 +29,14 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 	@Override
 	public List<TicketType> getAllTicketTypeByShowId(Long showId) {
 		return ticketTypeRepository.findAllTicketTypeByShowId(showId);
+	}
+	
+	@Override
+	public void saveTicketTypes(List<TicketTypeDto> ticketTypeDtos, Show show) {
+		for(TicketTypeDto ticketTypeDto : ticketTypeDtos) {	
+			TicketType ticketType = ticketTypeDto.toEntity();
+			ticketType.setShow(show);
+			ticketTypeRepository.save(ticketType);
+		}
 	}
 }

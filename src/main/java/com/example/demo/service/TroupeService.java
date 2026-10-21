@@ -10,4 +10,5 @@ public interface TroupeService {
 
 	Troupe getByEmail(String email);
 	void regist(TroupeDto dto);
+	Troupe getById(Long id);
 }
