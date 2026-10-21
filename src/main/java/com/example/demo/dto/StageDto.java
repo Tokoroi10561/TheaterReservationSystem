@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import com.example.demo.constant.CapacityStatus;
 import com.example.demo.constant.StageStatus;
 import com.example.demo.entity.Stage;
 
@@ -47,8 +48,9 @@ public class StageDto {
 	@Min(value = 1, message = "席数は1以上の数字を入力してください")
 	private Integer capacity;
 	
-	@NotNull(message = "ステージステータスは必須です")
-	private StageStatus status;
+	private StageStatus stageStatus;
+	
+	private CapacityStatus capacityStatus;
 	
 	public Stage toEntity() {
 		return Stage.builder()
@@ -57,7 +59,8 @@ public class StageDto {
 				.endTime(this.endTime)
 				.openTime(this.openTime)
 				.capacity(this.capacity)
-				.status(this.status)
+				.stageStatus(StageStatus.RECEPTION)
+				.capacityStatus(CapacityStatus.WIDE_OPEN)
 				.build();
 	}
 	
@@ -68,7 +71,8 @@ public class StageDto {
 				.endTime(stage.getEndTime())
 				.openTime(stage.getOpenTime())
 				.capacity(stage.getCapacity())
-				.status(stage.getStatus())
+				.stageStatus(stage.getStageStatus())
+				.capacityStatus(stage.getCapacityStatus())
 				.build();
 	}
 }

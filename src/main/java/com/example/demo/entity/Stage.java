@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import com.example.demo.constant.CapacityStatus;
 import com.example.demo.constant.StageStatus;
 
 import lombok.AllArgsConstructor;
@@ -53,7 +54,11 @@ public class Stage {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "stage_status", nullable = false)
-	private StageStatus status;
+	private StageStatus stageStatus;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "capasity_status", nullable = false)
+	private CapacityStatus capacityStatus;
 	
 	@ManyToOne
 	@JoinColumn(name = "show_id", nullable = false)

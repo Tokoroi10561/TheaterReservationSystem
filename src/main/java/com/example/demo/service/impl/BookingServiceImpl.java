@@ -97,6 +97,8 @@ public class BookingServiceImpl implements BookingService {
 		bookingRepository.save(booking);
 		log.info("{}様の予約が完了しました。 予約トークン: {}", dto.getName(), token);
 		
+		stageService.changeStageStatus(stage, all, booking);
+		
 		return token;
 	}
 	
@@ -133,9 +135,11 @@ public class BookingServiceImpl implements BookingService {
 			
 			int zero = 0;
 			int newTotal = calculateSumDtoTicket(bookingDetailsDtos, zero);
-			log.info("新しいチケット合計: {}", newTotal);;
+			log.info("新しいチケット合計: {}", newTotal);
 			
-			if((total - oldTotal) + newTotal > capacity) {
+			int all = (total - oldTotal) + newTotal;
+			
+			if(all > capacity) {
 				log.warn("ステージが満席のため予約に失敗しました。 stageId: {}, 要求数: {}, 定員: {}",
 						newStageId, newTotal, capacity);
 				throw new StageSoldOutException("ステージは満席です" + newStageId);
@@ -146,6 +150,8 @@ public class BookingServiceImpl implements BookingService {
 			}
 			
 			details.addAll(details);
+			
+			stageService.changeStageStatus(stage, all, booking);
 
 			bookingRepository.save(booking);
 		}else {
@@ -179,6 +185,8 @@ public class BookingServiceImpl implements BookingService {
 			
 			details.addAll(details);
 			
+			stageService.changeStageStatus(stage, all, booking);
+			
 			bookingRepository.save(booking);
 		}
 
@@ -196,6 +204,17 @@ public class BookingServiceImpl implements BookingService {
 		
 		booking.setBookingStatus(BookingStatus.CANCELLED);
 		bookingRepository.save(booking);
+		
+		Long stageId = booking.getStage().getId();
+		Stage stage = stageService.stageExist(stageId);
+		
+		List<Booking> bookings = bookingRepository.findByStageId(stageId, BookingStatus.RESERVED);
+		
+		int total = 0;
+		total = calculateSumStageTicket(bookings, total);
+		
+		stageService.changeStageStatus(stage, total, booking);
+		
 		log.info("{}様の予約を削除しました。", booking.getName());
 	}
 	
@@ -259,7 +278,6 @@ public class BookingServiceImpl implements BookingService {
 		return total;
 	}
 	
-	//キャンセル・変更の期限を確認するメソッド
 	private void checkDeadline(Booking entity) {
 		LocalDateTime now = LocalDateTime.now();
 		
@@ -326,4 +344,6 @@ public class BookingServiceImpl implements BookingService {
 		new NoDataFoundException("idが見つかりません")
 		);
 	}
+	
+	
 }
