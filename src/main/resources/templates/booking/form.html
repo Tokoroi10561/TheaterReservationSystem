@@ -11,8 +11,7 @@
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col-md-6 bg-white">
-                <!-- アクションのshowIdのやつがやばいから後でちゃんと変更する。 -->
-                <form th:action="@{/booking/form/{showId}/confirm(showId=1)}" th:object="${bookingDto}" method="post">
+                <form th:action="@{/booking/form/{showId}/confirm(showId=${showId})}" th:object="${bookingDto}" method="post">
                     <div class="form-title">
                         <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">予約フォーム</h1>
                     </div>

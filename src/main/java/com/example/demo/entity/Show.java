@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -45,8 +46,8 @@ public class Show {
 	@Column(name = "place", nullable = true, length = 100)
 	private String place;
 	
-	@Column(name = "flyer_url", nullable = true, length = 255)
-	private String flyerImageUrl;
+	@Column(name = "flyer_image", nullable = true, length = 255)
+	private String flyerImage;
 	
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
@@ -68,7 +69,9 @@ public class Show {
 	@OneToMany(mappedBy = "show")
 	private List<Staff> staffs;
 	
-	@ElementCollection
+	@ElementCollection(targetClass = ShowOption.class)
 	@Enumerated(EnumType.STRING)
-	private Set<ShowOption> option;
+	@CollectionTable(name = "show_options")
+	@Column(name = "option_name")
+	private Set<ShowOption> options;
 }

@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.dto.ShowDto;
+import com.example.demo.entity.Show;
 import com.example.demo.service.ShowService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,17 +32,21 @@ public class ShowController {
 	public String showForm(@ModelAttribute ShowDto showDto,
 						   Model model,
 						   @PathVariable Long troupeId) {
+		model.addAttribute("troupeId", troupeId);
 		
 		return "show/form";
 	}
 	
 	@PostMapping("/comfirm/{troupeId}")
 	public String confirm(@Valid@ModelAttribute ShowDto showDto,
-							  BindingResult bindingResult,
-							  HttpSession httpSession) {
+						  BindingResult bindingResult,
+						  HttpSession httpSession,
+						  @PathVariable Long troupeId,
+						  Model model) {
 		if(bindingResult.hasErrors()) {
 			return "show/form";
 		}
+		model.addAttribute("troupeId", troupeId);
 		httpSession.setAttribute("showDto", showDto);
 		return "show/confirm";
 	}
@@ -63,8 +70,11 @@ public class ShowController {
 	}
 	
 	@GetMapping("/list/{troupeId}")
-	public String showList() {
-		//showのリストを渡したいよね、だからtroupeの中の公演集を渡したい。
+	public String showList(Model model, @PathVariable Long troupeId) {
+		List<Show> showList = showService.findAllActive(troupeId);
+		
+		model.addAttribute("troupeId", troupeId);		
+		model.addAttribute("showList", showList);
 		
 		return "show/list";
 	}
@@ -72,7 +82,8 @@ public class ShowController {
 	@GetMapping("/detail/{showId}")
 	public String showDetail(@PathVariable Long showId, Model model) {
 		
-		//showIdからshowを取り出して、それをmodelで渡す
+		Show show = showService.getById(showId);
+		model.addAttribute("show", show);
 		
 		return "show/detail";
 	}

@@ -56,6 +56,7 @@ public class BookingController {
 		
 		bookingService.mapTicketTypeToDto(ticketTypes, dto);
 		
+		model.addAttribute("showId", showId);
 		model.addAttribute("bookingDto", dto);
 		model.addAttribute("ticketTypes", ticketTypes);
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
@@ -73,6 +74,7 @@ public class BookingController {
 							  @PathVariable Long showId
 							  ) {
 		log.info("フォーム確認メソッド開始");
+		model.addAttribute("showId", showId);
 		
 		if(bindingResult.hasErrors()) {
 			log.warn("バリデーションエラー");
@@ -116,6 +118,9 @@ public class BookingController {
 							   RedirectAttributes redirectAttributes
 							   ) {
 		log.info("フォーム登録メソッド開始");
+
+		model.addAttribute("showId", showId);
+		
 		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
 		if(bookingDto == null) {
 			log.warn("バリデーションエラー");

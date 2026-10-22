@@ -53,7 +53,7 @@ public class ShowServiceImpl implements ShowService {
 		}else {
 			show.setTitle(showDto.getTitle());
 			show.setPlace(showDto.getPlace());
-			show.setFlyerImageUrl(showDto.getFlyerImageUrl());
+			show.setFlyerImage(showDto.getFlyerImage());
 			
 			Troupe troupe = troupeService.getById(showDto.getTroupeId());
 			show.setTroupe(troupe);
@@ -76,7 +76,7 @@ public class ShowServiceImpl implements ShowService {
 		Show show = getById(id);
 		
 		if(show.getDeletedAt() == null) {
-			throw new IllegalArgumentException("すでに削除されています。");
+			throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
 		}else {
 			show.setDeletedAt(LocalDateTime.now());
 			
@@ -86,9 +86,15 @@ public class ShowServiceImpl implements ShowService {
 	
 	@Override
 	public Show getById(Long id) {
-		return showRepository.findById(id).orElseThrow(() ->
-			new NoDataFoundException("Idが存在しません" + id)
+			Show show = showRepository.findById(id).orElseThrow(() ->
+				new NoDataFoundException("Idが存在しません" + id)
 			);
+			
+			if(show.getDeletedAt() == null) {
+				throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
+			}else {
+				return show;
+			}
 	}
 	
 	@Override
