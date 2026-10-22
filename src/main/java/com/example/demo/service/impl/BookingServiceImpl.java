@@ -349,6 +349,4 @@ public class BookingServiceImpl implements BookingService {
 		new NoDataFoundException("idが見つかりません")
 		);
 	}
-	
-	
 }
