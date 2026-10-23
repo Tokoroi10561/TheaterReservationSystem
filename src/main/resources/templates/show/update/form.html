@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公演情報更新</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-secondary">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 bg-white">
+                <form th:action="@{/show/confirm/{showId}(showId=${showId})}" th:object="${showDto}" method="post" enctype="multipart/form-data">
+                    <div class="form-groupe">
+                        <div class="form-title">
+                            <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">公演情報更新</h1>
+                        </div>
+                        <div class="form-body">
+                            <label class="form-label" for="title">公演タイトル<span class="text-danger"> *</span>：</label>
+                            <input type="text" class="form-control" id="title" th:field="*{title}" required>
+                            
+                            <label class="form-label" for="place">公演場所</label>
+                            <input type="text" class="form-control" id="place" th:field="*{place}">
+
+                            <label class="form-label" for="flyerImage">フライヤー画像</label>
+                            <input type="file" class="form-control" id="flyerImage" th:field="*{flyer_image}" accept=".pdf">
+
+                            <div th:each="ticketType, stat: *{ticketTypes}">
+                                <label class="form-label" for="ticketName">チケット種別</label>
+                                <input type="text" class="form-control" id="ticketName" th:field="${ticketType[__${stat.index}__].name}" required>
+                                <label class="form-label" for="ticketPrice">価格</label>
+                                <input type="number" class="form-control" id="ticketPrice" th:field="${ticketType[__${stat.index}__].price}" required>
+                            </div>
+
+                            <div th:each="stage, stat: *{stages}">
+                                <label class="form-label" for="stageName">ステージ名</label>
+                                <input type="text" class="form-control" id="stageName" th:field="${stage[__${stat.index}__].name}" required>
+                                <label class="form-label" for="startTime">公演開始時間</label>
+                                <input type="datetime-local" class="form-control" id="startTime" th:field="${stage[__${stat.index}__].startTime}" required>
+                                <label class="form-label" for="capacity">定員</label>
+                                <input type="number" class="form-control" id="capacity" th:field="${stage[__${stat.index}__].capacity}" required>
+                            </div>
+
+                            <div th:each="staff, stat: *{staffs}">
+                                <label class="form-label" for="staffName">スタッフ名</label>
+                                <input type="text" class="form-control" id="staffName" th:field="${staff[__${stat.index}__].name}" required>
+                                <label class="form-label" for="belong">所属</label>
+                                <input type="text" class="form-control" id="belong" th:field="${staff[__${stat.index}__].belong}" required>
+                            </div>
+
+                            <div th:each="option, stat: *{options.values()}">
+                                <label class="form-label" for="option" th:text="${option[__${stat.index}__].label}">扱い有</label>
+                                <input type="checkbox" class="form-check-input" id="option" th:field="${option[__${stat.index}__]}">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">確認</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

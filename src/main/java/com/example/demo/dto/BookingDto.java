@@ -75,7 +75,7 @@ public class BookingDto {
 				.remarks(this.remarks)
 				.token(this.token)
 				.paymentMethod(this.paymentMethod)
-				.bookingStatus(this.bookingStatus.RESERVED)
+				.bookingStatus(BookingStatus.RESERVED)
 //				.paymentStatus(this.paymentStatus)
 				.build();
 	}
