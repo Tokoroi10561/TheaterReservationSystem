@@ -9,6 +9,8 @@ public class HomeController {
 	
 	@GetMapping("/home")
 	public String showHome() {
+//		model.addAttribute("troupeId", troupeId);
+		
 		return "home";
 	}
 

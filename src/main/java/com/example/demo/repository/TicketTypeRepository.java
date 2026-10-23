@@ -10,8 +10,6 @@ import com.example.demo.entity.TicketType;
 
 public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
 
-	void deleteTicketTypes(List<TicketType> ticketTypes);
-	
 	@Query("SELECT t FROM TicketType t WHERE t.id = :id")
 	Optional<TicketType> findById(Long id);
 	

@@ -85,6 +85,8 @@ public class AuthController {
 		boolean canAuth = authService.check(loginDto);
 		
 		if(canAuth) {
+			
+			
 			log.info("ログイン確認処理。成功");
 			return "redirect:/home";
 		}else {

@@ -11,7 +11,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6 bg-white">
                 <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">公演詳細</h1>
-                <div th:object="${showDto}">
+                <div th:object="${show}">
                     <p><strong>公演タイトル：</strong> <span th:text="*{title}"></span></p>
                     <p><strong>公演場所：</strong> <span th:text="*{place}"></span></p>
                     <p><strong>フライヤー画像：</strong> <span th:text="*{flyer_image}"></span></p>

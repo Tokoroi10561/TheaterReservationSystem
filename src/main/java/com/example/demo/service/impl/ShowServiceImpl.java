@@ -99,6 +99,6 @@ public class ShowServiceImpl implements ShowService {
 	
 	@Override
 	public List<Show> findAllActive(Long troupeId){
-		return showRepository.findAll(troupeId);
+		return showRepository.findAllActive(troupeId);
 	}
 }
