@@ -43,16 +43,17 @@ public class ShowController {
 						  HttpSession httpSession,
 						  @PathVariable Long troupeId,
 						  Model model) {
+
+		model.addAttribute("troupeId", troupeId);
 		if(bindingResult.hasErrors()) {
 			return "show/form";
 		}
-		model.addAttribute("troupeId", troupeId);
 		httpSession.setAttribute("showDto", showDto);
 		return "show/confirm";
 	}
 	
 	@PostMapping("/register/{troupeId}")
-	public String regist(HttpSession httpSession,
+	public String register(HttpSession httpSession,
 							 @PathVariable Long troupeId,
 							 RedirectAttributes redirectAttributes) {
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
@@ -84,28 +85,34 @@ public class ShowController {
 		
 		Show show = showService.getById(showId);
 		model.addAttribute("show", show);
+		model.addAttribute("showId", showId);
 		
 		return "show/detail";
 	}
 	
 	@GetMapping("/update/form/{showId}")
-	public String showUpdateForm() {
+	public String showUpdateForm(@PathVariable Long showId, Model model) {
+		model.addAttribute("showId", showId);
+		
 		return "show/update/form";
 	}
 	
 	@PostMapping("/update/confirm/{showId}")
 	public String confirmUpdate(@Valid@ModelAttribute ShowDto showDto,
 			  				  BindingResult bindingResult,
-			  				  HttpSession httpSession) {
-			if(bindingResult.hasErrors()) {
-				return "show/update/form";
-			}
-			httpSession.setAttribute("showDto", showDto);
-			return "show/update/confirm";
+			  				  HttpSession httpSession,
+			  				  @PathVariable Long showId,
+			  				  Model model) {
+		model.addAttribute("showId", showId);
+		if(bindingResult.hasErrors()) {
+			return "show/update/form";
+		}
+		httpSession.setAttribute("showDto", showDto);
+		return "show/update/confirm";
 	}
 	
 	@PostMapping("/update/regist/{showId}")
-	public String registUpdate(HttpSession httpSession,
+	public String registerUpdate(HttpSession httpSession,
 							   RedirectAttributes redirectAttributes) {
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
 		
@@ -116,7 +123,9 @@ public class ShowController {
 	}
 	
 	@PostMapping("/delete/{showId}")
-	public void delete(@PathVariable Long showId) {
+	public void delete(@PathVariable Long showId, Model model) {
+		model.addAttribute("showId", showId);
+		
 		showService.deleteShow(showId);
 	}
 }

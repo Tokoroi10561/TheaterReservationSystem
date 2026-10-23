@@ -67,7 +67,7 @@ public class BookingController {
 	}
 	
 	@PostMapping("/confirm/{showId}")
-	public String confirmForm(@Valid @ModelAttribute BookingDto bookingDto,
+	public String confirm(@Valid @ModelAttribute BookingDto bookingDto,
 							  BindingResult bindingResult,
 							  HttpSession httpSession,
 							  Model model,
@@ -112,7 +112,7 @@ public class BookingController {
 	}
 	
 	@PostMapping("/register/{showId}")
-	public String registerForm(HttpSession httpSession,
+	public String register(HttpSession httpSession,
 							   Model model,
 							   @PathVariable Long showId,
 							   RedirectAttributes redirectAttributes
@@ -151,7 +151,7 @@ public class BookingController {
 	}
 	
 	@GetMapping("/complete")
-	public String completeForm() {
+	public String complete() {
 		log.info("フォーム完了");
 		return "booking/complete";
 	}
@@ -201,7 +201,7 @@ public class BookingController {
 	}
 	
 	@PostMapping("/update/confirm/{id}")
-	public String confirmUpdateForm(@Valid @ModelAttribute BookingDto bookingDto,
+	public String confirmUpdate(@Valid @ModelAttribute BookingDto bookingDto,
 			  BindingResult bindingResult,
 			  HttpSession httpSession,
 			  Model model,
@@ -241,7 +241,7 @@ public class BookingController {
 	}
 	
 	@PostMapping("/update/register/{id}")
-	public String updateForm(HttpSession httpSession,
+	public String registerUpdate(HttpSession httpSession,
 							   Model model,
 							   @PathVariable("id") Long bookingId,
 							   RedirectAttributes redirectAttributes
@@ -262,7 +262,7 @@ public class BookingController {
 	}
 	
 	@PostMapping("/delete/{id}")
-	public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	public String registerDelete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 		log.info("削除メソッド開始");
 		Booking booking = bookingService.getById(id);
 		
@@ -275,7 +275,7 @@ public class BookingController {
 	}
 	
 	@GetMapping("/delete/complete")
-	public String deleteComplete(Model model) {
+	public String completeDelete(Model model) {
 		log.info("削除完了");
 		return "booking/delete/complete";
 	}
