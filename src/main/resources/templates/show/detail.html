@@ -33,10 +33,21 @@
                     </div>
                 </div>
                 <div class="text-center mt-3">
+                    <a th:href="@{/show/update/form/{showId}(showId=${show.id})}" class="btn btn-primary">編集</a>
+                    <form th:action="@{/booking/delete/{id}(id=${booking.id})}" method="post"
+                        onsubmit="return confirm('予約を削除しますか？')" style="display: inline">
+                        <button type="submit" class="btn btn-danger" id="delete-btn">予約を削除</button>
+                    </form>
+                </div>
+                <div class="text-center mt-3">
                     <a th:href="@{/show/list/{troupeId}(troupeId=${troupeId})}" class="btn btn-outline-primary">一覧に戻る</a>
                 </div>
             </div>
         </div>
+    </div>
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 </body>
 </html>

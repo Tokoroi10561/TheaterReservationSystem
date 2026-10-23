@@ -33,6 +33,10 @@ public class BookingDto {
 	@Size(min = 1, max = 100, message = "名前は1文字以上100文字以下で入力してください")
 	private String name;
 	
+	@NotBlank(message = "ナマエは必須です")
+	@Size(min = 1, max = 100, message = "名前は1文字以上100文字以下で入力してください")
+	private String nameKana;
+	
 	@NotBlank(message = "メールアドレスは必須です")
 	@Email(message = "メールアドレスの形式が正しくありません")
 	private String email;
@@ -69,6 +73,7 @@ public class BookingDto {
 	public Booking toEntity() {
 		return Booking.builder()
 				.name(this.name)
+				.nameKana(this.nameKana)
 				.email(this.email)
 				.phone(this.phone)
 				.address(this.address)
@@ -84,6 +89,7 @@ public class BookingDto {
 		return BookingDto.builder()
 				.id(booking.getId())
 				.name(booking.getName())
+				.nameKana(booking.getNameKana())
 				.email(booking.getEmail())
 				.phone(booking.getPhone())
 				.address(booking.getAddress())

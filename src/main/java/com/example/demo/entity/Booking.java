@@ -44,6 +44,9 @@ public class Booking {
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 	
+	@Column(name = "name_kana", nullable = false, length = 100)
+	private String nameKana;
+	
 	@Column(name = "email", nullable = false, length = 100)
 	private String email;
 	

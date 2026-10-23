@@ -12,9 +12,9 @@
             <div class="col-md-6">
                 <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">登録完了</h1>
                 <p class="text-center">公演の登録が完了しました。</p>
-                <!-- <div class="text-center">
-                    <a href="/shows" class="btn btn-primary">一覧に戻る</a>
-                </div> -->
+                <div class="text-center">
+                    <a th:href="@{/show/list/{troupeId}(troupeId=${troupeId})}" class="btn btn-outline-primary">一覧に戻る</a>
+                </div>
             </div>
         </div>
     </div>

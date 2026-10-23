@@ -123,9 +123,17 @@ public class ShowController {
 	}
 	
 	@PostMapping("/delete/{showId}")
-	public void delete(@PathVariable Long showId, Model model) {
+	public String delete(@PathVariable Long showId, Model model, RedirectAttributes redirectAttributes) {
 		model.addAttribute("showId", showId);
 		
+		Show show = showService.getById(showId);
+		
+		Long troupeId = show.getTroupe().getId();
+		
 		showService.deleteShow(showId);
+		
+		redirectAttributes.addFlashAttribute("successMessage", "予約を完了しました。");
+		
+		return "redirect:/show/list/" + troupeId;
 	}
 }

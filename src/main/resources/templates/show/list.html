@@ -29,13 +29,20 @@
                             <td th:text="${show.flyer_image}"></td>
                             <td>
                                 <a th:href="@{/show/update/form/{showId}(showId=${show.id})}" class="btn btn-primary">編集</a>
-                                <a th:href="@{/show/delete/{showId}(showId=${show.id})}" class="btn btn-danger">削除</a>
+                                <form th:action="@{/booking/delete/{id}(id=${booking.id})}" method="post"
+                                    onsubmit="return confirm('予約を削除しますか？')" style="display: inline">
+                                    <button type="submit" class="btn btn-danger" id="delete-btn">予約を削除</button>
+                                </form>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 </body>
 </html>
