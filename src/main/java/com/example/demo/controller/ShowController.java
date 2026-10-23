@@ -51,7 +51,7 @@ public class ShowController {
 		return "show/confirm";
 	}
 	
-	@PostMapping("/regist/{troupeId}")
+	@PostMapping("/register/{troupeId}")
 	public String regist(HttpSession httpSession,
 							 @PathVariable Long troupeId,
 							 RedirectAttributes redirectAttributes) {

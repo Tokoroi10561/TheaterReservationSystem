@@ -66,7 +66,7 @@ public class BookingController {
 		return "booking/form";
 	}
 	
-	@PostMapping("/form/{showId}/confirm")
+	@PostMapping("/confirm/{showId}")
 	public String confirmForm(@Valid @ModelAttribute BookingDto bookingDto,
 							  BindingResult bindingResult,
 							  HttpSession httpSession,
@@ -111,7 +111,7 @@ public class BookingController {
 		return "booking/confirm";
 	}
 	
-	@PostMapping("/form/{showId}/register")
+	@PostMapping("/register/{showId}")
 	public String registerForm(HttpSession httpSession,
 							   Model model,
 							   @PathVariable Long showId,
@@ -147,10 +147,10 @@ public class BookingController {
 		
 		mailService.sendBookingMail(bookingDto, uuid);
 		log.info("メールの送信");
-		return "redirect:/booking/form/complete";
+		return "redirect:/booking/complete";
 	}
 	
-	@GetMapping("/form/complete")
+	@GetMapping("/complete")
 	public String completeForm() {
 		log.info("フォーム完了");
 		return "booking/complete";
@@ -174,7 +174,7 @@ public class BookingController {
 		
 	}
 	
-	@GetMapping("/form/update/{id}")
+	@GetMapping("/update/form/{id}")
 	public String showUpdateForm(@PathVariable("id") Long bookingId, Model model) {
 		log.info("編集フォーム提示メソッド開始");
 		Booking booking = bookingService.getById(bookingId);
@@ -197,10 +197,10 @@ public class BookingController {
 		model.addAttribute("paymentMethods", PaymentMethod.values());
 		
 		log.info("編集フォーム提示ページを投げる");
-		return "update/form";
+		return "booking/update/form";
 	}
 	
-	@PostMapping("/confirm/update/{id}")
+	@PostMapping("/update/confirm/{id}")
 	public String confirmUpdateForm(@Valid @ModelAttribute BookingDto bookingDto,
 			  BindingResult bindingResult,
 			  HttpSession httpSession,
@@ -224,7 +224,7 @@ public class BookingController {
 			model.addAttribute("paymentMethods", PaymentMethod.values());
 			
 			log.info("編集フォーム確認ページ投げる");
-			return "update/form";
+			return "booking/update/form";
 		}
 		
 		httpSession.setAttribute("bookingDto", bookingDto);
@@ -237,10 +237,10 @@ public class BookingController {
 		
 		log.info("編集フォーム確認ページを投げる");
 		
-		return "update/confirm";
+		return "booking/update/confirm";
 	}
 	
-	@PostMapping("/update/{id}")
+	@PostMapping("/update/register/{id}")
 	public String updateForm(HttpSession httpSession,
 							   Model model,
 							   @PathVariable("id") Long bookingId,
@@ -277,6 +277,6 @@ public class BookingController {
 	@GetMapping("/delete/complete")
 	public String deleteComplete(Model model) {
 		log.info("削除完了");
-		return "delete/complete";
+		return "booking/delete/complete";
 	}
 }

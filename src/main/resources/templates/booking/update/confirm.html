@@ -27,7 +27,7 @@
                     </div>
                     <p><strong>備考:</strong><span th:text="${bookingDto.remarks}"></span></p>
 
-                    <form th:action="@{/booking/update/{id}(id=${bookingDto.id})}" method="post">
+                    <form th:action="@{/booking/update/register/{id}(id=${bookingDto.id})}" method="post">
                         <button type="submit" class="btn btn-primary">予約する</button>
                         <button type="button" class="btn btn-secondary" onclick="history.back()">戻る</button>
                     </form>

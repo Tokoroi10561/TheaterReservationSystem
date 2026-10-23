@@ -45,7 +45,7 @@
                          ・電話番号、住所備考等はnullの場合は表示しないようにする -->
                 </table>
 
-                <form th:action="@{/booking/form/update/{id}(id=${booking.id})}" method="get">
+                <form th:action="@{/booking/update/form/{id}(id=${booking.id})}" method="get">
                     <button type="submit" class="btn btn-primary">予約を変更</button>
                 </form>
                 <form th:action="@{/booking/delete/{id}(id=${booking.id})}" method="post"
