@@ -15,24 +15,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.constant.ShowOption;
 import com.example.demo.dto.ShowDto;
+import com.example.demo.dto.StaffDto;
+import com.example.demo.dto.StageDto;
+import com.example.demo.dto.TicketTypeDto;
 import com.example.demo.entity.Show;
 import com.example.demo.service.ShowService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/show")
 @RequiredArgsConstructor
+@Slf4j
 public class ShowController {
 	
 	private final ShowService showService;
 
 	@GetMapping("/form/{troupeId}")
-	public String showForm(@ModelAttribute ShowDto showDto,
-						   Model model,
+	public String showForm(Model model,
 						   @PathVariable Long troupeId) {
+		log.info("フォームの提示");
+		ShowDto showDto = new ShowDto();
+		
+		showDto.getTicketTypes().add(new TicketTypeDto());
+		showDto.getStages().add(new StageDto());
+		showDto.getStaffs().add(new StaffDto());
+		
 		model.addAttribute("troupeId", troupeId);
+		
+		model.addAttribute("showDto", showDto);		
+		model.addAttribute("showOptions", ShowOption.values());
 		
 		return "show/form";
 	}
@@ -43,12 +58,16 @@ public class ShowController {
 						  HttpSession httpSession,
 						  @PathVariable Long troupeId,
 						  Model model) {
-
+		log.info("フォーム確認メソッド開始");
 		model.addAttribute("troupeId", troupeId);
+
+		model.addAttribute("showOptions", ShowOption.values());
 		if(bindingResult.hasErrors()) {
+			log.warn("バリデーションエラー");
 			return "show/form";
 		}
 		httpSession.setAttribute("showDto", showDto);
+		log.info("セッション保存完了");
 		return "show/confirm";
 	}
 	
@@ -56,26 +75,32 @@ public class ShowController {
 	public String register(HttpSession httpSession,
 							 @PathVariable Long troupeId,
 							 RedirectAttributes redirectAttributes) {
+		log.info("フォーム登録メソッド開始");
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
 		
 		showService.createShow(showDto, troupeId);
+		log.info("データの保存");
 		
 		httpSession.removeAttribute("showDto");
+		log.info("セッションの削除");
 		
 		return "redirect:/show/complete";
 	}
 	
 	@GetMapping("/complete")
 	public String complete() {
+		log.info("フォーム完了");
 		return "show/complete";
 	}
 	
 	@GetMapping("/list/{troupeId}")
 	public String showList(Model model, @PathVariable Long troupeId) {
+		
 		List<Show> showList = showService.findAllActive(troupeId);
 		
 		model.addAttribute("troupeId", troupeId);		
 		model.addAttribute("showList", showList);
+		
 		
 		return "show/list";
 	}
@@ -92,8 +117,12 @@ public class ShowController {
 	
 	@GetMapping("/update/form/{showId}")
 	public String showUpdateForm(@PathVariable Long showId, Model model) {
+		log.info("編集フォーム提示メソッド開始");
 		model.addAttribute("showId", showId);
+
+		model.addAttribute("showOption", ShowOption.values());
 		
+		log.info("編集フォーム提示ページを投げる");
 		return "show/update/form";
 	}
 	
@@ -103,27 +132,36 @@ public class ShowController {
 			  				  HttpSession httpSession,
 			  				  @PathVariable Long showId,
 			  				  Model model) {
+		log.info("編集フォーム確認メソッド開始");
 		model.addAttribute("showId", showId);
+
+		model.addAttribute("showOptions", ShowOption.values());
 		if(bindingResult.hasErrors()) {
+			log.warn("バリデーションエラー");
 			return "show/update/form";
 		}
 		httpSession.setAttribute("showDto", showDto);
+		log.info("セッション保存");
 		return "show/update/confirm";
 	}
 	
 	@PostMapping("/update/regist/{showId}")
 	public String registerUpdate(HttpSession httpSession,
 							   RedirectAttributes redirectAttributes) {
+		log.info("編集フォーム更新メソッド開始");
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
 		
 		showService.updateShow(showDto);
+		log.info("編集データ保存");
 		httpSession.removeAttribute("showDto");
+		log.info("セッション削除");
 		
 		return "redirect:/show/complete";
 	}
 	
 	@PostMapping("/delete/{showId}")
 	public String delete(@PathVariable Long showId, Model model, RedirectAttributes redirectAttributes) {
+		log.info("削除メソッド開始");
 		model.addAttribute("showId", showId);
 		
 		Show show = showService.getById(showId);
@@ -131,6 +169,7 @@ public class ShowController {
 		Long troupeId = show.getTroupe().getId();
 		
 		showService.deleteShow(showId);
+		log.info("{}のデータ削除。公演ID: {}", show.getTitle(), show.getId());
 		
 		redirectAttributes.addFlashAttribute("successMessage", "予約を完了しました。");
 		

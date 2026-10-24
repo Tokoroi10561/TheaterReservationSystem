@@ -18,9 +18,11 @@ import com.example.demo.service.TicketTypeService;
 import com.example.demo.service.TroupeService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShowServiceImpl implements ShowService {
 	
 	private final ShowRepository showRepository;
@@ -32,6 +34,7 @@ public class ShowServiceImpl implements ShowService {
 	@Transactional
 	@Override
 	public void createShow(ShowDto showDto, Long troupeId) {
+		log.info("予約処理を開始します。");
 		Show show = showDto.toEntity();
 		Troupe troupe = troupeService.getById(troupeId);
 		show.setTroupe(troupe);
@@ -40,15 +43,17 @@ public class ShowServiceImpl implements ShowService {
 		staffService.saveStaffs(showDto.getStaffs(), show);
 		stageService.saveStages(showDto.getStages(), show);
 		ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
+		log.info("{}の公演登録が完了しました。 公演ID: {}", showDto.getTitle(), showDto.getId());
 	}
 	
 	@Transactional
 	@Override
 	public void updateShow(ShowDto showDto) {
-		
+		log.info("予約更新処理を開始します。");
 		Show show = getById(showDto.getId());
 		
 		if(show.getDeletedAt() == null) {
+			log.warn("バリデーションエラー");
 			throw new IllegalArgumentException("すでに削除されています");
 		}else {
 			show.setTitle(showDto.getTitle());
@@ -67,38 +72,46 @@ public class ShowServiceImpl implements ShowService {
 			staffService.saveStaffs(showDto.getStaffs(), show);
 			stageService.saveStages(showDto.getStages(), show);
 			ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
+			log.info("予約更新処理が完了しました。公演ID: {}", show.getId());
 		}
 	}
 	
 	@Transactional
 	@Override
 	public void deleteShow(Long id) {
+		log.info("予約削除処理を開始します。");
 		Show show = getById(id);
 		
 		if(show.getDeletedAt() == null) {
+			log.warn("バリデーションエラー");
 			throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
 		}else {
 			show.setDeletedAt(LocalDateTime.now());
 			
 			showRepository.save(show);
+			log.info("予約削除処理が完了しました。公演ID: {}", show.getId());
 		}
 	}
 	
 	@Override
 	public Show getById(Long id) {
-			Show show = showRepository.findById(id).orElseThrow(() ->
-				new NoDataFoundException("Idが存在しません" + id)
-			);
-			
-			if(show.getDeletedAt() == null) {
-				throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
-			}else {
-				return show;
-			}
+		log.info("showIdからのshowオブジェクト取得メソッドを開始します");
+		Show show = showRepository.findById(id).orElseThrow(() ->
+			new NoDataFoundException("Idが存在しません" + id)
+		);
+		
+		if(show.getDeletedAt() == null) {
+			log.warn("バリデーションエラー");
+			throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
+		}else {
+			log.info("showIdからのshowオブジェクト取得メソッドが完了しました。 公演ID: {}", id);
+			return show;
+		}
 	}
 	
 	@Override
 	public List<Show> findAllActive(Long troupeId){
+		log.info("activeなshowオブジェクト全取得メソッドを開始します。");
 		return showRepository.findAllActive(troupeId);
 	}
 }

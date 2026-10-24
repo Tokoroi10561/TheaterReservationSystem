@@ -22,6 +22,12 @@ public class AuthServiceImpl implements AuthService{
 	private final PasswordEncoder passwordEncoder;
 	private final TroupeService troupeService;
 	
+	@Transactional
+	@Override
+	public void registNewTroupe(TroupeDto dto) {
+		troupeService.regist(dto);
+	}
+	
 	@Override
 	public boolean check(LoginDto dto){
 		log.info("ログインチェックメソッドを開始します。");
@@ -52,11 +58,9 @@ public class AuthServiceImpl implements AuthService{
 		
 	}
 	
-	
-	//劇団新規登録
-	@Transactional
-	@Override
-	public void registNewTroupe(TroupeDto dto) {
-		troupeService.regist(dto);
+	public Long getTroupeId(LoginDto loginDto) {
+		String email = loginDto.getEmail();
+		
+		return troupeService.getByEmail(email).getId();
 	}
 }

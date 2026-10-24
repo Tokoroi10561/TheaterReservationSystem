@@ -11,32 +11,36 @@
         <div class="row justify-content-center">
             <div class="col-md-8 bg-white">
                 <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">公演一覧</h1>
-            </div>
-            <div th:object="${showList}">
-                <table class="table table-striped mt-3">
-                    <thead>
-                        <tr>
-                            <th>公演タイトル</th>
-                            <th>公演場所</th>
-                            <th>フライヤー画像</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="show : *{shows}">
-                            <td th:text="${show.title}"></td>
-                            <td th:text="${show.place}"></td>
-                            <td th:text="${show.flyer_image}"></td>
-                            <td>
-                                <a th:href="@{/show/update/form/{showId}(showId=${show.id})}" class="btn btn-primary">編集</a>
-                                <form th:action="@{/booking/delete/{id}(id=${booking.id})}" method="post"
-                                    onsubmit="return confirm('予約を削除しますか？')" style="display: inline">
-                                    <button type="submit" class="btn btn-danger" id="delete-btn">予約を削除</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <a th:href="@{/show/form/{troupeId}(troupeId=${troupeId})}" class="btn btn-primary">新規公演登録</a>
+                <div th:unless="${showList}">
+                    <p>公演が見つかりません。</p>
+                </div>
+                <div th:if="${showList}">
+                    <table class="table table-striped mt-3">
+                        <thead>
+                            <tr>
+                                <th>公演タイトル</th>
+                                <th>公演場所</th>
+                                <th>フライヤー画像</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="show : ${showList}">
+                                <td th:text="${show.title}"></td>
+                                <td th:text="${show.place}"></td>
+                                <td th:text="${show.flyerImage}"></td>
+                                <td>
+                                    <a th:href="@{/show/update/form/{showId}(showId=${show.id})}" class="btn btn-primary">編集</a>
+                                    <form th:action="@{/show/delete/{id}(id=${show.id})}" method="post"
+                                        onsubmit="return confirm('公演を削除しますか？')" style="display: inline">
+                                        <button type="submit" class="btn btn-danger" id="delete-btn">公演を削除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

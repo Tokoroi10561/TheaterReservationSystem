@@ -23,34 +23,34 @@
                             <input type="text" class="form-control" id="place" th:field="*{place}">
 
                             <label class="form-label" for="flyerImage">フライヤー画像</label>
-                            <input type="file" class="form-control" id="flyerImage" th:field="*{flyer_image}" accept=".pdf">
+                            <input type="file" class="form-control" id="flyerImage" th:field="*{flyerImage}" accept=".pdf">
 
                             <div th:each="ticketType, stat: *{ticketTypes}">
-                                <label class="form-label" for="ticketName">チケット種別</label>
-                                <input type="text" class="form-control" id="ticketName" th:field="${ticketType[__${stat.index}__].name}" required>
-                                <label class="form-label" for="ticketPrice">価格</label>
-                                <input type="number" class="form-control" id="ticketPrice" th:field="${ticketType[__${stat.index}__].price}" required>
+                                <label class="form-label" th:for="${'ticketName' + stat.index}">チケット種別</label>
+                                <input type="text" class="form-control" th:id="${'ticketName' + stat.index}" th:field="*{ticketTypes[__${stat.index}__].name}" required>
+                                <label class="form-label" th:for="${'ticketPrice' + stat.index}">価格</label>
+                                <input type="number" class="form-control" th:id="${'ticketPrice' + stat.index}" th:field="*{ticketTypes[__${stat.index}__].price}" required>
                             </div>
 
                             <div th:each="stage, stat: *{stages}">
-                                <label class="form-label" for="stageName">ステージ名</label>
-                                <input type="text" class="form-control" id="stageName" th:field="${stage[__${stat.index}__].name}" required>
-                                <label class="form-label" for="startTime">公演開始時間</label>
-                                <input type="datetime-local" class="form-control" id="startTime" th:field="${stage[__${stat.index}__].startTime}" required>
-                                <label class="form-label" for="capacity">定員</label>
-                                <input type="number" class="form-control" id="capacity" th:field="${stage[__${stat.index}__].capacity}" required>
+                                <label class="form-label" th:for="${'stageName' + stat.index}">ステージ名</label>
+                                <input type="text" class="form-control" th:id="${'stageName' + stat.index}" th:field="*{stages[__${stat.index}__].name}" required>
+                                <label class="form-label" th:for="${'startTime' + stat.index}">公演開始時間</label>
+                                <input type="datetime-local" class="form-control" th:id="${'startTime' + stat.index}" th:field="*{stages[__${stat.index}__].startTime}" required>
+                                <label class="form-label" th:for="${'capacity' + stat.index}">定員</label>
+                                <input type="number" class="form-control" th:id="${'capacity' + stat.index}" th:field="*{stages[__${stat.index}__].capacity}" required>
                             </div>
 
                             <div th:each="staff, stat: *{staffs}">
-                                <label class="form-label" for="staffName">スタッフ名</label>
-                                <input type="text" class="form-control" id="staffName" th:field="${staff[__${stat.index}__].name}" required>
-                                <label class="form-label" for="belong">所属</label>
-                                <input type="text" class="form-control" id="belong" th:field="${staff[__${stat.index}__].belong}" required>
+                                <label class="form-label" th:for="${'staffName' + stat.index}">スタッフ名</label>
+                                <input type="text" class="form-control" th:id="${'staffName' + stat.index}" th:field="*{staffs[__${stat.index}__].name}">
+                                <label class="form-label" th:for="${'belong' + stat.index}">所属</label>
+                                <input type="text" class="form-control" th:id="${'belong' + stat.index}" th:field="*{staffs[__${stat.index}__].belong}">
                             </div>
 
-                            <div th:each="option, stat: *{options.values()}">
-                                <label class="form-label" for="option" th:text="${option[__${stat.index}__].label}">扱い有</label>
-                                <input type="checkbox" class="form-check-input" id="option" th:field="${option[__${stat.index}__]}">
+                            <div th:each="option, stat: ${showOptions}">
+                                <label class="form-label" th:for="${'option' + stat.index}" th:text="${option.label}">扱い有</label>
+                                <input type="checkbox" class="form-check-input" th:id="${'option' + stat.index}" th:value="${option}" th:field="*{options}">
                             </div>
                         </div>
                     </div>

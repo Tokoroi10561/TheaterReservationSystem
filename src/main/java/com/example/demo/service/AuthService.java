@@ -8,8 +8,9 @@ import com.example.demo.dto.TroupeDto;
 @Service
 public interface AuthService {
 	
+	void registNewTroupe(TroupeDto dto);
+	
 	boolean check(LoginDto dto);
 	
-	void registNewTroupe(TroupeDto dto);
-
+	Long getTroupeId(LoginDto loginDto);
 }

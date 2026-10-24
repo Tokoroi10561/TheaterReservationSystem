@@ -22,12 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form
-                .loginPage("/login") // 自作のログイン画面のURL
-                .loginProcessingUrl("/login") // フォームの送信先URL（Spring Securityが自動処理）
-                .defaultSuccessUrl("/home", true) // ログイン成功後の遷移先
-                .permitAll()
-            )
+            .formLogin(form -> form.disable())
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()

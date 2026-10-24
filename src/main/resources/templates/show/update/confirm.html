@@ -16,7 +16,7 @@
                 <div th:object="${showDto}">
                     <p><strong>公演タイトル：</strong> <span th:text="*{title}"></span></p>
                     <p><strong>公演場所：</strong> <span th:text="*{place}"></span></p>
-                    <p><strong>フライヤー画像：</strong> <span th:text="*{flyer_image}"></span></p>
+                    <p><strong>フライヤー画像：</strong> <span th:text="*{flyerImage}"></span></p>
                     <div th:each="ticketType, stat: *{ticketTypes}">
                         <p><strong>チケット種別：</strong> <span th:text="${ticketType[__${stat.index}__].name}"></span></p>
                         <p><strong>価格：</strong> <span th:text="${ticketType[__${stat.index}__].price}"></span></p>
@@ -30,8 +30,11 @@
                         <p><strong>スタッフ名：</strong> <span th:text="${staff[__${stat.index}__].name}"></span></p>
                         <p><strong>所属：</strong> <span th:text="${staff[__${stat.index}__].belong}"></span></p>
                     </div>
-                    <div th:each="option, stat: *{options.values()}">
-                        <p><strong th:text="${option[__${stat.index}__].label}"></strong> <span th:text="${option[__${stat.index}__]} ? '扱い有' : '扱い無'"></span></p>
+                    <div th:if="!*{options.empty()}">
+                        <p><strong>フォームオプション：</strong> </p>
+                        <div th:each="option: ${showOptions}">
+                            <p><span th:text="${option}"></span></p>
+                        </div>
                     </div>
 
                     <button type="button" class="btn btn-secondary mt-3 mb-3" onclick="history.back()">戻る</button>

@@ -1,8 +1,18 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +34,7 @@ public class AuthController {
 	private final AuthService authService;
 
 	@GetMapping("/login")
-	public String showLoginForm() {
+	public String showLoginForm(@ModelAttribute LoginDto loginDto) {
 		log.info("ログインフォーム投げる");
 		return "login";
 	}
@@ -79,16 +89,33 @@ public class AuthController {
 	
 	@PostMapping("/login")
 	public String login(@Valid@ModelAttribute LoginDto loginDto,
-			BindingResult bindinResult,
-			RedirectAttributes redirectAttributes) {
+			BindingResult bindingResult,
+			RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
 		log.info("ログインメソッドの開始");
+		if(bindingResult.hasErrors()) {
+			bindingResult.getAllErrors().forEach(error -> {
+				System.out.println(error.getDefaultMessage());
+			});
+			return "login";
+		}
 		boolean canAuth = authService.check(loginDto);
 		
 		if(canAuth) {
+			Long troupeId = authService.getTroupeId(loginDto);
 			
+			// ★ Spring Security に「この人は認証済みです」と教える処理を追加
+	        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+	        Authentication authentication = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), null, authorities);
+	        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+	        securityContext.setAuthentication(authentication);
+	        SecurityContextHolder.setContext(securityContext);
+	        
+	        // セッションにセキュリティコンテキストを保存
+	        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 			
 			log.info("ログイン確認処理。成功");
-			return "redirect:/home";
+			return "redirect:/home/" + troupeId;
 		}else {
 			log.info("ログイン確認処理。失敗");
 			return "login";

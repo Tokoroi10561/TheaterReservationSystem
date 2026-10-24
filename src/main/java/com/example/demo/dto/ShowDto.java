@@ -1,13 +1,14 @@
 package com.example.demo.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import com.example.demo.constant.PaymentMethod;
 import com.example.demo.constant.ShowOption;
 import com.example.demo.entity.Show;
 
@@ -24,7 +25,6 @@ import lombok.Setter;
 @Builder
 public class ShowDto {
 	
-	@NotNull(message = "idは必須です")
 	private Long id;
 	
 	@NotBlank(message = "タイトルは必須です")
@@ -41,13 +41,15 @@ public class ShowDto {
 	
 	private Long troupeId;
 	
-	private List<StaffDto> staffs;
+	private List<StaffDto> staffs = new ArrayList<>();
 	
-	private List<StageDto> stages;
+	private List<StageDto> stages = new ArrayList<>();
 	
-	private List<TicketTypeDto> ticketTypes;
+	private List<TicketTypeDto> ticketTypes = new ArrayList<>();
 	
 	private Set<ShowOption> options;
+	
+	private PaymentMethod paymentMethod;
 	
 	public Show toEntity() {
 		return Show.builder()
@@ -55,6 +57,7 @@ public class ShowDto {
 				.place(this.place)
 				.flyerImage(this.flyerImage)
 				.options(this.options)
+				.paymentMethod(PaymentMethod.CASH)
 				.build();
 	}
 	
@@ -66,6 +69,7 @@ public class ShowDto {
 				.deletedAt(show.getDeletedAt())
 				.troupeId(show.getTroupe().getId())
 				.options(show.getOptions())
+				.paymentMethod(show.getPaymentMethod())
 				.build();
 	}
 }
