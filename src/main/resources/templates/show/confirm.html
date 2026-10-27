@@ -32,8 +32,8 @@
                     </div>
                     <div th:if="*{options != null and !options.empty}">
                         <p><strong>フォームオプション：</strong> </p>
-                        <div th:each="option: ${showOptions}">
-                            <p><span th:text="${option}"></span></p>
+                        <div th:each="option: *{options}">
+                            <p><span th:text="${option.label}"></span></p>
                         </div>
                     </div>
 
