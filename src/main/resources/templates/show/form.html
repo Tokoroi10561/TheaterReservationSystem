@@ -27,13 +27,13 @@
                             <label class="form-label" for="flyerImage">フライヤー画像</label>
                             <input type="file" class="form-control" id="flyerImage" th:field="*{flyerImage}" accept=".pdf"> -->
 
-                            <div id="ticket-container">
-                                <div th:each="ticketType, stat: *{ticketTypes}" class="mb-3 border p-3 rounded ticket-row">
+                            <div id="ticketType-container">
+                                <div th:each="ticketType, stat: *{ticketTypes}" class="mb-3 border p-3 rounded ticketType-row">
                                     <label class="form-label" th:for="${'ticketName' + stat.index}">チケット種別<span class="text-danger"> *</span></label>
                                     <input type="text" class="form-control" th:id="${'ticketName' + stat.index}" th:field="*{ticketTypes[__${stat.index}__].name}" required>
                                     <label class="form-label" th:for="${'ticketPrice' + stat.index}">価格<span class="text-danger"> *</span></label>
                                     <input type="number" class="form-control" th:id="${'ticketPrice' + stat.index}" th:field="*{ticketTypes[__${stat.index}__].price}" required>
-                                    <button type="button" class="btn btn-outline-success add-btn" title="追加">
+                                    <button type="button" class="btn btn-outline-success add-btn" data-section="ticketType">
                                         <i class="bi bi-plus-lg"></i>追加
                                     </button>
                                 </div>
@@ -47,7 +47,7 @@
                                     <input type="datetime-local" class="form-control" th:id="${'startTime' + stat.index}" th:field="*{stages[__${stat.index}__].startTime}" required>
                                     <label class="form-label" th:for="${'capacity' + stat.index}">定員<span class="text-danger"> *</span></label>
                                     <input type="number" class="form-control" th:id="${'capacity' + stat.index}" th:field="*{stages[__${stat.index}__].capacity}" required>
-                                    <button type="button" class="btn btn-outline-success add-btn" date-section="stage">
+                                    <button type="button" class="btn btn-outline-success add-btn" data-section="stage">
                                         <i class="bi bi-plus-lg"></i>追加
                                     </button>
                                 </div>
@@ -59,6 +59,9 @@
                                     <input type="text" class="form-control" th:id="${'staffName' + stat.index}" th:field="*{staffs[__${stat.index}__].name}">
                                     <label class="form-label" th:for="${'belong' + stat.index}">所属</label>
                                     <input type="text" class="form-control" th:id="${'belong' + stat.index}" th:field="*{staffs[__${stat.index}__].belong}">
+                                    <button type="button" class="btn btn-outline-success add-btn" data-section="staff">
+                                        <i class="bi bi-plus-lg"></i>追加
+                                    </button>
                                 </div>
                             </div>
 
