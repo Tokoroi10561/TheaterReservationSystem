@@ -21,15 +21,17 @@
                             <tr>
                                 <th>公演タイトル</th>
                                 <th>公演場所</th>
-                                <th>フライヤー画像</th>
+                                <!-- <th>フライヤー画像</th> -->
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="show : ${showList}">
-                                <td th:text="${show.title}"></td>
+                                <td>
+                                    <a th:href="@{/show/detail/{showId}(showId=${show.id})}" th:text="${show.title}"></a>
+                                </td>
                                 <td th:text="${show.place}"></td>
-                                <td th:text="${show.flyerImage}"></td>
+                                <!-- <td th:text="${show.flyerImage}"></td> -->
                                 <td>
                                     <a th:href="@{/show/update/form/{showId}(showId=${show.id})}" class="btn btn-primary">編集</a>
                                     <form th:action="@{/show/delete/{id}(id=${show.id})}" method="post"

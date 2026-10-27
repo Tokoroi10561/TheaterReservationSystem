@@ -46,8 +46,8 @@ public class Show {
 	@Column(name = "place", nullable = true, length = 100)
 	private String place;
 	
-	@Column(name = "flyer_image", nullable = true, length = 255)
-	private String flyerImage;
+//	@Column(name = "flyer_image", nullable = true, length = 255)
+//	private String flyerImage;
 	
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
@@ -71,7 +71,8 @@ public class Show {
 	
 	@ElementCollection(targetClass = ShowOption.class)
 	@Enumerated(EnumType.STRING)
-	@CollectionTable(name = "show_options")
+	@CollectionTable(name = "show_opts",
+		    joinColumns = @JoinColumn(name = "show_id"))
 	@Column(name = "option_name")
 	private Set<ShowOption> options;
 }

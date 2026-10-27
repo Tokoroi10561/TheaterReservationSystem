@@ -31,12 +31,12 @@ public class ShowDto {
 	@Size(min = 1, max = 100, message = "タイトルは1文字以上100文字以内で入力してください")
 	private String title;
 	
-	@Size(min = 0, max = 100, message = "場所は1文字以上100文字以内で入力してください")
+	@Size(max = 100, message = "場所は0文字以上100文字以内で入力してください")
 	private String place;
-	
-	@Size(max = 255, message = "ビラ画像のURLは255文字以内で入力してください")
-	private String flyerImage;
-	
+//	
+//	@Size(max = 255, message = "ビラ画像のURLは255文字以内で入力してください")
+//	private String flyerImage;
+//	
 	private LocalDateTime deletedAt;
 	
 	private Long troupeId;
@@ -55,7 +55,7 @@ public class ShowDto {
 		return Show.builder()
 				.title(this.title)
 				.place(this.place)
-				.flyerImage(this.flyerImage)
+//				.flyerImage(this.flyerImage)
 				.options(this.options)
 				.paymentMethod(PaymentMethod.CASH)
 				.build();
@@ -63,9 +63,10 @@ public class ShowDto {
 	
 	public static ShowDto fromEntity(Show show) {
 		return ShowDto.builder()
+				.id(show.getId())
 				.title(show.getTitle())
 				.place(show.getPlace())
-				.flyerImage(show.getFlyerImage())
+//				.flyerImage(show.getFlyerImage())
 				.deletedAt(show.getDeletedAt())
 				.troupeId(show.getTroupe().getId())
 				.options(show.getOptions())

@@ -10,34 +10,35 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 bg-white">
-                <form th:action="@{/show/confirm/{showId}(showId=${showId})}" th:object="${showDto}" method="post" enctype="multipart/form-data">
+                <form th:action="@{/show/update/confirm/{showId}(showId=*{id})}" th:object="${showDto}" method="post" enctype="multipart/form-data">
                     <div class="form-groupe">
                         <div class="form-title">
                             <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">公演情報更新</h1>
                         </div>
                         <div class="form-body">
+                            <input type="hidden" th:field="*{id}">
                             <label class="form-label" for="title">公演タイトル<span class="text-danger"> *</span>：</label>
                             <input type="text" class="form-control" id="title" th:field="*{title}" required>
                             
                             <label class="form-label" for="place">公演場所</label>
                             <input type="text" class="form-control" id="place" th:field="*{place}">
 
-                            <label class="form-label" for="flyerImage">フライヤー画像</label>
-                            <input type="file" class="form-control" id="flyerImage" th:field="*{flyerImage}" accept=".pdf">
+                            <!-- <label class="form-label" for="flyerImage">フライヤー画像</label>
+                            <input type="file" class="form-control" id="flyerImage" th:field="*{flyerImage}" accept=".pdf"> -->
 
                             <div th:each="ticketType, stat: *{ticketTypes}">
-                                <label class="form-label" th:for="${'ticketName' + stat.index}">チケット種別</label>
+                                <label class="form-label" th:for="${'ticketName' + stat.index}">チケット種別<span class="text-danger"> *</span></label>
                                 <input type="text" class="form-control" th:id="${'ticketName' + stat.index}" th:field="*{ticketTypes[__${stat.index}__].name}" required>
-                                <label class="form-label" th:for="${'ticketPrice' + stat.index}">価格</label>
+                                <label class="form-label" th:for="${'ticketPrice' + stat.index}">価格<span class="text-danger"> *</span></label>
                                 <input type="number" class="form-control" th:id="${'ticketPrice' + stat.index}" th:field="*{ticketTypes[__${stat.index}__].price}" required>
                             </div>
 
                             <div th:each="stage, stat: *{stages}">
-                                <label class="form-label" th:for="${'stageName' + stat.index}">ステージ名</label>
+                                <label class="form-label" th:for="${'stageName' + stat.index}">ステージ名<span class="text-danger"> *</span></label>
                                 <input type="text" class="form-control" th:id="${'stageName' + stat.index}" th:field="*{stages[__${stat.index}__].name}" required>
-                                <label class="form-label" th:for="${'startTime' + stat.index}">公演開始時間</label>
+                                <label class="form-label" th:for="${'startTime' + stat.index}">公演開始時間<span class="text-danger"> *</span></label>
                                 <input type="datetime-local" class="form-control" th:id="${'startTime' + stat.index}" th:field="*{stages[__${stat.index}__].startTime}" required>
-                                <label class="form-label" th:for="${'capacity' + stat.index}">定員</label>
+                                <label class="form-label" th:for="${'capacity' + stat.index}">定員<span class="text-danger"> *</span></label>
                                 <input type="number" class="form-control" th:id="${'capacity' + stat.index}" th:field="*{stages[__${stat.index}__].capacity}" required>
                             </div>
 

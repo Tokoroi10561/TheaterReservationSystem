@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.constant.PaymentMethod;
 import com.example.demo.dto.ShowDto;
 import com.example.demo.entity.Show;
 import com.example.demo.entity.Troupe;
@@ -48,31 +49,38 @@ public class ShowServiceImpl implements ShowService {
 	
 	@Transactional
 	@Override
-	public void updateShow(ShowDto showDto) {
+	public Long updateShow(ShowDto showDto) {
 		log.info("予約更新処理を開始します。");
 		Show show = getById(showDto.getId());
 		
-		if(show.getDeletedAt() == null) {
+		if(show.getDeletedAt() != null) {
 			log.warn("バリデーションエラー");
 			throw new IllegalArgumentException("すでに削除されています");
 		}else {
 			show.setTitle(showDto.getTitle());
 			show.setPlace(showDto.getPlace());
-			show.setFlyerImage(showDto.getFlyerImage());
 			
-			Troupe troupe = troupeService.getById(showDto.getTroupeId());
-			show.setTroupe(troupe);
+			//後で絶対変えないといけない
+			show.setPaymentMethod(PaymentMethod.CASH);
+			show.setOptions(showDto.getOptions());
+//			show.setFlyerImage(showDto.getFlyerImage());
 			
+			Long troupeId = show.getTroupe().getId();
+						
 			showRepository.save(show);
 			
 			staffService.deleteStaffs(show.getStaffs());
 			stageService.deleteStages(show.getStages());
 			ticketTypeService.deleteTicketTypes(show.getTicketTypes());
 			
+			showRepository.flush();
+			
 			staffService.saveStaffs(showDto.getStaffs(), show);
 			stageService.saveStages(showDto.getStages(), show);
 			ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
 			log.info("予約更新処理が完了しました。公演ID: {}", show.getId());
+			
+			return troupeId;
 		}
 	}
 	
@@ -82,7 +90,7 @@ public class ShowServiceImpl implements ShowService {
 		log.info("予約削除処理を開始します。");
 		Show show = getById(id);
 		
-		if(show.getDeletedAt() == null) {
+		if(show.getDeletedAt() != null) {
 			log.warn("バリデーションエラー");
 			throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
 		}else {
@@ -100,7 +108,7 @@ public class ShowServiceImpl implements ShowService {
 			new NoDataFoundException("Idが存在しません" + id)
 		);
 		
-		if(show.getDeletedAt() == null) {
+		if(show.getDeletedAt() != null) {
 			log.warn("バリデーションエラー");
 			throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
 		}else {

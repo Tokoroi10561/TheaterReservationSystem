@@ -11,7 +11,7 @@ import com.example.demo.entity.Show;
 public interface ShowService {
 
 	void createShow(ShowDto showDto, Long troupeId);
-	void updateShow(ShowDto showDto);
+	Long updateShow(ShowDto showDto);
 	void deleteShow(Long id);
 	
 	Show getById (Long id);

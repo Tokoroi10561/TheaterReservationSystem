@@ -15,6 +15,7 @@
                         <h1 class="h2 bg-primary text-white text-center mt-3 py-2 rounded">フォーム編集</h1>
                     </div>
                     <div class="form-body">
+                        <input type="hidden" th:field="*{id}">
 
                         <label class="form-label" for="name">名前</label>
                         <input type="text" class="form-control" id="name" th:field="*{name}" required>

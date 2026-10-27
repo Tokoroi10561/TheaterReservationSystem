@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.example.demo.constant.CapacityStatus;
 import com.example.demo.constant.StageStatus;
 import com.example.demo.entity.Stage;
@@ -32,6 +34,7 @@ public class StageDto {
 	@Size(min = 1, max = 100, message = "ステージ名は1文字以上100文字以下で入力してください")
 	private String name;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	@NotNull(message = "開演時間は必須です")
 	@Future(message = "開演時間は未来の時間を指定してください")
 	private LocalDateTime startTime;
@@ -64,6 +67,7 @@ public class StageDto {
 	
 	public static StageDto fromEntity(Stage stage) {
 		return StageDto.builder()
+				.id(stage.getId())
 				.name(stage.getName())
 				.startTime(stage.getStartTime())
 //				.endTime(stage.getEndTime())
