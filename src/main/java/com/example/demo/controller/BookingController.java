@@ -294,12 +294,17 @@ public class BookingController {
 	}
 	
 	@GetMapping("/list/{showId}")
-	public String bookingList() {
+	public String bookingList(Model model, @PathVariable Long showId) {
+		List<Booking> bookingList = bookingService.getAllActiveByShowId(showId, BookingStatus.RESERVED);
+		
+		model.addAttribute("bookingList", bookingList);
+		model.addAttribute("showId", showId);
+		
 		return "booking/list";
 	}
 	
 	@GetMapping("/detail/{bookingId}")
-	public String bookingDetail(){
+	public String bookingDetail(@PathVariable Long bookingId){
 		return "booking/detail";
 	}
 }

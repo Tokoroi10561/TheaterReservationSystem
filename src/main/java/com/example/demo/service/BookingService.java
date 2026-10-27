@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.constant.BookingStatus;
 import com.example.demo.dto.BookingDto;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.TicketType;
@@ -12,9 +13,7 @@ import com.example.demo.entity.TicketType;
 public interface BookingService {
 	
 	String createBooking(BookingDto dto);
-	
 	String updateBooking(BookingDto dto);
-	
 	void deleteBooking(String token);
 	
 	int calculateTicketSumPrice(BookingDto bookingDto);
@@ -22,10 +21,9 @@ public interface BookingService {
 	void mapTicketTypeToDto(List<TicketType> ticketTypes, BookingDto dto);
 	
 	Booking getValidateByTokenAndStatus(String token);
-	
 	Booking getById(Long id);
 	
-//	List<Booking> getAllBookings();
+	List<Booking> getAllActiveByShowId(Long showId, BookingStatus status);
 //	
 //	List<Booking> getBookingsByName(String name);
 //	

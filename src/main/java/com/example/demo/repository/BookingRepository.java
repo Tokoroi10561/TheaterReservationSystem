@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.entity.Booking;
@@ -34,4 +35,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	List<Booking> findByStaffId(Long staffId);
 	
 	List<Booking> findByBookingDetailsId(Long bookingDetailsId);
+	
+	@Query("SELECT b FROM Booking b WHERE b.bookingStatus =:status AND b.show.id = :showId")
+	List<Booking> findAllActiveByShowId(@Param("showId")Long showId, @Param("status")BookingStatus status);
 }

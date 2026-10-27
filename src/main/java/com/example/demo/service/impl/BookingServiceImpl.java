@@ -349,4 +349,9 @@ public class BookingServiceImpl implements BookingService {
 		new NoDataFoundException("idが見つかりません")
 		);
 	}
+	
+	@Override
+	public List<Booking> getAllActiveByShowId(Long showId, BookingStatus status){
+		return bookingRepository.findAllActiveByShowId(showId, status);
+	};
 }
