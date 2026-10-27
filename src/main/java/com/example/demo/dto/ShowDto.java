@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -37,6 +38,7 @@ public class ShowDto {
 //	@Size(max = 255, message = "ビラ画像のURLは255文字以内で入力してください")
 //	private String flyerImage;
 //	
+	@Future(message = "未来の時間を入力してください")
 	private LocalDateTime deletedAt;
 	
 	private Long troupeId;

@@ -12,6 +12,7 @@
             <div class="col-md-6">
                 <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">予約確認</h1>
                 <div class="form-group text-dark">
+                    
                     <p><strong>名前:</strong><span th:text="${bookingDto.name}"></span></p>
                     <p><strong>ナマエ:</strong><span th:text="${bookingDto.nameKana}"></span></p>
                     <p><strong>メールアドレス:</strong><span th:text="${bookingDto.email}"></span></p>
@@ -21,12 +22,13 @@
                     
                     <!-- 数字ではなく文字が表示されるようにする -->
 
-                    <p><strong>ステージ:</strong><span th:text="${bookingDto.stageId}"></span></p>
-                    <p><strong>スタッフ:</strong><span th:text="${bookingDto.staffId}"></span></p>
+                    <p><strong>ステージ:</strong><span th:text="${stage.name}"></span></p>
+                    <p><strong>スタッフ:</strong><span th:text="${staff.name}"></span></p>
                     <div th:each="bookingDetail, stat:${bookingDto.bookingDetails}">
-                        <p><strong th:text="${bookingDetail.ticketTypeId}"></strong>: <span th:text="${bookingDetail.quantity}"></span></p>
+                        <p><strong th:text="${bookingDetail.name}"></strong>: <span th:text="${bookingDetail.quantity}"></span></p>
                     </div>
                     <p><strong>備考:</strong><span th:text="${bookingDto.remarks}"></span></p>
+                    <p><strong>合計金額:</strong><span th:text="${sumPrice}"></span></p>
 
                     <form th:action="@{/booking/register/{showId}(showId=${showId})}" method="post">
                         <button type="submit" class="btn btn-primary">予約する</button>

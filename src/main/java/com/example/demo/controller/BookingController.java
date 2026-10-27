@@ -21,6 +21,8 @@ import com.example.demo.constant.PaymentMethod;
 import com.example.demo.dto.BookingDetailsDto;
 import com.example.demo.dto.BookingDto;
 import com.example.demo.entity.Booking;
+import com.example.demo.entity.Staff;
+import com.example.demo.entity.Stage;
 import com.example.demo.entity.TicketType;
 import com.example.demo.exception.NotReservedException;
 import com.example.demo.service.BookingDetailsService;
@@ -101,11 +103,17 @@ public class BookingController {
 		httpSession.setAttribute("bookingDto", bookingDto);
 		log.info("セッション保存完了");
 		
+		
 		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
 		model.addAttribute("sumPrice", sumPrice);
 		log.info("チケット合計金額: {}", sumPrice);
+		
+		Stage stage = stageService.stageExist(bookingDto.getStageId());
+		Staff staff = staffService.getStaffById(bookingDto.getStaffId());
 	
 		model.addAttribute("bookingDto", bookingDto);
+		model.addAttribute("stage", stage);
+		model.addAttribute("staff", staff);
 		
 		log.info("確認画面投げる");
 		return "booking/confirm";
@@ -233,8 +241,13 @@ public class BookingController {
 		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
 		log.info("チケット合計金額: {}", sumPrice);
 		model.addAttribute("sumPrice", sumPrice);
-		model.addAttribute("bookingDto", bookingDto);
 		
+		Stage stage = stageService.stageExist(bookingDto.getStageId());
+		Staff staff = staffService.getStaffById(bookingDto.getStaffId());
+		
+		model.addAttribute("bookingDto", bookingDto);
+		model.addAttribute("stage", stage);
+		model.addAttribute("staff", staff);
 		log.info("編集フォーム確認ページを投げる");
 		
 		return "booking/update/confirm";
@@ -278,5 +291,15 @@ public class BookingController {
 	public String completeDelete(Model model) {
 		log.info("削除完了");
 		return "booking/delete/complete";
+	}
+	
+	@GetMapping("/list/{showId}")
+	public String bookingList() {
+		return "booking/list";
+	}
+	
+	@GetMapping("/detail/{bookingId}")
+	public String bookingDetail(){
+		return "booking/detail";
 	}
 }

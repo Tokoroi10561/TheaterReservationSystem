@@ -109,28 +109,6 @@ public class ShowController {
 		return "show/complete";
 	}
 	
-	@GetMapping("/list/{troupeId}")
-	public String showList(Model model, @PathVariable Long troupeId) {
-		
-		List<Show> showList = showService.findAllActive(troupeId);
-		
-		model.addAttribute("troupeId", troupeId);		
-		model.addAttribute("showList", showList);
-		
-		
-		return "show/list";
-	}
-	
-	@GetMapping("/detail/{showId}")
-	public String showDetail(@PathVariable Long showId, Model model) {
-		
-		Show show = showService.getById(showId);
-		model.addAttribute("show", show);
-		model.addAttribute("showId", showId);
-		
-		return "show/detail";
-	}
-	
 	@GetMapping("/update/form/{showId}")
 	public String showUpdateForm(@PathVariable Long showId, Model model) {
 		log.info("編集フォーム提示メソッド開始");
@@ -242,5 +220,27 @@ public class ShowController {
 			}
 			showDto.setStaffs(staffDtos);
 		}
+	}
+
+	@GetMapping("/list/{troupeId}")
+	public String showList(Model model, @PathVariable Long troupeId) {
+		
+		List<Show> showList = showService.findAllActive(troupeId);
+		
+		model.addAttribute("troupeId", troupeId);		
+		model.addAttribute("showList", showList);
+		
+		
+		return "show/list";
+	}
+	
+	@GetMapping("/detail/{showId}")
+	public String showDetail(@PathVariable Long showId, Model model) {
+		
+		Show show = showService.getById(showId);
+		model.addAttribute("show", show);
+		model.addAttribute("showId", showId);
+		
+		return "show/detail";
 	}
 }
