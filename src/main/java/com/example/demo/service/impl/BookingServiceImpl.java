@@ -6,13 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.dto.BookingDetailsDto;
 import com.example.demo.dto.BookingDto;
+import com.example.demo.dto.BookingSearchCriteria;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.BookingDetails;
 import com.example.demo.entity.Staff;
@@ -245,23 +250,7 @@ public class BookingServiceImpl implements BookingService {
 		log.info("合計金額: {}", sum);
 		return sum;
 	}
-	
-//	@Override
-//	public List<Booking> getAllBookings() {}
-	
-//	@Override
-//	public List<Booking> getBookingsByName(String name) {}
-//	
-//	@Override
-//	public List<Booking> getBookingsByEmail(String email) {}
-//	
-//	@Override
-//	public List<Booking> getBookingsByStageId(Long stageId) {}
-	
-//	@Override
-//	public List<Booking> getBookingsByStaffId(Long staffId) {}
-	
-	
+
 	private int calculateSumDtoTicket
 						(List<BookingDetailsDto> bookingDetailsDtos, int total) {
 		for(BookingDetailsDto bookingDetailsDto: bookingDetailsDtos) {
@@ -354,4 +343,45 @@ public class BookingServiceImpl implements BookingService {
 	public List<Booking> getAllActiveByShowId(Long showId, BookingStatus status){
 		return bookingRepository.findAllActiveByShowId(showId, status);
 	};
+	
+	@Override
+	public Page<Booking> searchBookings(BookingSearchCriteria criteria, Pageable pageable){
+		Specification<Booking> spec = (root, query, criteriaBuilder) -> {
+			List<Predicate> predicates = new ArrayList<>();
+			
+			if(criteria.keyword() != null && !criteria.keyword().isBlank()) {
+				String pattern = "%" + criteria.keyword() + "%";
+				
+				Predicate nameMatch = criteriaBuilder.like(root.get("name"), pattern);
+				Predicate emailMatch = criteriaBuilder.like(root.get("email"),pattern);
+				Predicate phoneMatch = criteriaBuilder.like(root.get("phone"), pattern);
+				
+				predicates.add(criteriaBuilder.or(nameMatch, emailMatch, phoneMatch));
+			}
+			
+			if(criteria.stageId() != null) {
+				predicates.add(criteriaBuilder.equal(root.get("stage").get("id"), criteria.stageId()));
+			}
+			
+			if(criteria.staffId() != null) {
+				predicates.add(criteriaBuilder.equal(root.get("staff").get("id"), criteria.staffId()));
+			}
+			
+			if(criteria.ticketTypeId() != null) {
+				predicates.add(criteriaBuilder.equal(root.get("ticketType").get("id"), criteria.ticketTypeId()));
+			}
+			
+			if(criteria.bookingStatus() != null) {
+				predicates.add(criteriaBuilder.equal(root.get("bookingStatus"), criteria.bookingStatus()));
+			}
+			
+			if(criteria.paymentStatus() != null) {
+				predicates.add(criteriaBuilder.equal(root.get("paymentStatus"), criteria.paymentStatus()));
+			}
+			
+			return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+		};
+		
+		return bookingRepository.findAll(spec, pageable);
+	}
 }

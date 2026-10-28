@@ -2,10 +2,13 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.dto.BookingDto;
+import com.example.demo.dto.BookingSearchCriteria;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.TicketType;
 
@@ -24,12 +27,5 @@ public interface BookingService {
 	Booking getById(Long id);
 	
 	List<Booking> getAllActiveByShowId(Long showId, BookingStatus status);
-//	
-//	List<Booking> getBookingsByName(String name);
-//	
-//	List<Booking> getBookingsByEmail(String email);
-//	
-//	List<Booking> getBookingsByStageId(Long stageId);
-//	
-//	List<Booking> getBookingsByStaffId(Long staffId);
+	Page<Booking> searchBookings(BookingSearchCriteria criteria, Pageable pageable);
 }
