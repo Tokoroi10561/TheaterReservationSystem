@@ -28,7 +28,7 @@
                         <tbody>
                             <tr th:each="show : ${showList}">
                                 <td>
-                                    <a th:href="@{/show/detail/{showId}(showId=${show.id})}" th:text="${show.title}"></a>
+                                    <a th:href="@{/booking/list/{showId}(showId=${show.id})}" th:text="${show.title}"></a>
                                 </td>
                                 <td th:text="${show.place}"></td>
                                 <!-- <td th:text="${show.flyerImage}"></td> -->

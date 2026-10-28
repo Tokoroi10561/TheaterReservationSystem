@@ -42,13 +42,15 @@
                     </tr>
                     <!-- ・ステージ、スタッフ、チケット枚数は数字ではなく文字が表示されるようにする
                          ・チケット枚数系をきちんと表示させる
-                         ・電話番号、住所備考等はnullの場合は表示しないようにする -->
+                         ・電話番号、住所備考等はnullの場合は表示しないようにする
+                         ・合計金額が表示されるようにする。
+                         ・支払い済みか否かも表示されるようにする。 -->
                 </table>
 
                 <form th:action="@{/booking/update/form/{id}(id=${booking.id})}" method="get">
                     <button type="submit" class="btn btn-primary">予約を変更</button>
                 </form>
-                <form th:action="@{/booking/delete/{id}(id=${booking.id})}" method="post"
+                <form th:action="@{/booking/delete/customer/{id}(id=${booking.id})}" method="post"
                     onsubmit="return confirm('予約を削除しますか？')" style="display: inline">
                     <button type="submit" class="btn btn-danger" id="delete-btn">予約を削除</button>
                 </form>

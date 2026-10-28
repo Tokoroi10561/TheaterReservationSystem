@@ -274,8 +274,8 @@ public class BookingController {
 		return "redirect:/booking/form/complete";
 	}
 	
-	@PostMapping("/delete/{id}")
-	public String registerDelete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	@PostMapping("/delete/customer/{id}")
+	public String registerCustomerDelete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 		log.info("削除メソッド開始");
 		Booking booking = bookingService.getById(id);
 		
@@ -284,13 +284,26 @@ public class BookingController {
 		bookingService.deleteBooking(token);
 		log.info("{}様のデータ削除。token: {}", booking.getName(), token);
 		
-		return "redirect:/booking/delete/complete";
+		return "redirect:/booking/delete/customer/complete";
 	}
 	
-	@GetMapping("/delete/complete")
+	@GetMapping("/delete/customer/complete")
 	public String completeDelete(Model model) {
 		log.info("削除完了");
 		return "booking/delete/complete";
+	}
+	
+	@PostMapping("/delete/{id}")
+	public String registerDelete(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+		model.addAttribute("id", id);
+		
+		Booking booking = bookingService.getById(id);
+		Long showId = booking.getStage().getShow().getId();
+		bookingService.deleteBooking(booking.getToken());
+		
+		log.info("{}様のデータを削除。予約ID: {}", booking.getName(), booking.getId());
+		
+		return "redirect:/booking/list/" + showId;
 	}
 	
 	@GetMapping("/list/{showId}")
@@ -300,11 +313,22 @@ public class BookingController {
 		model.addAttribute("bookingList", bookingList);
 		model.addAttribute("showId", showId);
 		
+		//名前検索
+		//メール検索
+		//ステージ絞り込み、チケットタイプ絞り込み
+		//ソート
+		
 		return "booking/list";
 	}
 	
 	@GetMapping("/detail/{bookingId}")
-	public String bookingDetail(@PathVariable Long bookingId){
+	public String bookingDetail(@PathVariable Long bookingId, Model model){
+		Booking booking = bookingService.getById(bookingId);
+		
+		model.addAttribute("booking", booking);
+		//公演の名前詰めたほうが良いかな
+		//これBookingDetailsを詰める必要があるのか？
+		
 		return "booking/detail";
 	}
 }
