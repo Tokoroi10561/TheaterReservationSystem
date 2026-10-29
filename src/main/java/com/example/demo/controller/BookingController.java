@@ -283,7 +283,7 @@ public class BookingController {
 		
 		Long showId = staffService.getStaffById(bookingDto.getStaffId()).getShow().getId();
 		
-		return "redirect:/booking/form/complete" + showId;
+		return "redirect:/booking/complete/" + showId;
 	}
 	
 	@PostMapping("/delete/customer/{id}")

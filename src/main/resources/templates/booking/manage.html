@@ -26,15 +26,15 @@
                     </tr>
                     <tr>
                         <th>ステージ</th>
-                        <td th:text="${booking.stage}">1st</td>
+                        <td th:text="${booking.stage.name}">1st</td>
                     </tr>
-                    <!-- <tr>
-                        <th>チケット枚数</th>
-                        <td th:text="${booking.bookingDetails}">2</td>
-                    </tr> -->
+                    <div th:each="bookingDetail:${booking.bookingDetails}">
+                        <th th:text="${bookingDetail.ticketType.name}"></th>
+                        <td th:text="${bookingDetail.quantity}"></td>
+                    </div>
                     <tr>
                         <th>スタッフ</th>
-                        <td th:text="${booking.staff}">山田太郎</td>
+                        <td th:text="${booking.staff.name}">山田太郎</td>
                     </tr>
                     <tr>
                         <th>備考</th>

@@ -18,6 +18,10 @@
                         <td th:text="*{name}"></td>
                     </tr>
                     <tr>
+                        <th>ナマエ</th>
+                        <td th:text="*{nameKana}"></td>
+                    </tr>
+                    <tr>
                         <th>email</th>
                         <td th:text="*{email}">example@example.com</td>
                     </tr>
@@ -26,16 +30,20 @@
                         <td th:text="*{phone}">09012345678</td>
                     </tr>
                     <tr>
-                        <th>ステージ</th>
-                        <td th:text="*{stage}">1st</td>
+                        <th>住所</th>
+                        <td th:text="*{address}"></td>
                     </tr>
-                    <!-- <tr>
-                        <th>チケット枚数</th>
-                        <td th:text="${booking.bookingDetails}">2</td>
-                    </tr> -->
+                    <tr>
+                        <th>ステージ</th>
+                        <td th:text="*{stage.name}">1st</td>
+                    </tr>
+                    <div th:each="bookingDetail: *{bookingDetails}">
+                        <th th:text="${bookingDetail.ticketType.name}"></th>
+                        <td th:text="${bookingDetail.quantity}"></td>
+                    </div>
                     <tr>
                         <th>スタッフ</th>
-                        <td th:text="*{staff}">山田太郎</td>
+                        <td th:text="*{staff.name}">山田太郎</td>
                     </tr>
                     <tr>
                         <th>備考</th>

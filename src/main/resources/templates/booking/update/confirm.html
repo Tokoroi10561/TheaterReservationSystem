@@ -24,7 +24,7 @@
                     <p><strong>ステージ:</strong><span th:text="${stage.name}"></span></p>
                     <p><strong>スタッフ:</strong><span th:text="${staff.name}"></span></p>
                     <div th:each="ticketType, stat:${ticketTypes}">
-                        <p><strong th:text="${ticketType.name}"></strong>: <span th:text="${bookingDetail[__${stat.index}__].quantity}"></span></p>
+                        <p><strong th:text="${ticketType.name}"></strong>: <span th:text="${bookingDto.bookingDetails[__${stat.index}__].quantity}"></span></p>
                     </div>
                     <p><strong>備考:</strong><span th:text="${bookingDto.remarks}"></span></p>
                     <p><strong>合計金額:</strong><span th:text="${sumPrice}"></span></p>
