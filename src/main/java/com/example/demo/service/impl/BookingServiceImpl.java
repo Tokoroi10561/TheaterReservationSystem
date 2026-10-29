@@ -250,6 +250,29 @@ public class BookingServiceImpl implements BookingService {
 		log.info("合計金額: {}", sum);
 		return sum;
 	}
+	
+	@Override
+	public int calculateTicketSumPrice(Booking booking) {
+		log.info("チケット合計金額計算メソッドを開始します。");
+		int sum = 0;
+		
+		List<BookingDetails> bookingDetails = booking.getBookingDetails();
+		
+		for(BookingDetails bookingDetail: bookingDetails) {
+			int quantity = bookingDetail.getQuantity();
+			
+			Long ticketId = bookingDetail.getTicketType().getId();
+			
+			TicketType ticketType = ticketTypeService.getById(ticketId);
+			int price = ticketType.getPrice();
+			
+			int total = quantity * price;
+			
+			sum += total;
+		}
+		log.info("合計金額: {}", sum);
+		return sum;
+	}
 
 	private int calculateSumDtoTicket
 						(List<BookingDetailsDto> bookingDetailsDtos, int total) {

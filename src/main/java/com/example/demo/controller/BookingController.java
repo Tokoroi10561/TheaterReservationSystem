@@ -184,6 +184,9 @@ public class BookingController {
 			throw new NotReservedException("予約されていません");
 		}
 			model.addAttribute("booking", booking);
+			
+			int sumPrice = bookingService.calculateTicketSumPrice(booking);
+			model.addAttribute("sumPrice", sumPrice);
 		
 		log.info("更新前状態表示ページを投げる");
 		return "booking/manage";

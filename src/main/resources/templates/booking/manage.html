@@ -17,6 +17,10 @@
                         <td th:text="${booking.name}">小林瑞歩</td>
                     </tr>
                     <tr>
+                        <th>ナマエ</th>
+                        <td th:text="${booking.nameKana}"></td>
+                    </tr>
+                    <tr>
                         <th>email</th>
                         <td th:text="${booking.email}">example@example.com</td>
                     </tr>
@@ -40,9 +44,11 @@
                         <th>備考</th>
                         <td th:text="${booking.remarks}">備考内容</td>
                     </tr>
-                    <!-- ・ステージ、スタッフ、チケット枚数は数字ではなく文字が表示されるようにする
-                         ・チケット枚数系をきちんと表示させる
-                         ・電話番号、住所備考等はnullの場合は表示しないようにする
+                    <tr>
+                        <th>合計金額</th>
+                        <td th:text="${sumPrice}">備考内容</td>
+                    </tr>
+                    <!-- ・電話番号、住所備考等はnullの場合は表示しないようにする
                          ・合計金額が表示されるようにする。
                          ・支払い済みか否かも表示されるようにする。 -->
                 </table>
