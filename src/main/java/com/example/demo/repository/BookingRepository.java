@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.entity.Booking;
@@ -14,15 +13,15 @@ import com.example.demo.entity.Booking;
 public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
 	
 	//後でnameとemailをキーワード検索できるようにしたい
-	@Query("SELECT b FROM Booking b WHERE b.name LIKE %:name%")
-	List<Booking> findByName(String name);
-	
-	@Query("SELECT b FROM Booking b WHERE b.email LIKE %:email%")
-	List<Booking> findByEmail(String email);
-	
-	@Query("SELECT b FROM Booking b WHERE b.phone LIKE %:phone%")
-	List<Booking> findByPhone(String phone);
-	
+//	@Query("SELECT b FROM Booking b WHERE b.name LIKE %:name%")
+//	List<Booking> findByName(String name);
+//	
+//	@Query("SELECT b FROM Booking b WHERE b.email LIKE %:email%")
+//	List<Booking> findByEmail(String email);
+//	
+//	@Query("SELECT b FROM Booking b WHERE b.phone LIKE %:phone%")
+//	List<Booking> findByPhone(String phone);
+//	
 	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :status ORDER BY b.createdAt DESC")
 	List<Booking> findByStageId(Long stageId, BookingStatus status);
 	
@@ -39,7 +38,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 	List<Booking> findByStaffId(Long staffId);
 	
 	List<Booking> findByBookingDetailsId(Long bookingDetailsId);
-	
-	@Query("SELECT b FROM Booking b WHERE b.bookingStatus =:status AND b.show.id = :showId")
-	List<Booking> findAllActiveByShowId(@Param("showId")Long showId, @Param("status")BookingStatus status);
+//	
+//	@Query("SELECT b FROM Booking b WHERE b.bookingStatus =:status AND b.show.id = :showId")
+//	List<Booking> findAllActiveByShowId(@Param("showId")Long showId, @Param("status")BookingStatus status);
 }

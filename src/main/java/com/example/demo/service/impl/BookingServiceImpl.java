@@ -339,16 +339,23 @@ public class BookingServiceImpl implements BookingService {
 		);
 	}
 	
-	@Override
-	public List<Booking> getAllActiveByShowId(Long showId, BookingStatus status){
-		return bookingRepository.findAllActiveByShowId(showId, status);
-	};
+//	@Override
+//	public List<Booking> getAllActiveByShowId(Long showId, BookingStatus status){
+//		return bookingRepository.findAllActiveByShowId(showId, status);
+//	};
 	
 	@Override
-	public Page<Booking> searchBookings(BookingSearchCriteria criteria, Pageable pageable){
+	public Page<Booking> searchBookings(Long showId, BookingSearchCriteria criteria, Pageable pageable){
 		Specification<Booking> spec = (root, query, criteriaBuilder) -> {
 			List<Predicate> predicates = new ArrayList<>();
 			
+			predicates.add(criteriaBuilder.equal(
+						root.get("stage")
+						    .get("show")
+						    .get("id"),
+						    showId
+					)
+			);		
 			if(criteria.keyword() != null && !criteria.keyword().isBlank()) {
 				String pattern = "%" + criteria.keyword() + "%";
 				
@@ -373,6 +380,8 @@ public class BookingServiceImpl implements BookingService {
 			
 			if(criteria.bookingStatus() != null) {
 				predicates.add(criteriaBuilder.equal(root.get("bookingStatus"), criteria.bookingStatus()));
+			}else {
+				predicates.add(criteriaBuilder.equal(root.get("bookingStatus"), BookingStatus.RESERVED));
 			}
 			
 			if(criteria.paymentStatus() != null) {

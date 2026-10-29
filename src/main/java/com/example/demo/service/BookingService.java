@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.constant.BookingStatus;
 import com.example.demo.dto.BookingDto;
 import com.example.demo.dto.BookingSearchCriteria;
 import com.example.demo.entity.Booking;
@@ -25,7 +24,7 @@ public interface BookingService {
 	
 	Booking getValidateByTokenAndStatus(String token);
 	Booking getById(Long id);
-	
-	List<Booking> getAllActiveByShowId(Long showId, BookingStatus status);
-	Page<Booking> searchBookings(BookingSearchCriteria criteria, Pageable pageable);
+//	
+//	List<Booking> getAllActiveByShowId(Long showId, BookingStatus status);
+	Page<Booking> searchBookings(Long showId, BookingSearchCriteria criteria, Pageable pageable);
 }

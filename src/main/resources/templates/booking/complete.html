@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,9 @@
         <div class="row align-items-center justify-content-center">
             <div class="col-md-6">
                 <h1 class="h3 text-center bg-primary mt-3 text-white p-3 rounded">完了</h1>
-                <p>処理が完了しました。<br>メールから予約情報の確認、変更・削除が可能です。</p>
+                <p>処理が完了しました。<br>メールから予約情報の確認・変更・削除が可能です。</p>
+
+                <a th:href="@{/booking/form/{showId}(showId=${showId})}">ここから同公演の予約が可能です</a>
             </div>
         </div>
     </div>

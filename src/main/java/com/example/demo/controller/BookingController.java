@@ -5,6 +5,11 @@ import java.util.List;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +23,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.constant.BookingStatus;
 import com.example.demo.constant.PaymentMethod;
+import com.example.demo.constant.PaymentStatus;
 import com.example.demo.dto.BookingDetailsDto;
 import com.example.demo.dto.BookingDto;
+import com.example.demo.dto.BookingSearchCriteria;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.Staff;
 import com.example.demo.entity.Stage;
@@ -77,21 +84,21 @@ public class BookingController {
 							  ) {
 		log.info("フォーム確認メソッド開始");
 		model.addAttribute("showId", showId);
-		
+		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+		model.addAttribute("ticketTypes", ticketTypes);
 		if(bindingResult.hasErrors()) {
 			log.warn("バリデーションエラー");
 			bindingResult.getAllErrors().forEach(error -> {
 				System.out.println(error.getDefaultMessage());
 				});
 			
-			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+			
 			
 			BookingDto dto = new BookingDto();
 			
 			bookingService.mapTicketTypeToDto(ticketTypes, dto);
 			
 			model.addAttribute("bookingDto", dto);
-			model.addAttribute("ticketTypes", ticketTypes);
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 			model.addAttribute("paymentMethod", PaymentMethod.values());
@@ -155,11 +162,12 @@ public class BookingController {
 		
 		mailService.sendBookingMail(bookingDto, uuid);
 		log.info("メールの送信");
-		return "redirect:/booking/complete";
+		return "redirect:/booking/complete" + showId;
 	}
 	
-	@GetMapping("/complete")
-	public String complete() {
+	@GetMapping("/complete/{showId}")
+	public String complete(@PathVariable Long showId, Model model) {
+		model.addAttribute("showId", showId);
 		log.info("フォーム完了");
 		return "booking/complete";
 	}
@@ -216,17 +224,19 @@ public class BookingController {
 			  @PathVariable("id") Long bookingId
 			  ) {
 		log.info("編集フォーム確認メソッド開始");
+		
+		Booking booking = bookingService.getById(bookingId);
+		Long showId = booking.getStage().getShow().getId();
+		
+		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+		model.addAttribute("ticketTypes", ticketTypes);
 		if(bindingResult.hasErrors()) {
 			log.warn("バリデーションエラー");
-			Booking booking = bookingService.getById(bookingId);
-			Long showId = booking.getStage().getShow().getId();
 			
-			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 			
 			bookingService.mapTicketTypeToDto(ticketTypes, bookingDto);
 			
 			model.addAttribute("bookingDto", bookingDto);
-			model.addAttribute("ticketTypes", ticketTypes);
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 			model.addAttribute("paymentMethods", PaymentMethod.values());
@@ -271,7 +281,9 @@ public class BookingController {
 		mailService.sendBookingMail(bookingDto, uuid);
 		log.info("メール送信");
 		
-		return "redirect:/booking/form/complete";
+		Long showId = staffService.getStaffById(bookingDto.getStaffId()).getShow().getId();
+		
+		return "redirect:/booking/form/complete" + showId;
 	}
 	
 	@PostMapping("/delete/customer/{id}")
@@ -306,17 +318,40 @@ public class BookingController {
 		return "redirect:/booking/list/" + showId;
 	}
 	
-	@GetMapping("/list/{showId}")
-	public String bookingList(Model model, @PathVariable Long showId) {
-		List<Booking> bookingList = bookingService.getAllActiveByShowId(showId, BookingStatus.RESERVED);
+	@GetMapping({"/list/{showId}", "/search/{showId}"})
+	public String bookingList(BookingSearchCriteria criteria,
+							  @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable,
+							  Model model,
+							  @PathVariable Long showId) {
+		String sortBy = criteria.sortBy() != null ? criteria.sortBy() : "";
 		
-		model.addAttribute("bookingList", bookingList);
+		Sort sort = switch(sortBy) {
+			case "stage" ->
+				Sort.by("stage.startTime").ascending();
+			default ->
+				Sort.by(Sort.Direction.DESC,"id");
+		};
+		
+		Pageable customPageable = PageRequest.of(
+				pageable.getPageNumber(),
+				pageable.getPageSize(),
+				sort
+				);
+		
+		Page<Booking> bookingPage = bookingService.searchBookings(showId, criteria, customPageable);
+		
+		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
+		
 		model.addAttribute("showId", showId);
-		
-		//名前検索
-		//メール検索
-		//ステージ絞り込み、チケットタイプ絞り込み
-		//ソート
+		model.addAttribute("bookingPage", bookingPage);
+		model.addAttribute("bookings", bookingPage.getContent());
+		model.addAttribute("allBookingStatus", BookingStatus.values());
+		model.addAttribute("allPaymentStatus", PaymentStatus.values());
+//		model.addAttribute("paymentMethods", PaymentMethod.values());
+		model.addAttribute("criteria", criteria);
+		model.addAttribute("ticketTypes", ticketTypes);
+		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
+		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 		
 		return "booking/list";
 	}

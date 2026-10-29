@@ -9,5 +9,6 @@ public record BookingSearchCriteria (
 	Long ticketTypeId,
 	Long staffId,
 	BookingStatus bookingStatus,
-	PaymentStatus paymentStatus
+	PaymentStatus paymentStatus,
+	String sortBy
 	) {}

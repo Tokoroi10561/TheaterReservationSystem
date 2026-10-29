@@ -5,16 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>予約一覧</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 画面上部の検索エリアをスッキリ横並びにするスタイルの例 */
+        .search-bar {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .search-field {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9rem;
+        }
+        .search-field label {
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .search-field input, .search-field select {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-actions {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
 </head>
 <body class="bg-secondary">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 bg-light">
                 <h1 class="bg-primary text-white text-center mt-3 rounded py-3">予約一覧</h1>
-                <div th:unless="${bookingList}">
+                <form th:action="@{/booking/search/{showId}(showId=${showId})}" method="get" th:object="${criteria}" class="search-bar">
+        
+                    <!-- キーワード入力 -->
+                    <div class="search-field">
+                        <label>キーワード</label>
+                        <input type="text" th:field="*{keyword}" placeholder="名前・メアド・電話" />
+                    </div>
+
+                    <!-- ステータス選択 -->
+                    <div class="search-field">
+                        <label>予約ステータス</label>
+                        <select th:field="*{bookingStatus}">
+                            <option value="">すべて</option>
+                            <option th:each="bs : ${allBookingStatus}" 
+                                    th:value="${bs}" th:text="${bs.label}">STATUS</option>
+                        </select>
+                    </div>
+
+                    <div class="search-field">
+                        <label>支払い方法</label>
+                        <select th:field="*{paymentStatus}">
+                            <option value="">すべて</option>
+                            <option th:each="ps : ${allPaymentMethods}" 
+                                    th:value="${ps}" th:text="${ps.label}">STATUS</option>
+                        </select>
+                    </div>
+
+                    <div class="ticket-field">
+                        <label>チケット種別</label>
+                        <select th:field="*{ticketTypeId}">
+                            <option value="">すべて</option>
+                            <option th:each="ticketType : ${ticketTypes}" 
+                                    th:value="${ticketType.id}" th:text="${ticketType.name}">STATUS</option>
+                        </select>
+                    </div>
+
+                    <div class="search-field">
+                        <label>ステージ</label>
+                        <select th:field="*{stageId}">
+                            <option value="">すべて</option>
+                            <option th:each="stage : ${stages}" 
+                                    th:value="${stage.id}" th:text="${stage.name}">STATUS</option>
+                        </select>
+                    </div>
+
+                    <div class="search-field">
+                        <label>スタッフ</label>
+                        <select th:field="*{staffId}">
+                            <option value="">すべて</option>
+                            <option th:each="staff : ${staffs}" 
+                                    th:value="${staff.id}" th:text="${staff.name}">STATUS</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>並べ替え</label>
+                        <select th:field="*{sortBy}">
+                            <option value="id">新しい順</option>
+                            <option value="stage">ステージ順</option>
+                        </select>
+                    </div>
+
+                    <!-- ボタン類 -->
+                    <div class="search-actions">
+                        <button type="submit">絞り込み</button>
+                        <a th:href="@{/bookings}" style="padding: 6px 12px; text-decoration: none; background: #ddd; color: #333; border-radius: 4px;">クリア</a>
+                    </div>
+                </form>
+                <div th:unless="${bookings}">
                     <p>現在予約はありません</p>
                 </div>
-                <div th:if="{bookingList}">
+                <div th:if="${bookings}">
+                    <h2>予約一覧（全 <span th:text="${bookingPage.totalElements}">0</span> 件）</h2>
                     <table class="table table-striped mt-3">
                         <thead>
                             <tr>
@@ -28,15 +128,17 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
-                            <tr th:each="booking: ${bookingList}">
+                            <tr th:each="booking: ${bookings}">
                                 <td>
-                                    <a th:href="@{/booking/detail/${booking.id}}" th:text="${booking.name}"></a>
+                                    <a th:href="@{/booking/detail/{id}(id=${booking.id})}" th:text="${booking.name}"></a>
                                     <p>(<span th:text="${booking.nameKana}"></span>)</p>
                                 </td>
                                 <td th:text="${booking.email}"></td>
                                 <td th:text="${booking.stage.name}"></td>
                                 <!-- チケット種別 -->
+                                 <td th:text="${booking.staff.name}"></td>
                                 <td th:text="${booking.createdAt}"></td>
                                 <td th:text="${booking.bookingStatus}"></td>
                                 <td>
