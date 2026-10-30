@@ -78,13 +78,6 @@ public class Booking {
 	@Column(name = "booking_status", nullable = false)
 	private BookingStatus bookingStatus;
 	
-//	@Enumerated(EnumType.STRING)
-//	@Column(name = "payment_status", nullable = false)
-//	private PaymentStatus paymentStatus;
-	
-	//メール遅れたか否かのstatusを作りたい
-	
-	
 	@ManyToOne
 	@JoinColumn(name = "stage_id", nullable = false)
 	private Stage stage;

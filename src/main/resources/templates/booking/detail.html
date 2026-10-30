@@ -46,12 +46,21 @@
                         <td th:text="*{staff.name}">山田太郎</td>
                     </tr>
                     <tr>
+                        <th>支払い方法</th>
+                        <td th:text="${booking.paymentMethod.label}"></td>
+                    </tr>
+                    <!-- <tr>
+                        <th>支払い状況</th>
+                        <td th:text="${booking.paymentStatus.label}"></td>
+                    </tr> -->
+                    <tr>
+                        <th>予約状況</th>
+                        <td th:text="${booking.bookingStatus.label}"></td>
+                    </tr>
+                    <tr>
                         <th>備考</th>
                         <td th:text="*{remarks}">備考内容</td>
                     </tr>
-                    <!-- ・電話番号、住所備考等はnullの場合は表示しないようにする
-                         ・合計金額が表示されるようにする。
-                         ・支払い済みか否かも表示されるようにする。 -->
                 </table>
                 <form th:action="@{/booking/update/form/{id}(id=${booking.id})}" method="get">
                     <button type="submit" class="btn btn-primary">予約を変更</button>

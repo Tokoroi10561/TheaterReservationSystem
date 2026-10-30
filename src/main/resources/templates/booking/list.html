@@ -40,7 +40,7 @@
 <body class="bg-secondary">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8 bg-light">
+            <div class="col-md-12 bg-light">
                 <h1 class="bg-primary text-white text-center mt-3 rounded py-3">予約一覧</h1>
                 <form th:action="@{/booking/search/{showId}(showId=${showId})}" method="get" th:object="${criteria}" class="search-bar">
         
@@ -69,7 +69,7 @@
                         </select>
                     </div>
 
-                    <div class="ticket-field">
+                    <div class="search-field">
                         <label>チケット種別</label>
                         <select th:field="*{ticketTypeId}">
                             <option value="">すべて</option>
@@ -120,9 +120,12 @@
                             <tr>
                                 <th>名前(ナマエ)</th>
                                 <th>メールアドレス</th>
+                                <th>電話番号</th>
                                 <th>ステージ</th>
                                 <!-- <th>チケット種別</th> -->
                                 <th>スタッフ扱い</th>
+                                <th>支払方法</th>
+                                <!-- <th>支払い状況</th> -->
                                 <th>予約日時</th>
                                 <th>ステータス</th>
                                 <th>操作</th>
@@ -136,11 +139,14 @@
                                     <p>(<span th:text="${booking.nameKana}"></span>)</p>
                                 </td>
                                 <td th:text="${booking.email}"></td>
+                                <td th:text="${booking.phone}"></td>
                                 <td th:text="${booking.stage.name}"></td>
                                 <!-- チケット種別 -->
-                                 <td th:text="${booking.staff.name}"></td>
+                                <td th:text="${booking.staff.name}"></td>
+                                <td th:text="${booking.paymentMethod.label}"></td>
+                                <!-- <td th:text="${booking.paymentStatus.label}"></td> -->
                                 <td th:text="${booking.createdAt}"></td>
-                                <td th:text="${booking.bookingStatus}"></td>
+                                <td th:text="${booking.bookingStatus.label}"></td>
                                 <td>
                                     <a th:href="@{/booking/update/form/{id}(id=${booking.id})}" class="btn btn-primary">編集</a>
                                     <form th:action="@{/booking/delete/{id}(id=${booking.id})}" method="post"
