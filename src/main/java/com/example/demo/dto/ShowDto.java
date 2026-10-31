@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.constant.PaymentMethod;
 import com.example.demo.constant.ShowOption;
+import com.example.demo.constant.ShowStatus;
 import com.example.demo.entity.Show;
 
 import lombok.AllArgsConstructor;
@@ -56,12 +57,15 @@ public class ShowDto {
 	
 	private PaymentMethod paymentMethod;
 	
+	private ShowStatus showStatus;
+	
 	public Show toEntity() {
 		return Show.builder()
 				.title(this.title)
 				.place(this.place)
 				.options(this.options)
 				.paymentMethod(PaymentMethod.CASH)
+				.showStatus(ShowStatus.DRAFT)
 				.build();
 	}
 	
@@ -74,6 +78,7 @@ public class ShowDto {
 				.troupeId(show.getTroupe().getId())
 				.options(show.getOptions())
 				.paymentMethod(show.getPaymentMethod())
+				.showStatus(show.getShowStatus())
 				.build();
 	}
 }
