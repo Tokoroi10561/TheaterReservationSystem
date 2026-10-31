@@ -14,6 +14,9 @@ public interface ShowService {
 	Long updateShow(ShowDto showDto);
 	void deleteShow(Long id);
 	
+	void saveFile(ShowDto showDto);
+	void registerFile(ShowDto showDto);
+	
 	Show getById (Long id);
 	
 	List<Show> findAllActive(Long troupeId);

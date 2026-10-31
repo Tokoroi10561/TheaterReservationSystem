@@ -1,10 +1,16 @@
 package com.example.demo.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.constant.PaymentMethod;
 import com.example.demo.dto.ShowDto;
@@ -37,6 +43,9 @@ public class ShowServiceImpl implements ShowService {
 	public void createShow(ShowDto showDto, Long troupeId) {
 		log.info("予約処理を開始します。");
 		Show show = showDto.toEntity();
+		
+		show.setFlyerFileName(showDto.getFlyerFileName());
+		
 		Troupe troupe = troupeService.getById(troupeId);
 		show.setTroupe(troupe);
 		showRepository.save(show);
@@ -63,7 +72,8 @@ public class ShowServiceImpl implements ShowService {
 			//後で絶対変えないといけない
 			show.setPaymentMethod(PaymentMethod.CASH);
 			show.setOptions(showDto.getOptions());
-//			show.setFlyerImage(showDto.getFlyerImage());
+			
+			show.setFlyerFileName(showDto.getFlyerFileName());
 			
 			Long troupeId = show.getTroupe().getId();
 						
@@ -121,5 +131,81 @@ public class ShowServiceImpl implements ShowService {
 	public List<Show> findAllActive(Long troupeId){
 		log.info("activeなshowオブジェクト全取得メソッドを開始します。");
 		return showRepository.findAllActive(troupeId);
+	}
+	
+	@Override
+	@Transactional
+	public void saveFile(ShowDto showDto) {
+		log.info("ファイル一時保存メソッドを開始します。");
+		Path uploadDir = Path.of("uploads/temp");
+		
+		if(!Files.exists(uploadDir)) {
+			try {
+				Files.createDirectories(uploadDir);
+				log.info("一時保存用ディレクトリを作成しました。");
+			} catch (IOException e) {
+				log.error("一時保存用ディレクトリ作成失敗", e);
+				throw new RuntimeException("一時保存用ディレクトリ作成失敗", e);
+			}
+		}
+		
+		MultipartFile file = showDto.getFlyerImage();
+		
+		String tempFileName = UUID.randomUUID() + ".pdf";
+		log.info("DB保存用ファイル名: {}", tempFileName);
+		
+		if(file != null && !file.isEmpty()) {
+			try {
+				Files.copy(
+						file.getInputStream(),
+						uploadDir.resolve(tempFileName)
+						);
+				log.info("フライヤーを一時保存場所に保存");
+			} catch (IOException e) {
+				log.error("フライヤー保存失敗", e);
+				throw new RuntimeException("フライヤー保存失敗", e);
+			}
+			
+			showDto.setFlyerFileName(tempFileName);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public void registerFile(ShowDto showDto) {
+		log.info("ファイル移動メソッドを開始します。");
+		
+		Path tempDir = Path.of("uploads/temp");
+		Path permDir = Path.of("uploads/saved");
+		
+		if(!Files.exists(permDir)) {
+			try {
+				Files.createDirectories(permDir);
+			}catch(IOException e) {
+				log.error("本番ディレクトリ作成失敗。", e);
+				throw new RuntimeException("本番ディレクトリ作成失敗");
+			}
+		}
+		
+		String fileName = showDto.getFlyerFileName();
+		
+		if(fileName != null && !fileName.isBlank()) {
+			Path sourcePath = tempDir.resolve(fileName);
+			Path targetPath = permDir.resolve(fileName);
+			
+			try {
+				if(Files.exists(sourcePath)) {
+					Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+				}else {
+					log.warn("一時ファイルが見つかりません (すでに削除された可能性): {}", sourcePath);
+				}
+				
+				log.info("ファイルを本番ディレクトリへ移動しました: {}", fileName);
+				
+			}catch(IOException e) {
+				log.error("ファイルの移動に失敗しました", e);
+	            throw new RuntimeException("ファイルの移動に失敗しました", e);
+			}
+		}
 	}
 }

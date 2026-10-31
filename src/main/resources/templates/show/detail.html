@@ -15,7 +15,7 @@
                 <div th:object="${show}">
                     <p><strong>公演タイトル：</strong> <span th:text="*{title}"></span></p>
                     <p><strong>公演場所：</strong> <span th:text="*{place}"></span></p>
-                    <!-- <p><strong>フライヤー画像：</strong> <span th:text="*{flyerImage}"></span></p> -->
+                    <p><strong>フライヤー画像：</strong><a th:href="@{/show/flyer/{fileName}(fileName=*{flyerFileName})}" target="_blank">フライヤーを見る</a></p>
                     <div th:each="ticketType: *{ticketTypes}">
                         <p><strong>チケット種別：</strong> <span th:text="${ticketType.name}"></span></p>
                         <p><strong>価格：</strong> <span th:text="${ticketType.price}"></span></p>

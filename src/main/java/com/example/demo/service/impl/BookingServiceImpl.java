@@ -44,6 +44,7 @@ public class BookingServiceImpl implements BookingService {
 	private final StageService stageService;
 	private final TicketTypeService ticketTypeService;
 	private final StaffService staffService;
+//	private final ShowService showService;
 	
 	@Transactional
 	@Override

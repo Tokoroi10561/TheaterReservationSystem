@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.demo.constant.PaymentMethod;
 import com.example.demo.constant.ShowOption;
 import com.example.demo.entity.Show;
@@ -34,10 +36,11 @@ public class ShowDto {
 	
 	@Size(max = 100, message = "場所は0文字以上100文字以内で入力してください")
 	private String place;
-//	
-//	@Size(max = 255, message = "ビラ画像のURLは255文字以内で入力してください")
-//	private String flyerImage;
-//	
+
+	private MultipartFile flyerImage;
+	
+	private String flyerFileName;
+			
 	@Future(message = "未来の時間を入力してください")
 	private LocalDateTime deletedAt;
 	
@@ -57,7 +60,6 @@ public class ShowDto {
 		return Show.builder()
 				.title(this.title)
 				.place(this.place)
-//				.flyerImage(this.flyerImage)
 				.options(this.options)
 				.paymentMethod(PaymentMethod.CASH)
 				.build();
@@ -68,8 +70,7 @@ public class ShowDto {
 				.id(show.getId())
 				.title(show.getTitle())
 				.place(show.getPlace())
-//				.flyerImage(show.getFlyerImage())
-				.deletedAt(show.getDeletedAt())
+				.flyerFileName(show.getFlyerFileName())				.deletedAt(show.getDeletedAt())
 				.troupeId(show.getTroupe().getId())
 				.options(show.getOptions())
 				.paymentMethod(show.getPaymentMethod())

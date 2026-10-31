@@ -1,11 +1,17 @@
 package com.example.demo.controller;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,9 +20,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.constant.ShowOption;
+import com.example.demo.constant.ShowStatus;
 import com.example.demo.dto.ShowDto;
 import com.example.demo.dto.StaffDto;
 import com.example.demo.dto.StageDto;
@@ -25,6 +33,7 @@ import com.example.demo.entity.Show;
 import com.example.demo.entity.Staff;
 import com.example.demo.entity.Stage;
 import com.example.demo.entity.TicketType;
+import com.example.demo.exception.PublishException;
 import com.example.demo.service.ShowService;
 import com.example.demo.service.StaffService;
 import com.example.demo.service.StageService;
@@ -82,6 +91,7 @@ public class ShowController {
 			
 			return "show/form";
 		}
+		showService.saveFile(showDto);
 		httpSession.setAttribute("showDto", showDto);
 		log.info("セッション保存完了");
 		return "show/confirm";
@@ -93,6 +103,8 @@ public class ShowController {
 							 RedirectAttributes redirectAttributes) {
 		log.info("フォーム登録メソッド開始");
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
+		
+		showService.registerFile(showDto);
 		
 		showService.createShow(showDto, troupeId);
 		log.info("データの保存");
@@ -111,19 +123,25 @@ public class ShowController {
 	
 	@GetMapping("/update/form/{showId}")
 	public String showUpdateForm(@PathVariable Long showId, Model model) {
-		log.info("編集フォーム提示メソッド開始");
-		Show show = showService.getById(showId);
-		ShowDto showDto = ShowDto.fromEntity(show);
-		
-		formSetup(showId, showDto);
-		
-		model.addAttribute("showDto", showDto);
-		model.addAttribute("showId", showId);
-
-		model.addAttribute("showOptions", ShowOption.values());
-		
-		log.info("編集フォーム提示ページを投げる");
-		return "show/update/form";
+			log.info("編集フォーム提示メソッド開始");
+			Show show = showService.getById(showId);
+			
+			if(show.getShowStatus() == ShowStatus.DRAFT) {
+			
+			ShowDto showDto = ShowDto.fromEntity(show);
+			
+			formSetup(showId, showDto);
+			
+			model.addAttribute("showDto", showDto);
+			model.addAttribute("showId", showId);
+	
+			model.addAttribute("showOptions", ShowOption.values());
+			
+			log.info("編集フォーム提示ページを投げる");
+			return "show/update/form";
+			} else {
+				throw new PublishException("編集はできません。");
+			}
 	}
 	
 	@PostMapping("/update/confirm/{showId}")
@@ -146,6 +164,7 @@ public class ShowController {
 			model.addAttribute("showDto", showDto);
 			return "show/update/form";
 		}
+		showService.saveFile(showDto);
 		
 		httpSession.setAttribute("showDto", showDto);
 		log.info("セッション保存");
@@ -157,6 +176,8 @@ public class ShowController {
 							   RedirectAttributes redirectAttributes) {
 		log.info("編集フォーム更新メソッド開始");
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
+		
+		showService.registerFile(showDto);
 		
 		Long troupeId = showService.updateShow(showDto);
 		log.info("編集データ保存");
@@ -242,5 +263,27 @@ public class ShowController {
 		model.addAttribute("showId", showId);
 		
 		return "show/detail";
+	}
+	
+	@GetMapping("/flyer/{fileName:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> getFlyer(@PathVariable String fileName){
+		try {	
+			Path path = Path.of("uploads", "saved", fileName).normalize();
+			
+			Resource resource = new FileSystemResource(path);
+			
+			if(!resource.exists() || !resource.isReadable()) {
+				return ResponseEntity.notFound().build();
+			}
+			
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_PDF)
+					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+					.body(resource);
+			
+		}catch(Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
 	}
 }

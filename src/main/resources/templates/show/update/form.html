@@ -24,8 +24,8 @@
                             <label class="form-label" for="place">公演場所</label>
                             <input type="text" class="form-control mb-3" id="place" th:field="*{place}">
 
-                            <!-- <label class="form-label" for="flyerImage">フライヤー画像</label>
-                            <input type="file" class="form-control" id="flyerImage" th:field="*{flyerImage}" accept=".pdf"> -->
+                            <label class="form-label" for="flyerImage">フライヤー画像</label>
+                            <input type="file" class="form-control" id="flyerImage" th:field="*{flyerImage}" accept=".pdf">
 
                             <div id="ticketType-container">
                                 <div th:each="ticketType, stat: *{ticketTypes}" class="mb-3 border p-3 rounded ticketType-row">

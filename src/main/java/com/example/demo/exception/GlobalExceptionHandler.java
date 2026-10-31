@@ -52,6 +52,13 @@ public class GlobalExceptionHandler {
 		return "error/already-exists";
 	}
 	
+	@ExceptionHandler(PublishException.class)
+	public String handlePublishException(PublishException ex, Model model) {
+		model.addAttribute("errorMessage", ex.getMessage());
+		
+		return "error/publish";
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public String handleException(Exception ex, Model model) {
 		model.addAttribute("errorMessage", "予期せぬエラーが発生しました。時間をおいてやり直してください" + ex.getMessage());

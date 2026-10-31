@@ -20,6 +20,7 @@ import jakarta.persistence.Table;
 
 import com.example.demo.constant.PaymentMethod;
 import com.example.demo.constant.ShowOption;
+import com.example.demo.constant.ShowStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,8 +47,8 @@ public class Show {
 	@Column(name = "place", nullable = true, length = 100)
 	private String place;
 	
-//	@Column(name = "flyer_image", nullable = true, length = 255)
-//	private String flyerImage;
+	@Column(name = "flyer_file_name", nullable = true, length = 255)
+	private String flyerFileName;
 	
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
@@ -59,6 +60,10 @@ public class Show {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_method", nullable = false)
 	private PaymentMethod paymentMethod;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "show_status", nullable = false)
+	private ShowStatus showStatus;
 	
 	@OneToMany(mappedBy = "show")
 	private List<Stage> stages;
