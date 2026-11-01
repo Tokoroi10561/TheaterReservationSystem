@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.constant.PaymentMethod;
@@ -94,7 +95,14 @@ public class ShowController {
 			
 			return "show/form";
 		}
-		showService.saveFile(showDto);
+		
+		MultipartFile file = showDto.getFlyerImage();
+		if(file != null && !file.isEmpty()) {
+			showService.saveFile(showDto);
+			log.info("新しいフライヤーを一時保存しました。");
+		}else {
+			log.warn("フライヤーは追加されていません。");
+		}
 		httpSession.setAttribute("showDto", showDto);
 		log.info("セッション保存完了");
 		return "show/confirm";
@@ -107,8 +115,11 @@ public class ShowController {
 		log.info("フォーム登録メソッド開始");
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
 		
-		showService.registerFile(showDto);
-		
+		if(showDto.getFlyerFileName() == null || showDto.getFlyerFileName().isEmpty()) {
+			log.warn("フライヤーは追加されていません");
+		}else {
+			showService.registerFile(showDto);
+		}
 		showService.createShow(showDto, troupeId);
 		log.info("データの保存");
 		
@@ -143,6 +154,7 @@ public class ShowController {
 			
 			log.info("編集フォーム提示ページを投げる");
 			return "show/update/form";
+			
 			} else {
 				throw new PublishException("編集はできません。");
 			}
@@ -171,8 +183,14 @@ public class ShowController {
 		}
 		Show show = showService.getById(showId);
 		
-		if(!show.getFlyerFileName().isEmpty() && showDto.getFlyerFileName() == null) {
+		MultipartFile file = showDto.getFlyerImage();
+		
+		if(file != null && !file.isEmpty()) {
 			showService.saveFile(showDto);
+			log.info("新しいフライヤーを一時保存しました。");
+		}else {
+			showDto.setFlyerFileName(show.getFlyerFileName());
+			log.info("既存のフライヤー名を維持します: {}", show.getFlyerFileName());;
 		}
 		
 		httpSession.setAttribute("showDto", showDto);
@@ -188,9 +206,12 @@ public class ShowController {
 		ShowDto showDto = (ShowDto)httpSession.getAttribute("showDto");
 		Show show = showService.getById(showId);
 		
-		if(!show.getFlyerFileName().isEmpty() && showDto.getFlyerFileName() == null) {
+		if(show.getFlyerFileName() != null && !showDto.getFlyerFileName().equals(show.getFlyerFileName())){
 			showService.registerFile(showDto);
+		}else {
+			log.info("ファイルの変更がないため、ファイル移動はスキップします。");
 		}
+		
 		Long troupeId = showService.updateShow(showDto);
 		log.info("編集データ保存");
 		httpSession.removeAttribute("showDto");

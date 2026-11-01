@@ -33,7 +33,7 @@
                                 </td>
                                 <td th:text="${show.place}"></td>
                                 <td class="pdf-viewer-area">
-                                    <!-- <p style="color: red;" th:text="'ファイル名: ' + ${show.flyerFileName}"></p> -->
+                                    <p style="color: red;" th:text="'ファイル名: ' + ${show.flyerFileName}"></p>
                                     <div style="width: 100%; height: 600px; border: 1px solid #ccc;">
                                         <embed th:src="@{/show/flyer/{fileName}(fileName=${show.flyerFileName})}"
                                                type="application/pdf"
@@ -44,6 +44,7 @@
                                 <td th:text="${show.showStatus.label}"></td>
                                 <td>
                                     <a th:href="@{/show/update/form/{showId}(showId=${show.id})}" class="btn btn-primary">編集</a>
+                                    <a th:href="@{/show/detail/{showId}(showId=${show.id})}" class="btn btn-success">詳細</a>
                                     <form th:action="@{/show/delete/{id}(id=${show.id})}" method="post"
                                         onsubmit="return confirm('公演を削除しますか？')" style="display: inline">
                                         <button type="submit" class="btn btn-danger" id="delete-btn">公演を削除</button>

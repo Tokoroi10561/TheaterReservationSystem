@@ -15,7 +15,13 @@
                 <div th:object="${show}">
                     <p><strong>公演タイトル：</strong> <span th:text="*{title}"></span></p>
                     <p><strong>公演場所：</strong> <span th:text="*{place}"></span></p>
-                    <p><strong>フライヤー画像：</strong><a th:href="@{/show/flyer/{fileName}(fileName=*{flyerFileName})}" target="_blank">フライヤーを見る</a></p>
+                    <!-- <p><strong>フライヤー画像：</strong><a th:href="@{/show/flyer/{fileName}(fileName=*{flyerFileName})}" target="_blank">フライヤーを見る</a></p> -->
+                    <div style="width: 100%; height: 600px; border: 1px solid #ccc;">
+                                        <embed th:src="@{/show/flyer/{fileName}(fileName=*{flyerFileName})}"
+                                               type="application/pdf"
+                                               width="100%"
+                                               height="100%">
+                    </div>
                     <div th:each="ticketType: *{ticketTypes}">
                         <p><strong>チケット種別：</strong> <span th:text="${ticketType.name}"></span></p>
                         <p><strong>価格：</strong> <span th:text="${ticketType.price}"></span></p>
@@ -35,7 +41,7 @@
                             <p><span th:text="${option.label}"></span></p>
                         </div>
                     </div>
-                    <div th:if="*{paymentMethods != null nad !paymentMethods.empty}">
+                    <div th:if="*{paymentMethods != null and !paymentMethods.empty}">
                         <p><strong>支払い方法：</strong></p>
                         <div th:each="paymentMethod: *{paymentMethods}">
                             <p><span th:text="${paymentMethod.label}"></span></p>
