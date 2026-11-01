@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.constant.TroupeStatus;
+import com.example.demo.dto.AuthDto;
 import com.example.demo.dto.LoginDto;
-import com.example.demo.dto.TroupeDto;
 import com.example.demo.entity.Troupe;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.TroupeService;
@@ -24,8 +24,8 @@ public class AuthServiceImpl implements AuthService{
 	
 	@Transactional
 	@Override
-	public void registNewTroupe(TroupeDto dto) {
-		troupeService.regist(dto);
+	public void registerNewTroupe(AuthDto dto) {
+		troupeService.register(dto);
 	}
 	
 	@Override

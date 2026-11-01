@@ -232,7 +232,7 @@ public class ShowController {
 		showService.deleteShow(showId);
 		log.info("{}のデータ削除。公演ID: {}", show.getTitle(), show.getId());
 		
-		redirectAttributes.addFlashAttribute("successMessage", "予約を完了しました。");
+		redirectAttributes.addFlashAttribute("successMessage", "公演を削除しました。");
 		
 		return "redirect:/show/list/" + troupeId;
 	}

@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.dto.AuthDto;
 import com.example.demo.dto.LoginDto;
-import com.example.demo.dto.TroupeDto;
 import com.example.demo.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,13 +40,13 @@ public class AuthController {
 	}
 	
 	@GetMapping("/new/form")
-	public String showNewForm(@ModelAttribute TroupeDto troupeDto) {
+	public String showNewForm(@ModelAttribute AuthDto authDto) {
 		log.info("新規登録フォーム投げる");
 		return "new/form";
 	}
 	
 	@PostMapping("/new/confirm")
-	public String confirmNew(@Valid@ModelAttribute TroupeDto troupeDto,
+	public String confirmNew(@Valid@ModelAttribute AuthDto authDto,
 							 BindingResult bindingResult,
 							 RedirectAttributes redirectAttributes,
 							 HttpSession httpSession
@@ -61,7 +61,7 @@ public class AuthController {
 			log.info("新規登録フォームを投げる");
 			return "new/form";
 		}
-		httpSession.setAttribute("troupeDto", troupeDto);
+		httpSession.setAttribute("authDto", authDto);
 		log.info("セッション保存");
 		return "new/confirm";
 	}
@@ -70,12 +70,12 @@ public class AuthController {
 	public String registNew(HttpSession httpSession,
 							  RedirectAttributes redirectAttributes) {
 		log.info("新規登録メソッド開始");
-		TroupeDto troupeDto = (TroupeDto) httpSession.getAttribute("troupeDto");
+		AuthDto authDto = (AuthDto) httpSession.getAttribute("authDto");
 		
-		authService.registNewTroupe(troupeDto);
+		authService.registerNewTroupe(authDto);
 		log.info("新規登録処理");
 		
-		httpSession.removeAttribute("troupeDto");
+		httpSession.removeAttribute("authDto");
 		log.info("セッションの削除");
 		
 		return "redirect:/new/complete";

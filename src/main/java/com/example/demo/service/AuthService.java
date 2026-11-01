@@ -2,13 +2,13 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.AuthDto;
 import com.example.demo.dto.LoginDto;
-import com.example.demo.dto.TroupeDto;
 
 @Service
 public interface AuthService {
 	
-	void registNewTroupe(TroupeDto dto);
+	void registerNewTroupe(AuthDto dto);
 	
 	boolean check(LoginDto dto);
 	
