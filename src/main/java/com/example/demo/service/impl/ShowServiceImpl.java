@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.constant.PaymentMethod;
 import com.example.demo.dto.ShowDto;
 import com.example.demo.entity.Show;
 import com.example.demo.entity.Troupe;
@@ -70,7 +69,7 @@ public class ShowServiceImpl implements ShowService {
 			show.setPlace(showDto.getPlace());
 			
 			//後で絶対変えないといけない
-			show.setPaymentMethod(PaymentMethod.CASH);
+			show.setPaymentMethods(showDto.getPaymentMethods());
 			show.setOptions(showDto.getOptions());
 			
 			show.setFlyerFileName(showDto.getFlyerFileName());

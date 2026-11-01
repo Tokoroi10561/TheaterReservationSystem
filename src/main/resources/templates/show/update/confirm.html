@@ -36,6 +36,12 @@
                             <p><span th:text="${option.label}"></span></p>
                         </div>
                     </div>
+                    <div th:if="*{paymentMethods != null and !paymentMethods.empty}">
+                        <p><strong>支払い方法：</strong></p>
+                        <div th:each="paymentMethod: *{paymentMethods}">
+                            <p><span th:text="${paymentMethod.label}"></span></p>
+                        </div>
+                    </div>
 
                     <button type="button" class="btn btn-secondary mt-3 mb-3" onclick="history.back()">戻る</button>
                     <form th:action="@{/show/update/register/{showId}(showId=${showDto.id})}" method="post">

@@ -57,9 +57,12 @@ public class Show {
 	@JoinColumn(name = "troupe_id", nullable = false)
 	private Troupe troupe;
 	
+	@ElementCollection(targetClass = PaymentMethod.class)
 	@Enumerated(EnumType.STRING)
-	@Column(name = "payment_method", nullable = false)
-	private PaymentMethod paymentMethod;
+	@CollectionTable(name = "payment_methods",
+			joinColumns = @JoinColumn(name = "show_id"))
+	@Column(name = "payment_method_name", nullable = false)
+	private Set<PaymentMethod> paymentMethods;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "show_status", nullable = false)

@@ -55,7 +55,7 @@ public class ShowDto {
 	
 	private Set<ShowOption> options;
 	
-	private PaymentMethod paymentMethod;
+	private Set<PaymentMethod> paymentMethods;
 	
 	private ShowStatus showStatus;
 	
@@ -64,7 +64,7 @@ public class ShowDto {
 				.title(this.title)
 				.place(this.place)
 				.options(this.options)
-				.paymentMethod(PaymentMethod.CASH)
+				.paymentMethods(this.paymentMethods)
 				.showStatus(ShowStatus.DRAFT)
 				.build();
 	}
@@ -74,10 +74,11 @@ public class ShowDto {
 				.id(show.getId())
 				.title(show.getTitle())
 				.place(show.getPlace())
-				.flyerFileName(show.getFlyerFileName())				.deletedAt(show.getDeletedAt())
+				.flyerFileName(show.getFlyerFileName())	
+				.deletedAt(show.getDeletedAt())
 				.troupeId(show.getTroupe().getId())
 				.options(show.getOptions())
-				.paymentMethod(show.getPaymentMethod())
+				.paymentMethods(show.getPaymentMethods())
 				.showStatus(show.getShowStatus())
 				.build();
 	}
