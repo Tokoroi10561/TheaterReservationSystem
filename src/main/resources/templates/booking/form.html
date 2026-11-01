@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+    th:with="ShowOption=${T(com.example.demo.constant.ShowOption)}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,33 +27,41 @@
                         <label class="form-label" for="email">メールアドレス<span class="text-danger"> *</span>：</label>
                         <input type="email" class="form-control" id="email" th:field="*{email}" required>
 
-                        <label class="form-label" for="phone">電話番号：</label>
-                        <input type="tel" class="form-control" id="phone" th:field="*{phone}">
+                        <div th:if="${options.contains(ShowOption.PHONE_REQUIRED)}">
+                            <label class="form-label" for="phone">電話番号</label>
+                            <input type="tel" class="form-control" id="phone" th:field="*{phone}">
+                        </div>
 
-                        <label class="form-label" for="address">住所：</label>
-                        <input type="text" class="form-control" id="address" th:field="*{address}">
-
-                        <!-- 後で丸▲視覚で満席具合と時間を表示 -->
+                        <div th:if="${options.contains(ShowOption.ADDRESS_REQUIRED)}">
+                            <label class="form-label" for="address">住所</label>
+                            <input type="text" class="form-control" id="address" th:field="*{address}">
+                        </div>
+                        
                         <label class="form-label" for="stage">ステージ<span class="text-danger"> *</span>：</label>
                         <select class="form-select" id="stage" th:field="*{stageId}" required>
                             <option value="" disabled selected>ステージを選択してください</option>
-                            <option th:each="stage: ${stages}" th:value="${stage.id}" th:text="${stage.name}">
+                            <!-- 修正: </option> を追加 -->
+                            <option th:each="stage: ${stages}" th:value="${stage.id}" th:text="${stage.name}"></option>
                         </select>
 
-                        <label class="form-label" for="staff">スタッフ：</label>
-                        <select class="form-select" id="staff" th:field="*{staffId}">
-                            <option value="">スタッフを選択してください</option>
-                            <option th:each="staff: ${staffs}" th:value="${staff.id}" th:text="${staff.name}">
-                        </select>
+                        <div th:if="${options.contains(ShowOption.STAFF_SUPPORT)}">
+                            <label class="form-label" for="staff">スタッフ：</label>
+                            <select class="form-select" id="staff" th:field="*{staffId}">
+                                <option value="">スタッフを選択してください</option>
+                                <!-- 修正: </option> を追加 -->
+                                <option th:each="staff: ${staffs}" th:value="${staff.id}" th:text="${staff.name}"></option>
+                            </select>
+                        </div>
 
                         <label class="form-label" for="paymentMethod">支払方法<span class="text-danger"> *</span>：</label>
                         <select class="form-select" id="paymentMethod" th:field="*{paymentMethod}" required>
                             <option value="" disabled selected>支払方法を選択してください</option>
-                            <option th:each="paymentMethod: ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.label}">
+                            <!-- 修正: </option> を追加 -->
+                            <option th:each="paymentMethod: ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.label}"></option>
                         </select>
 
                         <div th:each="ticketType, stat:${ticketTypes}">
-                            <label class="form-label" th:text="${ticketType.name}" for="ticketType__${ticketType.id}">招待</label>
+                            <label class="form-label" th:text="${ticketType.name}" th:for="'ticketType_' + ${ticketType.id}">招待</label>
                             <input type="hidden" th:field="*{bookingDetails[__${stat.index}__].ticketTypeId}">
                             <input type="number" class="form-control" th:field="*{bookingDetails[__${stat.index}__].quantity}" min="0">
                         </div>
@@ -67,8 +76,6 @@
                 </form>
             </div>
         </div>
-
     </div>
-    
 </body>
 </html>

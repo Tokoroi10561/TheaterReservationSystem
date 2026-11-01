@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+    th:with="ShowOption=${T(com.example.demo.constant.ShowOption)}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,14 +16,16 @@
                     <p><strong>名前： </strong><span th:text="${bookingDto.name}">山田太郎</span></p>
                     <p><strong>ナマエ： </strong><span th:text="${bookingDto.nameKana}">ヤマダタロウ</span></p>
                     <p><strong>メールアドレス:</strong><span th:text="${bookingDto.email}"></span></p>
-                    <p><strong>電話番号:</strong><span th:text="${bookingDto.phone}"></span></p>
-                    <p><strong>住所:</strong><span th:text="${bookingDto.address}"></span></p>
-
-                    
-                    <!-- 数字ではなく文字が表示されるようにする -->
-
+                    <div th:if="${options.contains(ShowOption.PHONE_REQUIRED)}">
+                        <p><strong>電話番号:</strong><span th:text="${bookingDto.phone}"></span></p>
+                    </div>
+                    <div th:if="${options.contains(ShowOption.ADDRESS_REQUIRED)}">
+                        <p><strong>住所:</strong><span th:text="${bookingDto.address}"></span></p>
+                    </div>
                     <p><strong>ステージ:</strong><span th:text="${stage.name}"></span></p>
-                    <p><strong>スタッフ:</strong><span th:text="${staff.name}"></span></p>
+                    <div th:if="${options.contains(ShowOption.STAFF_SUPPORT)}">
+                        <p><strong>スタッフ:</strong><span th:text="${staff.name}"></span></p>
+                    </div>
                     <div th:each="ticketType, stat:${ticketTypes}">
                         <p><strong th:text="${ticketType.name}"></strong>: <span th:text="${bookingDto.bookingDetails[__${stat.index}__].quantity}"></span></p>
                     </div>
