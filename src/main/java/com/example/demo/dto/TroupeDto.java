@@ -18,15 +18,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class TroupeDto {
+	private Long id;
+	
 	@NotBlank(message = "劇団名は必須です")
 	@Size(min = 1, max = 100, message = "劇団名は1文字以上100文字以内で入力してください")
-	private Long id;
+	private String name;
 	
 	@NotBlank(message = "メールアドレスは必須です")
 	@Email(message = "メールアドレスの形式が正しくありません")
-	private String name;
-	
-	@NotBlank
 	private String email;
 	
 	@Size(max = 20, message = "SNSアカウントは20文字以内で入力してください")

@@ -28,17 +28,17 @@ public class TroupeController {
 	
 	private final TroupeService troupeService;
 
-	@GetMapping("/update/form/{troupeId}")
+	@GetMapping("/form/{troupeId}")
 	public String showUpdateForm(@PathVariable Long troupeId, Model model) {
 		Troupe troupe = troupeService.getById(troupeId);
 		TroupeDto troupeDto = TroupeDto.fromEntity(troupe);
 		
 		model.addAttribute("troupeDto", troupeDto);
 		
-		return "troupe/update/form";
+		return "troupe/form";
 	}
 	
-	@PostMapping("/update/confirm/{troupeId}")
+	@PostMapping("/confirm/{troupeId}")
 	public String confirmUpdate(@Valid@ModelAttribute TroupeDto troupeDto,
 								BindingResult bindingResult,
 								HttpSession httpSession,
@@ -52,14 +52,14 @@ public class TroupeController {
 				System.out.println(error.getDefaultMessage());
 			});
 		
-			return "troupe/update/form";
+			return "troupe/form";
 		}
 		
 		httpSession.setAttribute("troupeDto", troupeDto);
-		return "troupe/update/confirm";
+		return "troupe/confirm";
 	}
 	
-	@PostMapping("/update/register/{troupeId}")
+	@PostMapping("/register/{troupeId}")
 	public String registerUpdate(HttpSession httpSession,
 								 RedirectAttributes redirectAttributes,
 								 @PathVariable Long troupeId) {
@@ -68,7 +68,7 @@ public class TroupeController {
 		troupeService.update(troupeDto);
 		log.info("劇団情報を更新しました。劇団Id: {}", troupeDto.getId());
 		httpSession.removeAttribute("troupeDto");
-		return "redirect:/complete/" + troupeId;
+		return "redirect:/troupe/complete/" + troupeId;
 	}
 	
 	@GetMapping("/complete/{troupeId}")
@@ -85,7 +85,7 @@ public class TroupeController {
 		troupeService.delete(troupeId);
 		log.info("劇団情報データを削除。公演ID: {}", troupeId);
 		
-		redirectAttributes.addFlashAttribute("successMessage", "予約を完了しました。");
+		redirectAttributes.addFlashAttribute("successMessage", "劇団を退会しました。");
 		
 		return "redirect:/login";
 	}
