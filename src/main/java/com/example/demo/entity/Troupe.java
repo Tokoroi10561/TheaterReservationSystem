@@ -42,9 +42,6 @@ public class Troupe {
 	@Column(name = "password_hash", nullable = false, length = 255)
 	private String passwordHash;
 	
-	@Column(name = "sns_account", nullable = true, length = 20)
-	private String snsAccount;
-	
 	@Column(name = "signature", nullable = true, length = 1000)
 	private String signature;
 	

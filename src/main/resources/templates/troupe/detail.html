@@ -14,7 +14,6 @@
                     <h1 class="h3 bg-primary text-light text-center py-3 my-3 rounded">劇団情報詳細</h1>
                     <P><strong>劇団名: </strong><span th:text="*{name}"></span></P>
                     <P><strong>メールアドレス: </strong><span th:text="*{email}"></span></P>
-                    <P><strong>SNSアカウント: </strong><span th:text="*{snsAccount}"></span></P>
                     <P><strong>メール署名: </strong><span th:text="*{signature}"></span></P>
 
                     <a th:href="@{/troupe/form/{troupeId}(troupeId=*{id})}" class="btn btn-primary">編集</a>

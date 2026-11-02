@@ -38,7 +38,6 @@ public class TroupeDto {
 		return Troupe.builder()
 		.name(this.name)
 		.email(this.email)
-		.snsAccount(this.snsAccount)
 		.signature(this.signature)
 		.build();
 	}
@@ -48,7 +47,6 @@ public class TroupeDto {
 				.id(troupe.getId())
 				.name(troupe.getName())
 				.email(troupe.getEmail())
-				.snsAccount(troupe.getSnsAccount())
 				.signature(troupe.getSignature())
 				.build();
 	}

@@ -36,9 +36,6 @@ public class AuthDto {
 	@Size(min = 8, max = 20, message = "パスワードは8文字以上20文字以内で入力してください")
 	private String password;
 	
-	@Size(max = 20, message = "SNSアカウントは20文字以内で入力してください")
-	private String snsAccount;
-	
 	@Size(max = 1000, message = "署名は1000文字以内で入力してください")
 	private String signature;
 	
@@ -51,7 +48,6 @@ public class AuthDto {
 				.name(this.name)
 				.email(this.email)
 				.passwordHash(password)
-				.snsAccount(this.snsAccount)
 				.signature(this.signature)
 				.status(TroupeStatus.ACTIVE)
 				.build();
@@ -63,7 +59,6 @@ public class AuthDto {
 				.name(troupe.getName())
 				.email(troupe.getEmail())
 				.password(troupe.getPasswordHash())
-				.snsAccount(troupe.getSnsAccount())
 				.signature(troupe.getSignature())
 				.status(troupe.getStatus())
 				.build();

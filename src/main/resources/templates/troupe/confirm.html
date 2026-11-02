@@ -14,7 +14,6 @@
                 <div th:object="${troupeDto}">
                     <p><strong>劇団名: </strong><span th:text="*{name}"></span></p>
                     <p><strong>メールアドレス: </strong><span th:text="*{email}"></span></p>
-                    <p><strong>SNSアカウント: </strong><span th:text="*{snsAccount}"></span></p>
                     <p><strong>署名: </strong><span th:text="*{signature}"></span></p>
 
                     <form th:action="@{/troupe/register/{troupeId}(troupeId=*{id})}" method="post">

@@ -52,7 +52,6 @@ public class TroupeServiceImpl implements TroupeService {
 		
 		troupe.setName(dto.getName());
 		troupe.setEmail(dto.getEmail());
-		troupe.setSnsAccount(dto.getSnsAccount());
 		troupe.setSignature(dto.getSignature());
 		
 		troupeRepository.save(troupe);
