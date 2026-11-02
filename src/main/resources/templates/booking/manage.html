@@ -56,8 +56,6 @@
                         <th>合計金額</th>
                         <td th:text="${sumPrice}">備考内容</td>
                     </tr>
-                    <!-- ・電話番号、住所備考等はnullの場合は表示しないようにする
-                         ・支払い済みか否かも表示されるようにする。 -->
                 </table>
 
                 <form th:action="@{/booking/update/form/{id}(id=${booking.id})}" method="get">
