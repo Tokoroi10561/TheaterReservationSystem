@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 	
-	/**
-	 * データ見つからないエラー(NoDataFoundException)を処理するメソッド
-	 */
 	@ExceptionHandler(NoDataFoundException.class)
 	public String handleNoDataFoundException(NoDataFoundException ex, Model model) {
 		model.addAttribute("errorMessage", ex.getMessage());
