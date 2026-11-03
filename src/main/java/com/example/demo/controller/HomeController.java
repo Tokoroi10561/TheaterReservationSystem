@@ -28,12 +28,10 @@ public class HomeController {
 		model.addAttribute("troupeId", troupeId);
 		
 		Show lastUpdatedShow = showService.getLastUpdated(troupeId);
-		
-		
-		
 		List<Show> publishedShows = showService.getByTroupeIdAndShowStatus(troupeId, ShowStatus.PUBLISH);
-		
 		List<Long> bookingSums = bookingService.calculateSumShowTicket(publishedShows);
+		
+		//最新の追加5件の詳細
 		
 		model.addAttribute("lastUpdatedShow", lastUpdatedShow);
 		model.addAttribute("publishedShows", publishedShows);
