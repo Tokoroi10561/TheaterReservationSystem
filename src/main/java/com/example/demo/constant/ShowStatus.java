@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ShowStatus {
+	
 	DRAFT("下書き"),
 	PUBLISH("公開中"),
 	CLOSED("受付終了");

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum PaymentMethod {
+	
 	CASH("当日現金払い"),
 	CREDIT_CARD("クレジット決済"),
 	BAND("銀行振込"),

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum CapacityStatus {
+	
 	WIDE_OPEN("◎"),
 	AVALILABLE("〇"),
 	LIMITED("△"),

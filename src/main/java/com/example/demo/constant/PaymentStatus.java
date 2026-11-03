@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum PaymentStatus {
+	
 	PENDING("未払い"),
 	COMPLETED("支払い済み"),
 	FAILED("支払い失敗"),
