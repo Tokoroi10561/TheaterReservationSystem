@@ -31,7 +31,6 @@ public class BookingDetailsDto {
 	public BookingDetails toEntity() {
 		return BookingDetails.builder()
 				.quantity(this.quantity)
-//				.ticketTypeId(this.ticketTypeId)
 				.build();
 	}
 	

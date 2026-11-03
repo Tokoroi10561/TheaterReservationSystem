@@ -52,6 +52,12 @@ public class Show {
 	
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
+
+	private LocalDateTime lastUpdated;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "show_status", nullable = false)
+	private ShowStatus showStatus;
 	
 	@ManyToOne
 	@JoinColumn(name = "troupe_id", nullable = false)
@@ -63,10 +69,13 @@ public class Show {
 			joinColumns = @JoinColumn(name = "show_id"))
 	@Column(name = "payment_method_name", nullable = false)
 	private Set<PaymentMethod> paymentMethods;
-	
+
+	@ElementCollection(targetClass = ShowOption.class)
 	@Enumerated(EnumType.STRING)
-	@Column(name = "show_status", nullable = false)
-	private ShowStatus showStatus;
+	@CollectionTable(name = "show_opts",
+		    joinColumns = @JoinColumn(name = "show_id"))
+	@Column(name = "option_name")
+	private Set<ShowOption> options;
 	
 	@OneToMany(mappedBy = "show")
 	private List<Stage> stages;
@@ -76,13 +85,4 @@ public class Show {
 	
 	@OneToMany(mappedBy = "show")
 	private List<Staff> staffs;
-	
-	@ElementCollection(targetClass = ShowOption.class)
-	@Enumerated(EnumType.STRING)
-	@CollectionTable(name = "show_opts",
-		    joinColumns = @JoinColumn(name = "show_id"))
-	@Column(name = "option_name")
-	private Set<ShowOption> options;
-	
-	private LocalDateTime lastUpdated;
 }

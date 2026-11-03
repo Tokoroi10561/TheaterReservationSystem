@@ -38,13 +38,7 @@ public class StageDto {
 	@NotNull(message = "開演時間は必須です")
 	@Future(message = "開演時間は未来の時間を指定してください")
 	private LocalDateTime startTime;
-//	
-//	@Future(message = "閉演時間は未来の時間を指定してください")
-//	private LocalDateTime endTime;
-//	
-//	@Future(message = "開場時間は未来の時間を指定してください")
-//	private LocalDateTime openTime;
-//	
+	
 	@NotNull(message = "席数上限は必須です")
 	@Min(value = 1, message = "席数は1以上の数字を入力してください")
 	private Integer capacity;
@@ -57,8 +51,6 @@ public class StageDto {
 		return Stage.builder()
 				.name(this.name)
 				.startTime(this.startTime)
-//				.endTime(this.endTime)
-//				.openTime(this.openTime)
 				.capacity(this.capacity)
 				.stageStatus(StageStatus.RECEPTION)
 				.capacityStatus(CapacityStatus.WIDE_OPEN)
@@ -70,8 +62,6 @@ public class StageDto {
 				.id(stage.getId())
 				.name(stage.getName())
 				.startTime(stage.getStartTime())
-//				.endTime(stage.getEndTime())
-//				.openTime(stage.getOpenTime())
 				.capacity(stage.getCapacity())
 				.stageStatus(stage.getStageStatus())
 				.capacityStatus(stage.getCapacityStatus())

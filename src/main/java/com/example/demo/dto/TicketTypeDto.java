@@ -36,7 +36,6 @@ public class TicketTypeDto {
 		return TicketType.builder()
 				.name(this.name)
 				.price(this.price)
-//				.showId(this.showId)
 				.build();
 	}
 	

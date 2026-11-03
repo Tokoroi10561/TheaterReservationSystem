@@ -45,10 +45,10 @@ public class Troupe {
 	@Column(name = "signature", nullable = true, length = 1000)
 	private String signature;
 	
-	@OneToMany(mappedBy = "troupe")
-	private List<Show> shows;
-	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "troupe_status", nullable = false)
 	private TroupeStatus status;
+	
+	@OneToMany(mappedBy = "troupe")
+	private List<Show> shows;
 }

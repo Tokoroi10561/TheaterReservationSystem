@@ -38,26 +38,26 @@ public class ShowDto {
 	@Size(max = 100, message = "場所は0文字以上100文字以内で入力してください")
 	private String place;
 
-	private MultipartFile flyerImage;
-	
 	private String flyerFileName;
 			
 	@Future(message = "未来の時間を入力してください")
 	private LocalDateTime deletedAt;
 	
 	private Long troupeId;
+
+	private ShowStatus showStatus;
+	
+	private MultipartFile flyerImage;
+
+	private Set<ShowOption> options;
+	
+	private Set<PaymentMethod> paymentMethods;
 	
 	private List<StaffDto> staffs = new ArrayList<>();
 	
 	private List<StageDto> stages = new ArrayList<>();
 	
 	private List<TicketTypeDto> ticketTypes = new ArrayList<>();
-	
-	private Set<ShowOption> options;
-	
-	private Set<PaymentMethod> paymentMethods;
-	
-	private ShowStatus showStatus;
 	
 	public Show toEntity() {
 		return Show.builder()

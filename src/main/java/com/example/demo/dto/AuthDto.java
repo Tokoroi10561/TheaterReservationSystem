@@ -38,10 +38,10 @@ public class AuthDto {
 	
 	@Size(max = 1000, message = "署名は1000文字以内で入力してください")
 	private String signature;
+
+	private TroupeStatus status;
 	
 	private List<ShowDto> shows;
-	
-	private TroupeStatus status;
 	
 	public Troupe toEntity() {
 		return Troupe.builder()
