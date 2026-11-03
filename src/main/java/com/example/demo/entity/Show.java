@@ -83,4 +83,6 @@ public class Show {
 		    joinColumns = @JoinColumn(name = "show_id"))
 	@Column(name = "option_name")
 	private Set<ShowOption> options;
+	
+	private LocalDateTime lastUpdated;
 }

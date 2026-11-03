@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.BookingDto;
 import com.example.demo.dto.BookingSearchCriteria;
 import com.example.demo.entity.Booking;
+import com.example.demo.entity.Show;
 import com.example.demo.entity.TicketType;
 
 @Service
@@ -20,6 +21,8 @@ public interface BookingService {
 	
 	int calculateTicketSumPrice(BookingDto bookingDto);
 	int calculateTicketSumPrice(Booking booking);
+	int calculateSumStageTicket(List<Booking> bookings, int total);
+	List<Long> calculateSumShowTicket(List<Show> shows);
 	
 	void mapTicketTypeToDto(List<TicketType> ticketTypes, BookingDto dto);
 	

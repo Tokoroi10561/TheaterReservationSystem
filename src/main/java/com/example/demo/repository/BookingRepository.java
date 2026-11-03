@@ -12,33 +12,14 @@ import com.example.demo.entity.Booking;
 
 public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
 	
-	//後でnameとemailをキーワード検索できるようにしたい
-//	@Query("SELECT b FROM Booking b WHERE b.name LIKE %:name%")
-//	List<Booking> findByName(String name);
-//	
-//	@Query("SELECT b FROM Booking b WHERE b.email LIKE %:email%")
-//	List<Booking> findByEmail(String email);
-//	
-//	@Query("SELECT b FROM Booking b WHERE b.phone LIKE %:phone%")
-//	List<Booking> findByPhone(String phone);
-//	
-	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :status ORDER BY b.createdAt DESC")
-	List<Booking> findByStageId(Long stageId, BookingStatus status);
-	
-//	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId"
-//			+ " AND b.ticketType.id = :ticketTypeId"
-//			+ " AND b.bookingStatus = :status")
-//	List<Booking> findByTicketTypeId(Long stageId, Long ticketTypeId, BookingStatus status);
-	
 	Optional<Booking> findByToken(String token);
-	
 	@Query("SELECT b FROM Booking b WHERE b.id = :id")
 	Optional<Booking> findById(Long id);
 	
 	List<Booking> findByStaffId(Long staffId);
-	
 	List<Booking> findByBookingDetailsId(Long bookingDetailsId);
-//	
-//	@Query("SELECT b FROM Booking b WHERE b.bookingStatus =:status AND b.show.id = :showId")
-//	List<Booking> findAllActiveByShowId(@Param("showId")Long showId, @Param("status")BookingStatus status);
+
+	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :status ORDER BY b.createdAt DESC")
+	List<Booking> findByStageId(Long stageId, BookingStatus status);
+	
 }

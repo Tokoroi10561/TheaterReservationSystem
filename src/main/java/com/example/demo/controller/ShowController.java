@@ -279,7 +279,7 @@ public class ShowController {
 	@GetMapping("/list/{troupeId}")
 	public String showList(Model model, @PathVariable Long troupeId) {
 		
-		List<Show> showList = showService.findAllActive(troupeId);
+		List<Show> showList = showService.getAllActive(troupeId);
 		
 		model.addAttribute("troupeId", troupeId);		
 		model.addAttribute("showList", showList);

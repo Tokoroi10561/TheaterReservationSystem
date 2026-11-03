@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.constant.ShowStatus;
 import com.example.demo.dto.ShowDto;
 import com.example.demo.entity.Show;
 import com.example.demo.entity.Troupe;
@@ -111,28 +112,6 @@ public class ShowServiceImpl implements ShowService {
 	}
 	
 	@Override
-	public Show getById(Long id) {
-		log.info("showIdからのshowオブジェクト取得メソッドを開始します");
-		Show show = showRepository.findById(id).orElseThrow(() ->
-			new NoDataFoundException("Idが存在しません" + id)
-		);
-		
-		if(show.getDeletedAt() != null) {
-			log.warn("バリデーションエラー");
-			throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
-		}else {
-			log.info("showIdからのshowオブジェクト取得メソッドが完了しました。 公演ID: {}", id);
-			return show;
-		}
-	}
-	
-	@Override
-	public List<Show> findAllActive(Long troupeId){
-		log.info("activeなshowオブジェクト全取得メソッドを開始します。");
-		return showRepository.findAllActive(troupeId);
-	}
-	
-	@Override
 	@Transactional
 	public void saveFile(ShowDto showDto) {
 		log.info("ファイル一時保存メソッドを開始します。");
@@ -206,5 +185,37 @@ public class ShowServiceImpl implements ShowService {
 	            throw new RuntimeException("ファイルの移動に失敗しました", e);
 			}
 		}
+	}
+	
+	@Override
+	public Show getById(Long id) {
+		log.info("showIdからのshowオブジェクト取得メソッドを開始します");
+		Show show = showRepository.findById(id).orElseThrow(() ->
+			new NoDataFoundException("Idが存在しません" + id)
+		);
+		
+		if(show.getDeletedAt() != null) {
+			log.warn("バリデーションエラー");
+			throw new IllegalArgumentException("この公演はすでに削除されています。" + id);
+		}else {
+			log.info("showIdからのshowオブジェクト取得メソッドが完了しました。 公演ID: {}", id);
+			return show;
+		}
+	}
+	
+	@Override
+	public Show getLastUpdated(Long troupeId) {
+		return showRepository.findTopByTroupeIdOrderByLastUpdatedDesc(troupeId);
+	}
+	
+	@Override
+	public List<Show> getAllActive(Long troupeId){
+		log.info("activeなshowオブジェクト全取得メソッドを開始します。");
+		return showRepository.findAllActive(troupeId);
+	}
+	
+	@Override
+	public List<Show> getByTroupeIdAndShowStatus(Long troupeId, ShowStatus status){
+		return showRepository.findByTroupeIdAndShowStatus(troupeId, status);
 	}
 }

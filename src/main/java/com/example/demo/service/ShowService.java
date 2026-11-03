@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.constant.ShowStatus;
 import com.example.demo.dto.ShowDto;
 import com.example.demo.entity.Show;
 
@@ -18,6 +19,8 @@ public interface ShowService {
 	void registerFile(ShowDto showDto);
 	
 	Show getById (Long id);
+	Show getLastUpdated (Long troupeId);
 	
-	List<Show> findAllActive(Long troupeId);
+	List<Show> getAllActive(Long troupeId);
+	List<Show> getByTroupeIdAndShowStatus(Long troupeId, ShowStatus status);
 }

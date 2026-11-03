@@ -20,6 +20,7 @@ import com.example.demo.dto.BookingDto;
 import com.example.demo.dto.BookingSearchCriteria;
 import com.example.demo.entity.Booking;
 import com.example.demo.entity.BookingDetails;
+import com.example.demo.entity.Show;
 import com.example.demo.entity.Staff;
 import com.example.demo.entity.Stage;
 import com.example.demo.entity.TicketType;
@@ -44,7 +45,6 @@ public class BookingServiceImpl implements BookingService {
 	private final StageService stageService;
 	private final TicketTypeService ticketTypeService;
 	private final StaffService staffService;
-//	private final ShowService showService;
 	
 	@Transactional
 	@Override
@@ -283,7 +283,8 @@ public class BookingServiceImpl implements BookingService {
 		return total;
 	}
 	
-	private int calculateSumStageTicket(List<Booking> bookings, int total) {
+	@Override
+	public int calculateSumStageTicket(List<Booking> bookings, int total) {
 		for(Booking booking: bookings) {
 			List<BookingDetails> bookingDetails = booking.getBookingDetails();
 			
@@ -294,6 +295,30 @@ public class BookingServiceImpl implements BookingService {
 			}
 		}
 		return total;
+	}
+	
+	@Override
+	public List<Long> calculateSumShowTicket(List<Show> shows) {
+		int total = 0;
+		
+		List<Long> bookingSums = new ArrayList<>();
+		
+		for(Show show : shows) {
+			List<Stage> stages = show.getStages();
+			for(Stage stage : stages) {
+				List<Booking> bookings = stage.getBookings();
+				
+				int sumTicket = calculateSumStageTicket(bookings, total);
+			
+				total += sumTicket;
+			}
+
+			Long sum = (long) total;
+			
+			bookingSums.add(sum);
+		}
+			
+		return bookingSums;
 	}
 	
 	private void checkDeadline(Booking entity) {

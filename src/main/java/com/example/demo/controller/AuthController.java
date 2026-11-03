@@ -115,7 +115,7 @@ public class AuthController {
 	        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 			
 			log.info("ログイン確認処理。成功");
-			return "redirect:/home/" + troupeId;
+			return "redirect:/home/dashboard/" + troupeId;
 		}else {
 			log.info("ログイン確認処理。失敗");
 			return "login";

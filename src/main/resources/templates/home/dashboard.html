@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホーム</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-secondary">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 bg-light">
+                <h1 class="h3 bg-primary text-light text-center py-3 my-3 rounded">ダッシュボード</h1>
+                <ul>
+                    <li>編集中の公演</li>
+                    <p><a th:href="@{/show/detail/{showId}(showId=${lastUpdatedShow.id})}" th:text="${lastUpdatedShow.title}">公演名</a></p>
+                    <li>公開中の予約合計</li>
+                    <table class="table">
+                        <div th:each="show:${publishedShows}">
+                            <tr>
+                                <p><a th:href="@{/booking/list/{showId}(showId=${show.id})}" th:text="${show.title}"></a></p>
+                            </tr>
+                        </div>
+                        <div th:each="sum:${bookingSums}">
+                            <td th:text="${sum}"></td>
+                        </div>
+                    </table>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

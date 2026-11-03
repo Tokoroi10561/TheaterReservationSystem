@@ -6,14 +6,19 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.example.demo.constant.ShowStatus;
 import com.example.demo.entity.Show;
 
 public interface ShowRepository extends JpaRepository<Show, Long> {
 
 	Optional<Show> findById(Long id);
+
+	Show findTopByTroupeIdOrderByLastUpdatedDesc(Long troupeId);
 	
 	@Query("SELECT s FROM Show s WHERE s.deletedAt IS NULL AND s.troupe.id = :troupeId")
 	List<Show> findAllActive(Long troupeId);
 	@Query("SELECT s FROM Show s WHERE s.title LIKE %:title%")
 	List<Show>findByTitle(String title);
+	
+	List<Show> findByTroupeIdAndShowStatus(Long troupeId, ShowStatus status);
 }
