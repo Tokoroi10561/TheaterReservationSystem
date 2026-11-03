@@ -205,7 +205,9 @@ public class ShowServiceImpl implements ShowService {
 	
 	@Override
 	public Show getLastUpdated(Long troupeId) {
-		return showRepository.findTopByTroupeIdOrderByLastUpdatedDesc(troupeId);
+		return showRepository.findTopByTroupeIdOrderByLastUpdatedDesc(troupeId).orElseThrow(() ->
+			new NoDataFoundException("更新された公演はありません" + troupeId)
+		);
 	}
 	
 	@Override

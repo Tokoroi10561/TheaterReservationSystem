@@ -18,8 +18,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 	
 	List<Booking> findByStaffId(Long staffId);
 	List<Booking> findByBookingDetailsId(Long bookingDetailsId);
-
-	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :status ORDER BY b.createdAt DESC")
-	List<Booking> findByStageId(Long stageId, BookingStatus status);
+	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :bookingStatus ORDER BY b.createdAt DESC")
+	List<Booking> findByStageId(Long stageId, BookingStatus bookingStatus);
 	
 }
