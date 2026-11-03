@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+
+<style>
+body{
+    margin:0;
+    display:flex;
+    font-family:sans-serif;
+}
+
+.sidebar{
+    width:250px;
+    height:100vh;
+    background:#2c3e50;
+    color:white;
+}
+
+.sidebar a{
+    display:block;
+    padding:15px;
+    color:white;
+    text-decoration:none;
+}
+
+.sidebar a:hover{
+    background:#34495e;
+}
+
+
+</style>
+</head>
+
+<body>
+    <div th:fragment="sidebar">
+        <div class="sidebar">
+            <h2 style="padding:15px;">観劇予約管理システム</h2>
+
+            <a th:href="@{/dashboard/{trouepId}(troupeId=${troupeId})}">
+                ダッシュボード
+            </a>
+
+            <a th:href="@{/show/list{trouepId}(troupeId=${troupeId})}">
+                公演一覧
+            </a>
+
+            <a th:href="@{/troupe/detail{trouepId}(troupeId=${troupeId})}">
+                劇団詳細
+            </a>
+        </div>
+    </div>
+</body>
+</html>
