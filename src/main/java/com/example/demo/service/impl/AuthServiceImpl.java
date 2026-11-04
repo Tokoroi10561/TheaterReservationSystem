@@ -19,20 +19,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthServiceImpl implements AuthService{
-	private final PasswordEncoder passwordEncoder;
+
 	private final TroupeService troupeService;
+	private final PasswordEncoder passwordEncoder;
 	
 	@Transactional
 	@Override
-	public void registerNewTroupe(AuthDto dto) {
-		troupeService.register(dto);
+	public void registerNewTroupe(AuthDto autoDto) {
+		troupeService.register(autoDto);
 	}
 	
 	@Override
-	public boolean check(LoginDto dto){
+	public boolean check(LoginDto loginDto){
 		log.info("ログインチェックメソッドを開始します。");
-		String email = dto.getEmail();
-		String rawPassword = dto.getPassword();
+		String email = loginDto.getEmail();
+		String rawPassword = loginDto.getPassword();
 		
 		Troupe troupe = troupeService.getByEmail(email);
 		if(troupe == null) {
@@ -55,7 +56,6 @@ public class AuthServiceImpl implements AuthService{
 			log.warn("パスワードが間違っているかもしくはアクティブではありません。");
 			return false;
 		}
-		
 	}
 	
 	public Long getTroupeId(LoginDto loginDto) {

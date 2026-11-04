@@ -11,11 +11,11 @@ import com.example.demo.entity.Show;
 
 public interface ShowRepository extends JpaRepository<Show, Long> {
 
-	Optional<Show> findTopByTroupeIdOrderByLastUpdatedDesc(Long troupeId);
 	Optional<Show> findById(Long id);
+	Optional<Show> findTopByTroupeIdOrderByLastUpdatedDesc(Long troupeId);
 
-	@Query("SELECT s FROM Show s WHERE s.deletedAt IS NULL AND s.troupe.id = :troupeId")
-	List<Show> findAllActive(Long troupeId);
+	@Query("SELECT s FROM Show s WHERE s.troupe.id = :troupeId")
+	List<Show>findAllActive(Long troupeId);
 	@Query("SELECT s FROM Show s WHERE s.title LIKE %:title%")
 	List<Show>findByTitle(String title);
 	List<Show> findByTroupeIdAndShowStatus(Long troupeId, ShowStatus showStatus);

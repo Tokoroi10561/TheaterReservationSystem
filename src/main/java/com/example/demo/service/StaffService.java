@@ -11,7 +11,7 @@ import com.example.demo.entity.Staff;
 @Service
 public interface StaffService {
 	
-	void saveStaffs(List<StaffDto> staffDtos, Show show);
+	void saveStaffs(List<StaffDto> staffDtoList, Show show);
 	void deleteStaffs(List<Staff> staffs);
 	
 	Staff getStaffById(Long id);

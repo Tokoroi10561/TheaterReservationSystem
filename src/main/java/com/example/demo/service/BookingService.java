@@ -20,14 +20,13 @@ public interface BookingService {
 	void deleteBooking(String token);
 
 	void mapTicketTypeToDto(List<TicketType> ticketTypes, BookingDto dto);
-	int calculateTicketSumPrice(BookingDto bookingDto);
 	int calculateTicketSumPrice(Booking booking);
+	int calculateTicketSumPrice(BookingDto bookingDto);
 	int calculateSumStageTicket(List<Booking> bookings, int total);
-	
-	Booking getValidateByTokenAndStatus(String token);
+
 	Booking getById(Long id);
-//	
-//	List<Booking> getAllActiveByShowId(Long showId, BookingStatus status);
+	Booking getValidateByTokenAndStatus(String token);
+
 	List<Long> calculateSumShowTicket(List<Show> shows);
 	Page<Booking> searchBookings(Long showId, BookingSearchCriteria criteria, Pageable pageable);
 }

@@ -12,12 +12,12 @@ import com.example.demo.entity.Stage;
 @Service
 public interface StageService {
 
-	void saveStages(List<StageDto> stageDtos, Show show);
+	void saveStages(List<StageDto> stageDtoList, Show show);
 	void deleteStages(List<Stage> stages);
 	
 	void changeStageStatus(Stage stage, int total, Booking booking);
 	
-	Stage stageExist(Long stageId);
+	Stage stageExist(Long id);
 	
 	List<Stage> getAllStageByShowId(Long showId);	
 }

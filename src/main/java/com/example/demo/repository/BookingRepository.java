@@ -12,13 +12,11 @@ import com.example.demo.entity.Booking;
 
 public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
 	
-	Optional<Booking> findByToken(String token);
-	@Query("SELECT b FROM Booking b WHERE b.id = :id")
 	Optional<Booking> findById(Long id);
+	Optional<Booking> findByToken(String token);
 	
-	List<Booking> findByStaffId(Long staffId);
-	List<Booking> findByBookingDetailsId(Long bookingDetailsId);
 	@Query("SELECT b FROM Booking b WHERE b.stage.id = :stageId AND b.bookingStatus = :bookingStatus ORDER BY b.createdAt DESC")
 	List<Booking> findByStageId(Long stageId, BookingStatus bookingStatus);
-	
-}
+	List<Booking> findByStaffId(Long staffId);
+	List<Booking> findByBookingDetailsId(Long bookingDetailsId);
+	}

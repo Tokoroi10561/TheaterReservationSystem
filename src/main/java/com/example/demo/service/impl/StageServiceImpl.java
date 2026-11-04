@@ -27,8 +27,8 @@ public class StageServiceImpl implements StageService {
 	private final StageRepository stageRepository;
 	
 	@Override
-	public void saveStages(List<StageDto> stageDtos, Show show) {
-		for(StageDto stageDto : stageDtos) {
+	public void saveStages(List<StageDto> stageDtoList, Show show) {
+		for(StageDto stageDto : stageDtoList) {
 			Stage stage = stageDto.toEntity();
 			stage.setShow(show);
 			stageRepository.save(stage);
@@ -72,9 +72,9 @@ public class StageServiceImpl implements StageService {
 	}
 	
 	@Override
-	public Stage stageExist(Long stageId) {
-		Stage stage = stageRepository.findById(stageId).orElseThrow(() -> 
-		new NoDataFoundException("ステージが存在しません" + stageId)
+	public Stage stageExist(Long id) {
+		Stage stage = stageRepository.findById(id).orElseThrow(() -> 
+		new NoDataFoundException("ステージが存在しません" + id)
 	);
 	log.info("ステージが存在しました。 stageId: {}", stage.getId());
 	return stage;

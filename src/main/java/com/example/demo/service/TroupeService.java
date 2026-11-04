@@ -9,8 +9,8 @@ import com.example.demo.entity.Troupe;
 @Service
 public interface TroupeService {
 
-	void register(AuthDto dto);
-	void update(TroupeDto dto);
+	void register(AuthDto authDto);
+	void update(TroupeDto troupeDto);
 	void delete(Long id);
 
 	Troupe getById(Long id);

@@ -11,7 +11,7 @@ import com.example.demo.entity.TicketType;
 @Service
 public interface TicketTypeService {
 	
-	void saveTicketTypes(List<TicketTypeDto> ticketTypeDtos, Show show);
+	void saveTicketTypes(List<TicketTypeDto> ticketTypeDtoList, Show show);
 	void deleteTicketTypes(List<TicketType> ticketTypes);
 	
 	TicketType getById(Long id);

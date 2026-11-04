@@ -8,6 +8,6 @@ import com.example.demo.entity.Troupe;
 
 public interface TroupeRepository extends JpaRepository<Troupe, Long> {
 	
-	Optional<Troupe> findByEmail(String email);
 	Optional<Troupe> findById(Long id);
+	Optional<Troupe> findByEmail(String email);
 }

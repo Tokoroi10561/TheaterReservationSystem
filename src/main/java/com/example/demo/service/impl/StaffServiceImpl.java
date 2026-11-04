@@ -19,8 +19,8 @@ public class StaffServiceImpl implements StaffService {
 	private final StaffRepository staffRepository;
 	
 	@Override
-	public void saveStaffs(List<StaffDto> staffDtos, Show show) {
-		for(StaffDto staffDto : staffDtos) {
+	public void saveStaffs(List<StaffDto> staffDtoList, Show show) {
+		for(StaffDto staffDto : staffDtoList) {
 			Staff staff = staffDto.toEntity();
 			staff.setShow(show);
 			staffRepository.save(staff);

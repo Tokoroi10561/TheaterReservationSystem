@@ -26,33 +26,33 @@ public class TroupeServiceImpl implements TroupeService {
 	
 	@Transactional
 	@Override
-	public void register(AuthDto dto) {
+	public void register(AuthDto authDto) {
 		log.info("劇団の新規登録メソッドを開始します。");
-		String email = dto.getEmail();
+		String email = authDto.getEmail();
 		boolean exist = troupeRepository.findByEmail(email).isPresent();
 		if(!exist) {
 
-			String hashedPassword = passwordEncoder.encode(dto.getPassword());
+			String hashedPassword = passwordEncoder.encode(authDto.getPassword());
 			
-			Troupe troupe = dto.toEntity();
+			Troupe troupe = authDto.toEntity();
 			troupe.setPasswordHash(hashedPassword);
 			
-			log.info("劇団を新規登録しました。 劇団名: {}", dto.getName());
+			log.info("劇団を新規登録しました。 劇団名: {}", authDto.getName());
 			troupeRepository.save(troupe);
 		}else {
-			log.warn("すでにメールアドレスが存在するため、登録できません。メールアドレス: {}", dto.getEmail());
+			log.warn("すでにメールアドレスが存在するため、登録できません。メールアドレス: {}", authDto.getEmail());
 			throw new AlreadyExistsException("すでにメールアドレスが存在します");
 		}
 	}
 	
 	@Override
 	@Transactional
-	public void update(TroupeDto dto) {
-		Troupe troupe = getById(dto.getId());
+	public void update(TroupeDto troupeDto) {
+		Troupe troupe = getById(troupeDto.getId());
 		
-		troupe.setName(dto.getName());
-		troupe.setEmail(dto.getEmail());
-		troupe.setSignature(dto.getSignature());
+		troupe.setName(troupeDto.getName());
+		troupe.setEmail(troupeDto.getEmail());
+		troupe.setSignature(troupeDto.getSignature());
 		
 		troupeRepository.save(troupe);
 		
@@ -80,7 +80,7 @@ public class TroupeServiceImpl implements TroupeService {
 	@Override
 	public Troupe getByEmail(String email) {
 		return troupeRepository.findByEmail(email).orElseThrow(() ->
-			new NoDataFoundException("このemailは存在しません")
+			new NoDataFoundException("このemailは存在しません" + email)
 		);
 	}
 }

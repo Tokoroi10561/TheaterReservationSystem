@@ -34,8 +34,8 @@ public class ShowServiceImpl implements ShowService {
 	
 	private final ShowRepository showRepository;
 	private final TroupeService troupeService;
-	private final StaffService staffService;
 	private final StageService stageService;
+	private final StaffService staffService;
 	private final TicketTypeService ticketTypeService;
 	
 	@Transactional
@@ -53,6 +53,7 @@ public class ShowServiceImpl implements ShowService {
 		staffService.saveStaffs(showDto.getStaffs(), show);
 		stageService.saveStages(showDto.getStages(), show);
 		ticketTypeService.saveTicketTypes(showDto.getTicketTypes(), show);
+		
 		log.info("{}の公演登録が完了しました。 公演ID: {}", showDto.getTitle(), showDto.getId());
 	}
 	

@@ -19,8 +19,8 @@ public class TicketTypeServiceImpl implements TicketTypeService {
 	private final TicketTypeRepository ticketTypeRepository;
 
 	@Override
-	public void saveTicketTypes(List<TicketTypeDto> ticketTypeDtos, Show show) {
-		for(TicketTypeDto ticketTypeDto : ticketTypeDtos) {	
+	public void saveTicketTypes(List<TicketTypeDto> ticketTypeDtoList, Show show) {
+		for(TicketTypeDto ticketTypeDto : ticketTypeDtoList) {	
 			TicketType ticketType = ticketTypeDto.toEntity();
 			ticketType.setShow(show);
 			ticketTypeRepository.save(ticketType);

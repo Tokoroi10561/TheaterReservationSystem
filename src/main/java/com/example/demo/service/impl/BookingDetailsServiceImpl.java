@@ -14,14 +14,14 @@ import com.example.demo.service.BookingDetailsService;
 public class BookingDetailsServiceImpl implements BookingDetailsService {
 
 	public List<BookingDetailsDto> convertBookingDetailsDto(Booking booking) {
-		List<BookingDetails> bookingDetails = booking.getBookingDetails();
+		List<BookingDetails> bookingDetailsList = booking.getBookingDetails();
 		
-		List<BookingDetailsDto> bookingDetailsDto = new ArrayList<>();
-		for(BookingDetails bookingDetail: bookingDetails) {
-			BookingDetailsDto dto = BookingDetailsDto.fromEntity(bookingDetail);
+		List<BookingDetailsDto> bookingDetailsDtoList = new ArrayList<>();
+		for(BookingDetails bookingDetails: bookingDetailsList) {
+			BookingDetailsDto bookingDetailsDto = BookingDetailsDto.fromEntity(bookingDetails);
 			
-			bookingDetailsDto.add(dto);
+			bookingDetailsDtoList.add(bookingDetailsDto);
 		}
-		return bookingDetailsDto;
+		return bookingDetailsDtoList;
 	}
 }

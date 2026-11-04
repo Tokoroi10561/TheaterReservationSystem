@@ -43,23 +43,22 @@ public class BookingServiceImpl implements BookingService {
 	
 	private final BookingRepository bookingRepository;
 	private final StageService stageService;
-	private final TicketTypeService ticketTypeService;
 	private final StaffService staffService;
+	private final TicketTypeService ticketTypeService;
 	
 	@Transactional
 	@Override
-	public String createBooking(BookingDto dto) {
+	public String createBooking(BookingDto bookingDto) {
 		log.info("予約処理を開始します。");
 		
-		Long stageId = dto.getStageId();
+		Long stageId = bookingDto.getStageId();
 		
 		Stage stage = stageService.stageExist(stageId);
 		int capacity = stage.getCapacity();
 		
-		
-		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetails();
+		List<BookingDetailsDto> bookingDetailsDtoList = bookingDto.getBookingDetails();
 		int demandTotal = 0;
-		demandTotal = calculateSumDtoTicket(bookingDetailsDtos, demandTotal);
+		demandTotal = calculateSumDtoTicket(bookingDetailsDtoList, demandTotal);
 		log.info("注文したチケット数の総数: {}", demandTotal);
 		
 		int total = 0;
@@ -76,7 +75,7 @@ public class BookingServiceImpl implements BookingService {
 			throw new StageSoldOutException("ステージは満席です" + stageId);
 		}
 		
-		Long staffId = dto.getStaffId();
+		Long staffId = bookingDto.getStaffId();
 		
 		Staff staff;
 		
@@ -89,19 +88,18 @@ public class BookingServiceImpl implements BookingService {
 		
 		String token = UUID.randomUUID().toString();
 		
-		Booking booking = dto.toEntity();
+		Booking booking = bookingDto.toEntity();
 		
-		
-		ArrayList<BookingDetails> details = convertDtoToEntity(bookingDetailsDtos, booking);
+		ArrayList<BookingDetails> bookingDetailsList = convertDtoToEntity(bookingDetailsDtoList, booking);
 		
 		booking.setToken(token);
 		booking.setBookingStatus(BookingStatus.RESERVED);
-		booking.setBookingDetails(details);
+		booking.setBookingDetails(bookingDetailsList);
 		booking.setStage(stage);
 		booking.setStaff(staff);
 		
 		bookingRepository.save(booking);
-		log.info("{}様の予約が完了しました。 予約トークン: {}", dto.getName(), token);
+		log.info("{}様の予約が完了しました。 予約トークン: {}", bookingDto.getName(), token);
 		
 		stageService.changeStageStatus(stage, all, booking);
 		
@@ -110,24 +108,24 @@ public class BookingServiceImpl implements BookingService {
 	
 	@Transactional
 	@Override
-	public String updateBooking(BookingDto dto) {
+	public String updateBooking(BookingDto bookingDto) {
 		log.info("予約の更新処理を開始します。");
 		
-		Booking booking = getById(dto.getId());
+		Booking booking = getById(bookingDto.getId());
 		String token = booking.getToken();
 		int total = 0;
 		checkDeadline(booking);
 		
-		booking.setName(dto.getName());
-		booking.setPhone(dto.getPhone());
-		booking.setAddress(dto.getAddress());	
-		booking.setRemarks(dto.getRemarks());
+		booking.setName(bookingDto.getName());
+		booking.setPhone(bookingDto.getPhone());
+		booking.setAddress(bookingDto.getAddress());	
+		booking.setRemarks(bookingDto.getRemarks());
 		
 		Long oldStageId = booking.getStage().getId();
-		Long newStageId = dto.getStageId();
+		Long newStageId = bookingDto.getStageId();
 		
-		List<BookingDetails> details = booking.getBookingDetails();
-		List<BookingDetailsDto> bookingDetailsDtos = dto.getBookingDetails();
+		List<BookingDetails> bookingDetailsList = booking.getBookingDetails();
+		List<BookingDetailsDto> bookingDetailsDtoList = bookingDto.getBookingDetails();
 		
 		if(oldStageId.equals(newStageId)) {
 			log.info("ステージは変更されていません。 stageId: {}", newStageId);
@@ -135,7 +133,7 @@ public class BookingServiceImpl implements BookingService {
 			int capacity = stage.getCapacity();
 			
 			int oldTotal = 0;
-			for(BookingDetails bookingDetails: details) {
+			for(BookingDetails bookingDetails: bookingDetailsList) {
 				oldTotal += bookingDetails.getQuantity();
 			}
 			log.info("元予約数のチケット合計: {}", oldTotal);
@@ -145,7 +143,7 @@ public class BookingServiceImpl implements BookingService {
 			log.info("ステージ内チケット合計: {}", total);
 			
 			int zero = 0;
-			int newTotal = calculateSumDtoTicket(bookingDetailsDtos, zero);
+			int newTotal = calculateSumDtoTicket(bookingDetailsDtoList, zero);
 			log.info("新しいチケット合計: {}", newTotal);
 			
 			int all = (total - oldTotal) + newTotal;
@@ -156,11 +154,11 @@ public class BookingServiceImpl implements BookingService {
 				throw new StageSoldOutException("ステージは満席です" + newStageId);
 			}
 			
-			for(int i = 0; i < details.size(); i++) {
-				details.get(i).setQuantity(bookingDetailsDtos.get(i).getQuantity());
+			for(int i = 0; i < bookingDetailsList.size(); i++) {
+				bookingDetailsList.get(i).setQuantity(bookingDetailsDtoList.get(i).getQuantity());
 			}
 			
-			details.addAll(details);
+			bookingDetailsList.addAll(bookingDetailsList);
 			
 			stageService.changeStageStatus(stage, all, booking);
 
@@ -171,7 +169,7 @@ public class BookingServiceImpl implements BookingService {
 			int capacity = stage.getCapacity();
 			int demandTotal = 0;
 			
-			demandTotal = calculateSumDtoTicket(bookingDetailsDtos, demandTotal);
+			demandTotal = calculateSumDtoTicket(bookingDetailsDtoList, demandTotal);
 			log.info("新しいチケット合計: {}", total);
 			
 			List<Booking> bookings = bookingRepository.findByStageId(newStageId, BookingStatus.RESERVED);
@@ -187,21 +185,21 @@ public class BookingServiceImpl implements BookingService {
 				throw new StageSoldOutException("ステージは満席です" + newStageId);
 			}
 
-			for(int i = 0; i < details.size(); i++) {
-				details.get(i).setQuantity(bookingDetailsDtos.get(i).getQuantity());
+			for(int i = 0; i < bookingDetailsList.size(); i++) {
+				bookingDetailsList.get(i).setQuantity(bookingDetailsDtoList.get(i).getQuantity());
 			}
 				
 			booking.setStage(stage);
 			log.info("ステージのセット");
 			
-			details.addAll(details);
+			bookingDetailsList.addAll(bookingDetailsList);
 			
 			stageService.changeStageStatus(stage, all, booking);
 			
 			bookingRepository.save(booking);
 		}
 
-		log.info("{}様の予約が完了しました。 予約トークン: {}", dto.getName(), token);
+		log.info("{}様の予約が完了しました。 予約トークン: {}", bookingDto.getName(), token);
 		return token;
 	}
 	
@@ -228,28 +226,20 @@ public class BookingServiceImpl implements BookingService {
 		
 		log.info("{}様の予約を削除しました。", booking.getName());
 	}
-	
+
 	@Override
-	public int calculateTicketSumPrice(BookingDto bookingDto) {
-		log.info("チケット合計金額計算メソッドを開始します。");
-		int sum = 0;
+	public void mapTicketTypeToDto(List<TicketType> ticketTypes, BookingDto bookingDto) {
 		
-		List<BookingDetailsDto> bookingDetails = bookingDto.getBookingDetails();
-		
-		for(BookingDetailsDto bookingDetail: bookingDetails) {
-			int quantity = bookingDetail.getQuantity();
-			
-			Long ticketId = bookingDetail.getTicketTypeId();
-			
-			TicketType ticketType = ticketTypeService.getById(ticketId);
-			int price = ticketType.getPrice();
-			
-			int total = quantity * price;
-			
-			sum += total;
-		}
-		log.info("合計金額: {}", sum);
-		return sum;
+		List<BookingDetailsDto> bookingDetailsDtoList = ticketTypes.stream()
+				.map(tt -> {
+					BookingDetailsDto d = new BookingDetailsDto();
+					
+					d.setTicketTypeId(tt.getId());
+					d.setQuantity(0);
+					return d;
+				})
+				.toList();
+		bookingDto.setBookingDetails(bookingDetailsDtoList);
 	}
 	
 	@Override
@@ -257,9 +247,9 @@ public class BookingServiceImpl implements BookingService {
 		log.info("チケット合計金額計算メソッドを開始します。");
 		int sum = 0;
 		
-		List<BookingDetails> bookingDetails = booking.getBookingDetails();
+		List<BookingDetails> bookingDetailsList = booking.getBookingDetails();
 		
-		for(BookingDetails bookingDetail: bookingDetails) {
+		for(BookingDetails bookingDetail: bookingDetailsList) {
 			int quantity = bookingDetail.getQuantity();
 			
 			Long ticketId = bookingDetail.getTicketType().getId();
@@ -275,26 +265,61 @@ public class BookingServiceImpl implements BookingService {
 		return sum;
 	}
 
-	private int calculateSumDtoTicket
-						(List<BookingDetailsDto> bookingDetailsDtos, int total) {
-		for(BookingDetailsDto bookingDetailsDto: bookingDetailsDtos) {
-			total += bookingDetailsDto.getQuantity();
+	@Override
+	public int calculateTicketSumPrice(BookingDto bookingDto) {
+		log.info("チケット合計金額計算メソッドを開始します。");
+		int sum = 0;
+		
+		List<BookingDetailsDto> bookingDetailDtoList = bookingDto.getBookingDetails();
+		
+		for(BookingDetailsDto bookingDetail: bookingDetailDtoList) {
+			int quantity = bookingDetail.getQuantity();
+			
+			Long ticketId = bookingDetail.getTicketTypeId();
+			
+			TicketType ticketType = ticketTypeService.getById(ticketId);
+			int price = ticketType.getPrice();
+			
+			int total = quantity * price;
+			
+			sum += total;
 		}
-		return total;
+		log.info("合計金額: {}", sum);
+		return sum;
 	}
-	
+
 	@Override
 	public int calculateSumStageTicket(List<Booking> bookings, int total) {
 		for(Booking booking: bookings) {
-			List<BookingDetails> bookingDetails = booking.getBookingDetails();
+			List<BookingDetails> bookingDetailsList = booking.getBookingDetails();
 			
-			for(BookingDetails bookingDetail: bookingDetails) {
+			for(BookingDetails bookingDetail: bookingDetailsList) {
 				int quantity = bookingDetail.getQuantity();
 				
 				total += quantity;
 			}
 		}
 		return total;
+	}
+
+	@Override
+	public Booking getById(Long id){
+		return bookingRepository.findById(id).orElseThrow(() ->
+		new NoDataFoundException("idが見つかりません")
+		);
+	}
+
+	@Override
+	public Booking getValidateByTokenAndStatus(String token) {
+		Booking booking = bookingRepository.findByToken(token).orElseThrow(() ->
+			new NoDataFoundException("トークンが存在しません" + token)
+		);
+		
+		if(booking.getBookingStatus() != BookingStatus.RESERVED) {
+			log.warn("予約はすでにキャンセルされています。");
+			throw new NoDataFoundException(booking.getName() + "様の予約はすでにキャンセルされています");
+		}
+		return booking;
 	}
 	
 	@Override
@@ -320,78 +345,6 @@ public class BookingServiceImpl implements BookingService {
 			
 		return bookingSums;
 	}
-	
-	private void checkDeadline(Booking entity) {
-		LocalDateTime now = LocalDateTime.now();
-		
-		LocalDateTime stageTime = entity.getStage().getStartTime();
-		LocalDate stageDay = stageTime.toLocalDate();
-		LocalDateTime deadline = stageDay.minusDays(1).atTime(23, 59);
-		
-		if(now.isAfter(deadline)) {
-			log.warn("ステージの予約期限を過ぎているため編集キャンセルはできません。"
-					+ "期限: {}", deadline);
-			throw new BookingClosedException("当日の編集・キャンセルはできません");
-		}
-	}
-	
-	@Override
-	public Booking getValidateByTokenAndStatus(String token) {
-		Booking booking = bookingRepository.findByToken(token).orElseThrow(() ->
-			new NoDataFoundException("トークンが存在しません" + token)
-		);
-		
-		if(booking.getBookingStatus() != BookingStatus.RESERVED) {
-			log.warn("予約はすでにキャンセルされています。");
-			throw new NoDataFoundException(booking.getName() + "様の予約はすでにキャンセルされています");
-		}
-		return booking;
-	}
-	
-	private ArrayList<BookingDetails> convertDtoToEntity (List<BookingDetailsDto> bookingDetailsDtos, Booking booking) {
-		log.info("DetailをDtoからEntityに変更するメソッドを開始します。");
-		ArrayList<BookingDetails> details = new ArrayList<>();
-		
-		for(BookingDetailsDto bookingDetailsDto: bookingDetailsDtos) {
-			Long ticketTypeId = bookingDetailsDto.getTicketTypeId();
-			BookingDetails detail = bookingDetailsDto.toEntity();
-			
-			TicketType ticketType = ticketTypeService.getById(ticketTypeId);
-			
-			detail.setTicketType(ticketType);
-			detail.setBooking(booking);
-			details.add(detail);;
-		}
-		
-		return details;
-	}
-	
-	@Override
-	public void mapTicketTypeToDto(List<TicketType> ticketTypes, BookingDto dto) {
-		
-		List<BookingDetailsDto> details = ticketTypes.stream()
-				.map(tt -> {
-					BookingDetailsDto d = new BookingDetailsDto();
-					
-					d.setTicketTypeId(tt.getId());
-					d.setQuantity(0);
-					return d;
-				})
-				.toList();
-		dto.setBookingDetails(details);
-	}
-	
-	@Override
-	public Booking getById(Long id){
-		return bookingRepository.findById(id).orElseThrow(() ->
-		new NoDataFoundException("idが見つかりません")
-		);
-	}
-	
-//	@Override
-//	public List<Booking> getAllActiveByShowId(Long showId, BookingStatus status){
-//		return bookingRepository.findAllActiveByShowId(showId, status);
-//	};
 	
 	@Override
 	public Page<Booking> searchBookings(Long showId, BookingSearchCriteria criteria, Pageable pageable){
@@ -442,4 +395,44 @@ public class BookingServiceImpl implements BookingService {
 		
 		return bookingRepository.findAll(spec, pageable);
 	}
+
+	private void checkDeadline(Booking entity) {
+		LocalDateTime now = LocalDateTime.now();
+		
+		LocalDateTime stageTime = entity.getStage().getStartTime();
+		LocalDate stageDay = stageTime.toLocalDate();
+		LocalDateTime deadline = stageDay.minusDays(1).atTime(23, 59);
+		
+		if(now.isAfter(deadline)) {
+			log.warn("ステージの予約期限を過ぎているため編集キャンセルはできません。"
+					+ "期限: {}", deadline);
+			throw new BookingClosedException("当日の編集・キャンセルはできません");
+		}
+	}
+	
+	private int calculateSumDtoTicket(List<BookingDetailsDto> bookingDetailsDtoList, int total) {
+		for(BookingDetailsDto bookingDetailsDto: bookingDetailsDtoList) {
+			total += bookingDetailsDto.getQuantity();
+		}
+		return total;
+	}
+	
+	private ArrayList<BookingDetails> convertDtoToEntity (List<BookingDetailsDto> bookingDetailsDtoList, Booking booking) {
+		log.info("DetailをDtoからEntityに変更するメソッドを開始します。");
+		ArrayList<BookingDetails> bookingDetailsList = new ArrayList<>();
+		
+		for(BookingDetailsDto bookingDetailsDto: bookingDetailsDtoList) {
+			Long ticketTypeId = bookingDetailsDto.getTicketTypeId();
+			BookingDetails bookingDetials = bookingDetailsDto.toEntity();
+			
+			TicketType ticketType = ticketTypeService.getById(ticketTypeId);
+			
+			bookingDetials.setTicketType(ticketType);
+			bookingDetials.setBooking(booking);
+			bookingDetailsList.add(bookingDetials);;
+		}
+		
+		return bookingDetailsList;
+	}
+	
 }
