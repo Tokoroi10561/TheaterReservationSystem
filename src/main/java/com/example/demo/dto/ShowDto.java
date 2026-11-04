@@ -47,12 +47,14 @@ public class ShowDto {
 
 	private ShowStatus showStatus;
 	
+	private PaymentMethod paymentMethod;
+	
 	private MultipartFile flyerImage;
 
 	private Set<ShowOption> options;
-	
-	private Set<PaymentMethod> paymentMethods;
-	
+//	
+//	private Set<PaymentMethod> paymentMethods;
+//	
 	private List<StaffDto> staffs = new ArrayList<>();
 	
 	private List<StageDto> stages = new ArrayList<>();
@@ -64,7 +66,7 @@ public class ShowDto {
 				.title(this.title)
 				.place(this.place)
 				.options(this.options)
-				.paymentMethods(this.paymentMethods)
+				.paymentMethod(PaymentMethod.CASH)
 				.showStatus(ShowStatus.DRAFT)
 				.build();
 	}
@@ -78,7 +80,7 @@ public class ShowDto {
 				.deletedAt(show.getDeletedAt())
 				.troupeId(show.getTroupe().getId())
 				.options(show.getOptions())
-				.paymentMethods(show.getPaymentMethods())
+				.paymentMethod(show.getPaymentMethod())
 				.showStatus(show.getShowStatus())
 				.build();
 	}

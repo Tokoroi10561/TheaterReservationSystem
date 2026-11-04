@@ -71,7 +71,7 @@ public class ShowServiceImpl implements ShowService {
 			show.setPlace(showDto.getPlace());
 			
 			//後で絶対変えないといけない
-			show.setPaymentMethods(showDto.getPaymentMethods());
+//			show.setPaymentMethods(showDto.getPaymentMethods());
 			show.setOptions(showDto.getOptions());
 			
 			show.setFlyerFileName(showDto.getFlyerFileName());

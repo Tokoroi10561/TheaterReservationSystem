@@ -26,6 +26,7 @@
                     <div th:if="${showOptions.contains(ShowOption.STAFF_SUPPORT)}">
                         <p><strong>スタッフ:</strong><span th:text="${staff.name}"></span></p>
                     </div>
+                    <!-- <p><strong>支配方法:</strong><span th:text="${bookingDto.paymentMethod.label}"></span></p> -->
                     <div th:each="ticketType, stat:${ticketTypes}">
                         <p><strong th:text="${ticketType.name}"></strong>: <span th:text="${bookingDto.bookingDetails[__${stat.index}__].quantity}"></span></p>
                     </div>

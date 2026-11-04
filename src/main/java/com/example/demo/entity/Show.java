@@ -59,16 +59,20 @@ public class Show {
 	@Column(name = "show_status", nullable = false)
 	private ShowStatus showStatus;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "payment_method", nullable = false)
+	private PaymentMethod paymentMethod;
+	
 	@ManyToOne
 	@JoinColumn(name = "troupe_id", nullable = false)
 	private Troupe troupe;
 	
-	@ElementCollection(targetClass = PaymentMethod.class)
-	@Enumerated(EnumType.STRING)
-	@CollectionTable(name = "payment_methods",
-			joinColumns = @JoinColumn(name = "show_id"))
-	@Column(name = "payment_method_name", nullable = false)
-	private Set<PaymentMethod> paymentMethods;
+//	@ElementCollection(targetClass = PaymentMethod.class)
+//	@Enumerated(EnumType.STRING)
+//	@CollectionTable(name = "payment_methods",
+//			joinColumns = @JoinColumn(name = "show_id"))
+//	@Column(name = "payment_method_name", nullable = false)
+//	private Set<PaymentMethod> paymentMethods;
 
 	@ElementCollection(targetClass = ShowOption.class)
 	@Enumerated(EnumType.STRING)

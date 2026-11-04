@@ -41,12 +41,12 @@
                             <p><span th:text="${option.label}"></span></p>
                         </div>
                     </div>
-                    <div th:if="*{paymentMethods != null and !paymentMethods.empty}">
+                    <!-- <div th:if="*{paymentMethods != null and !paymentMethods.empty}">
                         <p><strong>支払い方法：</strong></p>
                         <div th:each="paymentMethod: *{paymentMethods}">
                             <p><span th:text="${paymentMethod.label}"></span></p>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="text-center mt-3">
                     <a th:href="@{/show/update/form/{showId}(showId=${show.id})}" class="btn btn-primary">編集</a>

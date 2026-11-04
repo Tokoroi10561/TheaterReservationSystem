@@ -53,12 +53,11 @@
                             </select>
                         </div>
 
-                        <label class="form-label" for="paymentMethod">支払方法<span class="text-danger"> *</span>：</label>
+                        <!-- <label class="form-label" for="paymentMethod">支払方法<span class="text-danger"> *</span>：</label>
                         <select class="form-select" id="paymentMethod" th:field="*{paymentMethod}" required>
                             <option value="" disabled selected>支払方法を選択してください</option>
-                            <!-- 修正: </option> を追加 -->
                             <option th:each="paymentMethod: ${paymentMethods}" th:value="${paymentMethod}" th:text="${paymentMethod.label}"></option>
-                        </select>
+                        </select> -->
 
                         <div th:each="ticketType, stat:${ticketTypes}">
                             <label class="form-label" th:text="${ticketType.name}" th:for="'ticketType_' + ${ticketType.id}">招待</label>

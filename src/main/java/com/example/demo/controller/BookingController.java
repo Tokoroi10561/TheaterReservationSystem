@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.constant.BookingStatus;
-import com.example.demo.constant.PaymentMethod;
 import com.example.demo.constant.PaymentStatus;
 import com.example.demo.constant.ShowOption;
 import com.example.demo.dto.BookingDetailsDto;
@@ -69,7 +68,7 @@ public class BookingController {
 		Show show = showService.getById(showId);
 		
 		Set<ShowOption> showOptions = show.getOptions();
-		Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
+//		Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
 		
 		BookingDto bookingDto = new BookingDto();
 		
@@ -80,7 +79,7 @@ public class BookingController {
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 		model.addAttribute("ticketTypes", ticketTypes);
-		model.addAttribute("paymentMethods", paymentMethods);
+//		model.addAttribute("paymentMethods", paymentMethods);
 		model.addAttribute("showOptions", showOptions);
 		
 		return "booking/form";
@@ -109,14 +108,14 @@ public class BookingController {
 				System.out.println(error.getDefaultMessage());
 			});
 			BookingDto dto = new BookingDto();
-			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
+//			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
 			
 			bookingService.mapTicketTypeToDto(ticketTypes, dto);
 			
 			model.addAttribute("bookingDto", dto);
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
-			model.addAttribute("paymentMethods", paymentMethods);
+//			model.addAttribute("paymentMethods", paymentMethods);
 			
 			return "booking/form";
 		}
@@ -158,7 +157,7 @@ public class BookingController {
 			log.warn("バリデーションエラー");
 			
 			List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
-			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
+//			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
 			
 			BookingDto dto = new BookingDto();
 			
@@ -168,7 +167,7 @@ public class BookingController {
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 			model.addAttribute("ticketTypes", ticketTypes);
-			model.addAttribute("paymentMethods", paymentMethods);
+//			model.addAttribute("paymentMethods", paymentMethods);
 			
 			return "redirect:/booking/form/" + showId;
 		}
@@ -219,7 +218,7 @@ public class BookingController {
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 		Show show = showService.getById(showId);
 		Set<ShowOption> showOptions = show.getOptions();
-		Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
+//		Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
 		
 		BookingDto bookingDto = BookingDto.fromEntity(booking);
 		
@@ -232,7 +231,7 @@ public class BookingController {
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
 		model.addAttribute("ticketTypes", ticketTypes);
-		model.addAttribute("paymentMethods", paymentMethods);
+//		model.addAttribute("paymentMethods", paymentMethods);
 		model.addAttribute("showOptions", showOptions);
 		
 		log.info("編集フォーム提示ページを投げる");
@@ -259,13 +258,13 @@ public class BookingController {
 		model.addAttribute("options", showOptions);
 		if(bindingResult.hasErrors()) {
 			log.warn("バリデーションエラー");
-			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();			
+//			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();			
 			bookingService.mapTicketTypeToDto(ticketTypes, bookingDto);
 			
 			model.addAttribute("bookingDto", bookingDto);
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
-			model.addAttribute("paymentMethods", paymentMethods);
+//			model.addAttribute("paymentMethods", paymentMethods);
 			
 			log.info("編集フォーム確認ページ投げる");
 			return "booking/update/form";

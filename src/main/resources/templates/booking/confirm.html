@@ -24,13 +24,11 @@
                         <p><strong>住所:</strong><span th:text="${bookingDto.address}"></span></p>
                     </div>
 
-                    
-                    <!-- 数字ではなく文字が表示されるようにする -->
-
                     <p><strong>ステージ:</strong><span th:text="${stage.name}"></span></p>
                     <div th:if="${showOptions.contains(ShowOption.STAFF_SUPPORT)}">
                         <p><strong>スタッフ:</strong><span th:text="${staff.name}"></span></p>
                     </div>
+                    <!-- <p><strong>支払方法:</strong><span th:text="${bookingDto.paymentMethod.label}"></span></p> -->
                     <div th:each="ticketType, stat:${ticketTypes}">
                         <p><strong th:text="${ticketType.name}"></strong>: <span th:text="${bookingDto.bookingDetails[__${stat.index}__].quantity}"></span></p>
                     </div>

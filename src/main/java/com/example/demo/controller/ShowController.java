@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.constant.PaymentMethod;
 import com.example.demo.constant.ShowOption;
 import com.example.demo.constant.ShowStatus;
 import com.example.demo.dto.ShowDto;
@@ -67,7 +66,7 @@ public class ShowController {
 		
 		model.addAttribute("showDto", showDto);		
 		model.addAttribute("showOptions", ShowOption.values());
-		model.addAttribute("paymentMethodList", PaymentMethod.values());
+//		model.addAttribute("paymentMethodList", PaymentMethod.values());
 		
 		return "show/form";
 	}
@@ -91,7 +90,7 @@ public class ShowController {
 			formSetup(showDto);
 			
 			model.addAttribute("showDto", showDto);
-			model.addAttribute("paymentMethodList", PaymentMethod.values());
+//			model.addAttribute("paymentMethodList", PaymentMethod.values());
 			
 			return "show/form";
 		}
@@ -150,7 +149,7 @@ public class ShowController {
 			model.addAttribute("showId", showId);
 	
 			model.addAttribute("showOptions", ShowOption.values());
-			model.addAttribute("paymentMethodList", PaymentMethod.values());
+//			model.addAttribute("paymentMethodList", PaymentMethod.values());
 			
 			log.info("編集フォーム提示ページを投げる");
 			return "show/update/form";
@@ -178,7 +177,7 @@ public class ShowController {
 			formSetup(showId, showDto);
 			
 			model.addAttribute("showDto", showDto);
-			model.addAttribute("paymentMethodList", PaymentMethod.values());
+//			model.addAttribute("paymentMethodList", PaymentMethod.values());
 			return "show/update/form";
 		}
 		Show show = showService.getById(showId);

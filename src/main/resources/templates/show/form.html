@@ -70,10 +70,10 @@
                                 <input type="checkbox" class="form-check-input" th:id="${'option' + stat.index}" th:value="${option}" th:field="*{options}">
                             </div>
 
-                            <div th:each="paymentMethod, stat: ${paymentMethodList}">
+                            <!-- <div th:each="paymentMethod, stat: ${paymentMethodList}">
                                 <label class="form-label" th:for="${'paymentMethod' + stat.index}" th:text="${paymentMethod.label}">現金払い</label>
                                 <input type="checkbox" class="form-check-input" th:id="${'paymentMethod' + stat.index}" th:value="${paymentMethod}" th:field="*{paymentMethods}">
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3 mb-3">確認</button>
