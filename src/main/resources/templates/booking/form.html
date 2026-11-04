@@ -27,12 +27,12 @@
                         <label class="form-label" for="email">メールアドレス<span class="text-danger"> *</span>：</label>
                         <input type="email" class="form-control" id="email" th:field="*{email}" required>
 
-                        <div th:if="${options.contains(ShowOption.PHONE_REQUIRED)}">
+                        <div th:if="${showOptions.contains(ShowOption.PHONE_REQUIRED)}">
                             <label class="form-label" for="phone">電話番号</label>
                             <input type="tel" class="form-control" id="phone" th:field="*{phone}">
                         </div>
 
-                        <div th:if="${options.contains(ShowOption.ADDRESS_REQUIRED)}">
+                        <div th:if="${showOptions.contains(ShowOption.ADDRESS_REQUIRED)}">
                             <label class="form-label" for="address">住所</label>
                             <input type="text" class="form-control" id="address" th:field="*{address}">
                         </div>
@@ -44,7 +44,7 @@
                             <option th:each="stage: ${stages}" th:value="${stage.id}" th:text="${stage.name}"></option>
                         </select>
 
-                        <div th:if="${options.contains(ShowOption.STAFF_SUPPORT)}">
+                        <div th:if="${showOptions.contains(ShowOption.STAFF_SUPPORT)}">
                             <label class="form-label" for="staff">スタッフ：</label>
                             <select class="form-select" id="staff" th:field="*{staffId}">
                                 <option value="">スタッフを選択してください</option>

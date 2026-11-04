@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+    th:with="ShowOption=${T(com.example.demo.constant.ShowOption)}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,10 +25,18 @@
                         <th>email</th>
                         <td th:text="${booking.email}">example@example.com</td>
                     </tr>
-                    <tr>
-                        <th>電話番号</th>
-                        <td th:text="${booking.phone}">09012345678</td>
-                    </tr>
+                    <div th:if="${showOptions.contains(ShowOption.PHONE_REQUIRED)}">
+                        <tr>
+                            <th>電話番号</th>
+                            <td th:text="${booking.phone}">09012345678</td>
+                        </tr>
+                    </div>
+                    <div th:if="${showOptions.contains(ShowOption.ADDRESS_REQUIRED)}">
+                        <tr>
+                            <th>住所</th>
+                            <td th:text="${booking.address}"></td>
+                        </tr>
+                    </div>
                     <tr>
                         <th>ステージ</th>
                         <td th:text="${booking.stage.name}">1st</td>
@@ -36,10 +45,12 @@
                         <th th:text="${bookingDetail.ticketType.name}"></th>
                         <td th:text="${bookingDetail.quantity}"></td>
                     </div>
-                    <tr>
-                        <th>スタッフ</th>
-                        <td th:text="${booking.staff.name}">山田太郎</td>
-                    </tr>
+                    <div th:if="${showOptions.contains(ShowOption.STAFF_SUPPORT)}">
+                        <tr>
+                            <th>スタッフ</th>
+                            <td th:text="${booking.staff.name}">山田太郎</td>
+                        </tr>
+                    </div>
                     <tr>
                         <th>支払い方法</th>
                         <td th:text="${booking.paymentMethod.label}"></td>

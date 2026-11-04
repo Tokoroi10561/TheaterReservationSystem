@@ -396,10 +396,10 @@ public class BookingServiceImpl implements BookingService {
 		return bookingRepository.findAll(spec, pageable);
 	}
 
-	private void checkDeadline(Booking entity) {
+	private void checkDeadline(Booking booking) {
 		LocalDateTime now = LocalDateTime.now();
 		
-		LocalDateTime stageTime = entity.getStage().getStartTime();
+		LocalDateTime stageTime = booking.getStage().getStartTime();
 		LocalDate stageDay = stageTime.toLocalDate();
 		LocalDateTime deadline = stageDay.minusDays(1).atTime(23, 59);
 		

@@ -45,9 +45,9 @@ public class AuthServiceImpl implements AuthService{
 		
 		boolean isMatch = passwordEncoder.matches(rawPassword, hashedPassword);
 		
-		TroupeStatus status = troupe.getStatus();
+		TroupeStatus troupeStatus = troupe.getStatus();
 		
-		boolean isActive = status == TroupeStatus.ACTIVE;
+		boolean isActive = troupeStatus == TroupeStatus.ACTIVE;
 		
 		if(isMatch && isActive) {
 			log.info("チェックができました。 劇団名: {}", troupe.getName());

@@ -16,14 +16,14 @@
                     <p><strong>名前： </strong><span th:text="${bookingDto.name}">山田太郎</span></p>
                     <p><strong>ナマエ： </strong><span th:text="${bookingDto.nameKana}">ヤマダタロウ</span></p>
                     <p><strong>メールアドレス:</strong><span th:text="${bookingDto.email}"></span></p>
-                    <div th:if="${options.contains(ShowOption.PHONE_REQUIRED)}">
+                    <div th:if="${showOptions.contains(ShowOption.PHONE_REQUIRED)}">
                         <p><strong>電話番号:</strong><span th:text="${bookingDto.phone}"></span></p>
                     </div>
-                    <div th:if="${options.contains(ShowOption.ADDRESS_REQUIRED)}">
+                    <div th:if="${showOptions.contains(ShowOption.ADDRESS_REQUIRED)}">
                         <p><strong>住所:</strong><span th:text="${bookingDto.address}"></span></p>
                     </div>
                     <p><strong>ステージ:</strong><span th:text="${stage.name}"></span></p>
-                    <div th:if="${options.contains(ShowOption.STAFF_SUPPORT)}">
+                    <div th:if="${showOptions.contains(ShowOption.STAFF_SUPPORT)}">
                         <p><strong>スタッフ:</strong><span th:text="${staff.name}"></span></p>
                     </div>
                     <div th:each="ticketType, stat:${ticketTypes}">

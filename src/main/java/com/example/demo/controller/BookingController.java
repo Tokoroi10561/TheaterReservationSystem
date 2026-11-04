@@ -54,34 +54,34 @@ public class BookingController {
 	
 	private final BookingService bookingService;
 	private final BookingDetailsService bookingDetailsService;
-	private final TicketTypeService ticketTypeService;
-	private final StaffService staffService;
-	private final StageService stageService;
 	private final ShowService showService;
+	private final StageService stageService;
+	private final StaffService staffService;
+	private final TicketTypeService ticketTypeService;
 	private final MailService mailService;
 	
 	@GetMapping("/form/{showId}")
-	public String showForm(Model model, BookingDto bookingDto, @PathVariable Long showId) {
+	public String showForm(Model model, @PathVariable Long showId) {
 		log.info("フォームの提示");
 		
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 		
 		Show show = showService.getById(showId);
 		
-		Set<ShowOption> options = show.getOptions();
+		Set<ShowOption> showOptions = show.getOptions();
 		Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
 		
-		BookingDto dto = new BookingDto();
+		BookingDto bookingDto = new BookingDto();
 		
-		bookingService.mapTicketTypeToDto(ticketTypes, dto);
+		bookingService.mapTicketTypeToDto(ticketTypes, bookingDto);
 		
 		model.addAttribute("showId", showId);
-		model.addAttribute("bookingDto", dto);
-		model.addAttribute("ticketTypes", ticketTypes);
+		model.addAttribute("bookingDto", bookingDto);
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
-		model.addAttribute("options", options);
+		model.addAttribute("ticketTypes", ticketTypes);
 		model.addAttribute("paymentMethods", paymentMethods);
+		model.addAttribute("showOptions", showOptions);
 		
 		return "booking/form";
 	}
@@ -94,19 +94,22 @@ public class BookingController {
 							  @PathVariable Long showId
 							  ) {
 		log.info("フォーム確認メソッド開始");
-		model.addAttribute("showId", showId);
+		
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
-		model.addAttribute("ticketTypes", ticketTypes);
 		Show show = showService.getById(showId);
-		Set<ShowOption> options = show.getOptions();
-		model.addAttribute("options", options);
+		Set<ShowOption> showOptions = show.getOptions();
+
+		model.addAttribute("showId", showId);
+		model.addAttribute("ticketTypes", ticketTypes);
+		model.addAttribute("showOptions", showOptions);
+		
 		if(bindingResult.hasErrors()) {
 			log.warn("バリデーションエラー");
 			bindingResult.getAllErrors().forEach(error -> {
 				System.out.println(error.getDefaultMessage());
-				});
-			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();			
+			});
 			BookingDto dto = new BookingDto();
+			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
 			
 			bookingService.mapTicketTypeToDto(ticketTypes, dto);
 			
@@ -120,7 +123,6 @@ public class BookingController {
 		
 		httpSession.setAttribute("bookingDto", bookingDto);
 		log.info("セッション保存完了");
-		
 		
 		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
 		model.addAttribute("sumPrice", sumPrice);
@@ -144,13 +146,14 @@ public class BookingController {
 							   RedirectAttributes redirectAttributes
 							   ) {
 		log.info("フォーム登録メソッド開始");
-
-		model.addAttribute("showId", showId);
 		
 		BookingDto bookingDto = (BookingDto) httpSession.getAttribute("bookingDto");
 		Show show = showService.getById(showId);
-		Set<ShowOption> options = show.getOptions();
-		model.addAttribute("options", options);
+		Set<ShowOption> showOptions = show.getOptions();
+
+		model.addAttribute("showId", showId);
+		model.addAttribute("showOptions", showOptions);
+		
 		if(bookingDto == null) {
 			log.warn("バリデーションエラー");
 			
@@ -162,9 +165,9 @@ public class BookingController {
 			bookingService.mapTicketTypeToDto(ticketTypes, dto);
 			
 			model.addAttribute("bookingDto", dto);
-			model.addAttribute("ticketTypes", ticketTypes);
 			model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 			model.addAttribute("stages", stageService.getAllStageByShowId(showId));
+			model.addAttribute("ticketTypes", ticketTypes);
 			model.addAttribute("paymentMethods", paymentMethods);
 			
 			return "redirect:/booking/form/" + showId;
@@ -192,20 +195,18 @@ public class BookingController {
 		log.info("更新前状態表示メソッド開始");
 		Booking booking = bookingService.getValidateByTokenAndStatus(token);
 		
-		BookingStatus status = booking.getBookingStatus();
-			//現状の予約表示
-		if(status != BookingStatus.RESERVED) {
+		BookingStatus bookingStatus = booking.getBookingStatus();
+		if(bookingStatus != BookingStatus.RESERVED) {
 			log.warn("予約されていないため表示ができません");
 			throw new NotReservedException("予約されていません");
 		}
-			model.addAttribute("booking", booking);
+		int sumPrice = bookingService.calculateTicketSumPrice(booking);
 			
-			int sumPrice = bookingService.calculateTicketSumPrice(booking);
-			model.addAttribute("sumPrice", sumPrice);
+		model.addAttribute("booking", booking);
+		model.addAttribute("sumPrice", sumPrice);
 		
 		log.info("更新前状態表示ページを投げる");
 		return "booking/manage";
-		
 	}
 	
 	@GetMapping("/update/form/{id}")
@@ -217,22 +218,22 @@ public class BookingController {
 		
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
 		Show show = showService.getById(showId);
-		Set<ShowOption> options = show.getOptions();
+		Set<ShowOption> showOptions = show.getOptions();
 		Set<PaymentMethod> paymentMethods = show.getPaymentMethods();
 		
-		BookingDto dto = BookingDto.fromEntity(booking);
+		BookingDto bookingDto = BookingDto.fromEntity(booking);
 		
-		List<BookingDetailsDto> detailsDto = bookingDetailsService.convertBookingDetailsDto(booking);
-		dto.setBookingDetails(detailsDto);
+		List<BookingDetailsDto> bookingDetailsDtoList = bookingDetailsService.convertBookingDetailsDto(booking);
+		bookingDto.setBookingDetails(bookingDetailsDtoList);
 		
 //		bookingService.mapTicketTypeToDto(ticketTypes, dto);
 		
-		model.addAttribute("bookingDto", dto);
-		model.addAttribute("ticketTypes", ticketTypes);
+		model.addAttribute("bookingDto", bookingDto);
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
-		model.addAttribute("options", options);
+		model.addAttribute("ticketTypes", ticketTypes);
 		model.addAttribute("paymentMethods", paymentMethods);
+		model.addAttribute("showOptions", showOptions);
 		
 		log.info("編集フォーム提示ページを投げる");
 		return "booking/update/form";
@@ -251,10 +252,11 @@ public class BookingController {
 		Long showId = booking.getStage().getShow().getId();
 		
 		List<TicketType> ticketTypes = ticketTypeService.getAllTicketTypeByShowId(showId);
-		model.addAttribute("ticketTypes", ticketTypes);
 		Show show = showService.getById(showId);
-		Set<ShowOption> options = show.getOptions();
-		model.addAttribute("options", options);
+		Set<ShowOption> showOptions = show.getOptions();
+		
+		model.addAttribute("ticketTypes", ticketTypes);
+		model.addAttribute("options", showOptions);
 		if(bindingResult.hasErrors()) {
 			log.warn("バリデーションエラー");
 			Set<PaymentMethod> paymentMethods = show.getPaymentMethods();			
@@ -274,11 +276,11 @@ public class BookingController {
 		
 		int sumPrice = bookingService.calculateTicketSumPrice(bookingDto);
 		log.info("チケット合計金額: {}", sumPrice);
-		model.addAttribute("sumPrice", sumPrice);
 		
 		Stage stage = stageService.stageExist(bookingDto.getStageId());
 		Staff staff = staffService.getStaffById(bookingDto.getStaffId());
 		
+		model.addAttribute("sumPrice", sumPrice);
 		model.addAttribute("bookingDto", bookingDto);
 		model.addAttribute("stage", stage);
 		model.addAttribute("staff", staff);
@@ -373,9 +375,9 @@ public class BookingController {
 		model.addAttribute("allPaymentStatus", PaymentStatus.values());
 //		model.addAttribute("paymentMethods", PaymentMethod.values());
 		model.addAttribute("criteria", criteria);
-		model.addAttribute("ticketTypes", ticketTypes);
 		model.addAttribute("staffs", staffService.getAllStaffByShowId(showId));
 		model.addAttribute("stages", stageService.getAllStageByShowId(showId));
+		model.addAttribute("ticketTypes", ticketTypes);
 		
 		return "booking/list";
 	}

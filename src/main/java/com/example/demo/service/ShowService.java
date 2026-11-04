@@ -22,5 +22,5 @@ public interface ShowService {
 	Show getLastUpdated (Long troupeId);
 	
 	List<Show> getAllActive(Long troupeId);
-	List<Show> getByTroupeIdAndShowStatus(Long troupeId, ShowStatus status);
+	List<Show> getByTroupeIdAndShowStatus(Long troupeId, ShowStatus showStatus);
 }
